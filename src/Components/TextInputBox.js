@@ -20,6 +20,7 @@ const TextInputBox = props => {
                   : 25,
                 justifyContent: props.multiline ? 'flex-start' : 'center',
                 borderColor: props.borderColor,
+                backgroundColor: props.color
               },
             ]}>
             
@@ -27,8 +28,8 @@ const TextInputBox = props => {
               keyboardType={props?.isNumber ? 'numeric' : 'default'}
               multiline={props?.multiline}
               value={props?.value}
-              color={props.color}
-              // color={'#ff6666'}
+
+              color={'#ff6666'}
               onChangeText={text => props?.onChangeText(text)}
               placeholderTextColor={props?.errorText == '' ? 'gray' : '#ff6666'}
               placeholder={
@@ -79,7 +80,7 @@ const style = StyleSheet.create({
     shadowRadius: 2,
     elevation: 6,
     borderRadius: 26,
-    // backgroundColor: 'red'
+
   },
   manageAddressItem: {
     width: '50%',

@@ -121,6 +121,7 @@ const SignUpwithEmail = props => {
 
                 <TextInputBox
                     value={email}
+                    titlecolour={'white'}
                     errorText={checkEmail}
                     onChangeText={text => {
                         changeemail(text);
@@ -130,10 +131,11 @@ const SignUpwithEmail = props => {
                     width={getHeight(2.3)}
                     title={'Email ID'}
                     borderColor={'white'}
-                    color={'#ff6666'}
+                    // color={'#ff6666'}
                 />
                 <TextInputBox
                     value={password}
+                    titlecolour={'white'}
                     errorText={checkPassword}
                     onChangeText={text => {
                         changepassword(text);
@@ -145,14 +147,7 @@ const SignUpwithEmail = props => {
                     borderColor={'white'}
                 />
 
-                {/* <CommonButton
-                    onPress={() => isValidate()}
-                    // onPress={() => navigation.replace('Home')}
-                    color={['#8360C3', '#2EBF91']}
-                    title={'Login'}
-                    width={getHeight(2.3)}
-                    texttitle={'white'}
-                /> */}
+
                 <Text style={[styles.subTxt, { textAlign: 'right' }]}>{"Forgot Password ?"}</Text>
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(3.5) }}>
                     <Text style={[styles.subTxt, { textAlign: 'center' }]}>{" By continuing, you agree to our Terms of use and privacy policies"}</Text>

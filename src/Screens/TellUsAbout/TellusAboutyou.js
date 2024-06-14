@@ -146,6 +146,7 @@ const TellusAboutyou = props => {
                     placeholder={'User Name'}
                     width={getHeight(2.3)}
                     title={'What’s your date of birth?'}
+                    color={'white'}
                 />
                 <TextInputBox
                     value={phone}
@@ -158,7 +159,7 @@ const TellusAboutyou = props => {
                     placeholder={'Phone Number'}
                     width={getHeight(2.3)}
                     title={'Select your gender'}
-                // isNumber={true}
+                    color={'white'}
                 />
                 <TextInputBox
                     value={phone}
@@ -171,7 +172,7 @@ const TellusAboutyou = props => {
                     placeholder={'Phone Number'}
                     width={getHeight(2.3)}
                     title={'Choose your Country'}
-                // isNumber={true}
+                    color={'white'}
                 />
                 <TextInputBox
                     value={phone}
@@ -184,7 +185,7 @@ const TellusAboutyou = props => {
                     placeholder={'Phone Number'}
                     width={getHeight(2.3)}
                     title={'Choose your state'}
-                // isNumber={true}
+                    color={'white'}
                 />
 
 

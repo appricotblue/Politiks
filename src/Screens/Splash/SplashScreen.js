@@ -1,7 +1,24 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 const SplashScreen = ({ navigation }) => {
+
+  const getFcmToken = async () => {
+    console.log('hii token')
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log('Your Firebase Token is:', fcmToken);
+      // You can save this token in your database if you need
+    } else {
+      console.log('Failed to get FCM token');
+    }
+  }
+  useEffect(() => {
+
+    getFcmToken()
+  }, [])
+
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('LoginScreen'); // Replace 'LoginScreen' with the actual name of your login screen

@@ -12,3 +12,5 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 });
 
 AppRegistry.registerComponent(appName, () => App);
+
+
