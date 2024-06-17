@@ -9,7 +9,7 @@ const HomeHeader = ({ title }) => {
   const navigation = useNavigation();
   return (
     <LinearGradient
-      colors={['#8360C3', '#2EBF91']}
+      colors={['white', 'white']}
       start={{x: 0, y: 0.5}} 
       end={{x: 1, y: 0.5}}
       style={{
@@ -22,10 +22,11 @@ const HomeHeader = ({ title }) => {
       {/* Back Arrow */}
       <TouchableOpacity style={{flexDirection:'row'}} onPress={() => navigation.navigate('Profile')}>
       <Image source={ images.Profile}style={{width:44,height:44,marginRight:15}} />
-      <Image
+        <Text style={{ fontSize: 19, fontWeight: '700', color: 'black' }}>Politiks</Text>
+        {/* <Image
                        style={{width:40,height:40,}}
                         source={images.Logo}
-                    />
+                    /> */}
         {/* <Ionicons name="arrow-back" size={24} color="white" /> */}
       </TouchableOpacity>
 

@@ -48,7 +48,7 @@ const CreatePasswordScreen = props => {
         } else if (password != repassword) {
             changecheckrepassword('Password Mismatch!');
         } else {
-            navigation.replace('GenderScreen')
+            navigation.replace('SignUpwithEmail')
         }
     };
 
@@ -83,11 +83,11 @@ const CreatePasswordScreen = props => {
         <View style={styles.container}>
             <ImageBackground source={images.Welcome_3} resizeMode="cover" style={styles.image}>
                 <View style={{ width: getHeight(2.3), marginTop: 30, marginBottom: 40 }}>
-                    <Image
-                        style={{ width: 100, height: 90, marginBottom: 5 }}
-                        source={images.Faniverse_logo}
-                    />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={images.ArrowLeft} style={styles.arrowimg} />
+                    </TouchableOpacity>
                     <Text style={styles.TileTxt}>{"Create a Password"}</Text>
+                    <Text style={styles.subTxt}>{"Choose a strong password"}</Text>
                 </View>
                 <TextInputBox
                     value={password}
@@ -99,6 +99,9 @@ const CreatePasswordScreen = props => {
                     placeholder={'new password'}
                     width={getHeight(2.3)}
                     title={'New Password'}
+                    borderColor={'white'}
+                    valuecolor={'white'}
+                    titlecolour={'white'}
                 />
                 <TextInputBox
                     value={repassword}
@@ -110,16 +113,19 @@ const CreatePasswordScreen = props => {
                     placeholder={'password'}
                     width={getHeight(2.3)}
                     title={'Re-enter Password'}
+                    borderColor={'white'}
+                    valuecolor={'white'}
+                    titlecolour={'white'}
                 />
 
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(2.7) }}>
 
                     <CommonButton
                         onPress={() => isvalidate()}
-                        color={['#8360C3', '#2EBF91']}
+                        color={['white', 'white']}
                         title={'Save'}
                         width={getHeight(2.3)}
-                        texttitle={'white'}
+                        texttitle={'black'}
                     />
                 </View>
              
@@ -164,13 +170,18 @@ const styles = StyleSheet.create({
     subTxt: {
         fontSize: getHeight(50),
         color: 'white',
-        textAlign: 'center',
+        // textAlign: 'center',
         width: getHeight(2.6)
     },
     buttonContainer: {
         marginBottom: 20,
 
-    }
+    },
+    arrowimg: {
+        width: 30,
+        height: 20,
+        marginBottom: 30
+    },
 });
 export default CreatePasswordScreen;
 

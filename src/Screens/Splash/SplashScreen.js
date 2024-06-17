@@ -5,24 +5,43 @@ import messaging from '@react-native-firebase/messaging';
 const SplashScreen = ({ navigation }) => {
 
   const getFcmToken = async () => {
-    console.log('hii token')
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-      console.log('Your Firebase Token is:', fcmToken);
-      // You can save this token in your database if you need
-    } else {
-      console.log('Failed to get FCM token');
+    console.log('Attempting to get FCM token...');
+    try {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        console.log('Your Firebase Token is:', fcmToken);
+        // Save the token in your database if necessary
+      } else {
+        console.log('Failed to get FCM token');
+      }
+    } catch (error) {
+      console.error('Error getting FCM token:', error);
     }
-  }
-  useEffect(() => {
+  };
 
-    getFcmToken()
-  }, [])
+  useEffect(() => {
+    const initializeFCM = async () => {
+      console.log('Requesting user permission for notifications...');
+      await requestUserPermission();
+      console.log('User permission granted');
+      getFcmToken();
+
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        // Handle your message here
+      });
+
+      return unsubscribe;
+    };
+
+    initializeFCM();
+  }, []);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('LoginScreen'); // Replace 'LoginScreen' with the actual name of your login screen
-    }, 2000); // Adjust the time (in milliseconds) as needed
+      navigation.replace('LoginScreen');
+    }, 4000); 
 
     return () => clearTimeout(timer);
   }, [navigation]);

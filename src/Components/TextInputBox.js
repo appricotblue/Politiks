@@ -21,6 +21,7 @@ const TextInputBox = props => {
                 justifyContent: props.multiline ? 'flex-start' : 'center',
                 borderColor: props.borderColor,
                 backgroundColor: props.color
+                // backgroundColor: 'red'
               },
             ]}>
             
@@ -28,10 +29,12 @@ const TextInputBox = props => {
               keyboardType={props?.isNumber ? 'numeric' : 'default'}
               multiline={props?.multiline}
               value={props?.value}
+              editable={props.editable}
 
-              color={'#ff6666'}
+              // color={'#ff6666'}
+              color={'red'}
               onChangeText={text => props?.onChangeText(text)}
-              placeholderTextColor={props?.errorText == '' ? 'gray' : '#ff6666'}
+              placeholderTextColor={props?.errorText == '' ? 'gray' : 'red'}
               placeholder={
                 props?.errorText != '' ? props?.errorText : props?.placeholder
               }
@@ -43,7 +46,7 @@ const TextInputBox = props => {
                 minHeight: 20,
                 top: props?.multiline && 10,
                 paddingBottom: props?.multiline && 20,
-                color: '#ffffff',
+                color:props?.valuecolor,
                 // backgroundColor: 'green'
               }}
             />

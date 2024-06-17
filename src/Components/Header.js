@@ -9,7 +9,7 @@ const Header = ({ title }) => {
   const navigation = useNavigation();
   return (
     <LinearGradient
-      colors={['#8360C3', '#2EBF91']}
+      colors={['white', 'white']}
       start={{x: 0, y: 0.5}} 
       end={{x: 1, y: 0.5}}
       style={{

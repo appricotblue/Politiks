@@ -75,14 +75,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopLeftRadius:20,
     borderTopRightRadius:20,
-    height:80
+    height: 60
   },
   iconContainer: {
     alignItems: 'center',
   },
   icon: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
   },
   modalContainer: {
     flex: 1,

@@ -31,11 +31,11 @@ const InterestSelection = props => {
     const [fullname, changefullname] = useState('');
     const [error, changeerror] = useState('');
     const [password, changepassword] = useState('');
-   
-    const [selectedInterests, setSelectedInterests] = useState([]);
-    const interests = ['Interest 1', 'Interest ', 'Interest 3', 'Interest 4', 'Interest 5', 'Interest 6','Interest 7', 'Interest 8', 'Interest 9', 'Interest 10','Interest 11', 'Interest 12', 'Interest 13'];
 
-  
+    const [selectedInterests, setSelectedInterests] = useState([]);
+    const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry',];
+
+
     const toggleInterest = (interest) => {
         if (selectedInterests.includes(interest)) {
             setSelectedInterests(selectedInterests.filter(item => item !== interest));
@@ -43,14 +43,15 @@ const InterestSelection = props => {
             setSelectedInterests([...selectedInterests, interest]);
         }
     };
-  
+
     const isvalidate = async () => {
         if (selectedInterests?.length < 4) {
             // alert('Please select at least four interests.');
             changeerror('*Please select at least four interests.')
         } else {
             // Proceed to the next screen
-            navigation.replace('SuccessScreen');
+            // navigation.replace('SuccessScreen');
+            navigation.replace('FollowAccounts');
         }
     };
 
@@ -66,53 +67,52 @@ const InterestSelection = props => {
 
     return (
         <View style={styles.container}>
-            <View style={{ width: getHeight(2.3), marginTop: 30, marginBottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                <Image
-                    style={{ width: 50, height: 50, marginBottom: 5 }}
-                    source={images.Faniverse_logo}
-                />
-                <Text style={styles.TileTxt}>Welcome to  Fan Island </Text>
-                <Text style={styles.subTxt}>{"To make your feed optimized, Please select most appropriate options"}</Text>
+            <View style={{ width: getHeight(2.3), marginTop: 30, marginBottom: 40, }}>
+
+                <Text style={styles.TileTxt}>Tell us about you</Text>
+                <Text style={styles.subTxt}>{"This will help us to serve you better"}</Text>
             </View>
 
             <View style={{ width: getHeight(2.3) }}>
                 <Text style={styles.gentertxt}>Select Your Interests</Text>
 
                 <View style={styles.interestsContainer}>
-                {interests.map(interest => (
-                    <TouchableOpacity
-                        key={interest}
-                        style={[
-                            styles.interest,
-                            selectedInterests.includes(interest) && styles.selectedInterest
-                        ]}
-                        onPress={() => toggleInterest(interest)}>
-                        <Text style={[
-                            styles.interestText,
-                            selectedInterests.includes(interest) ? styles.selectedInterestText : styles.unselectedInterestText
-                        ]}>{interest}</Text>
-                    </TouchableOpacity>
-                ))}
+                    {interests.map(interest => (
+                        <TouchableOpacity
+                            key={interest}
+                            style={[
+                                styles.interest,
+                                selectedInterests.includes(interest) && styles.selectedInterest
+                            ]}
+                            onPress={() => toggleInterest(interest)}>
+                            <Text style={[
+                                styles.interestText,
+                                selectedInterests.includes(interest) ? styles.selectedInterestText : styles.unselectedInterestText
+                            ]}>{interest}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
-            </View>
-            <Text style={{color:'#ff6666',marginTop:40}}> {error}</Text>
-            <View style={{height: getHeight(5) ,alignSelf:'flex-end',marginTop:10}}>
+            <Text style={{ color: '#ff6666', marginTop: 40 }}> {error}</Text>
+            <View style={{ height: getHeight(5), alignSelf: 'flex-end', marginTop: 10 }}>
                 <CommonButton
                     onPress={isvalidate}
-                    color={['#8360C3', '#2EBF91']}
+                    color={['black', 'black']}
                     title={'Next'}
                     width={getHeight(2.3)}
                     texttitle={'white'}
                 />
-           <TouchableOpacity 
-             onPress={() => navigation.replace('DOBScreen')}
-           style={{width:windowWidth,height:50,justifyContent:'center',alignItems:'center'}}>
-           <Text style={{textDecorationLine:'underline',   fontFamily:'Jost',
-       fontWeight:'400',}}>Previous</Text>
-           </TouchableOpacity>
-                     
+                <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                    style={{ width: windowWidth, height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{
+                        textDecorationLine: 'underline', fontFamily: 'Jost',
+                        fontWeight: '400',
+                    }}>Previous</Text>
+                </TouchableOpacity>
 
-       
+
+
             </View>
         </View>
     );
@@ -147,18 +147,18 @@ const styles = StyleSheet.create({
     },
     TileTxt: {
         fontSize: 28,
-        color: '#8360C3',
-        fontFamily:'Jost',
-        fontWeight:'700',
+        color: 'black',
+        fontFamily: 'Jost',
+        fontWeight: '700',
         paddingBottom: 5
     },
     subTxt: {
         fontSize: 16,
         color: 'black',
-        textAlign: 'center',
+        // textAlign: 'center',
         width: getHeight(2.6),
-        fontFamily:'Jost',
-        fontWeight:'400',
+        fontFamily: 'Jost',
+        fontWeight: '400',
     },
     optionContainer: {
         flexDirection: 'row',
@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     selectedOption: {
-        backgroundColor: '#2EBF91'
+        backgroundColor: '#3A7BD5'
     },
     optionText: {
         fontSize: 16,
-        fontFamily:'Jost',
-        fontWeight:'400',
+        fontFamily: 'Jost',
+        fontWeight: '400',
 
     },
     gentertxt: {
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: '800',
         paddingBottom: 5,
-        alignSelf: 'center',
+        // alignSelf: 'center',
         marginBottom: 10,
         fontFamily: 'jost'
     },
@@ -202,20 +202,20 @@ const styles = StyleSheet.create({
     interestsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        // justifyContent: 'center'
     },
     interest: {
-        width: '30%',
+        // width: '30%',
         paddingVertical: 10,
         paddingHorizontal: 10,
         margin: 5,
         borderWidth: 1,
         borderRadius: 30,
-        borderColor: '#2EBF91'
+        borderColor: '#3A7BD5'
     },
     selectedInterest: {
-        backgroundColor: '#2EBF91',
-        borderColor: '#2EBF91'
+        backgroundColor: '#3A7BD5',
+        borderColor: '#3A7BD5'
     },
     interestText: {
         fontSize: 16,

@@ -29,6 +29,9 @@ import SuperHugs from '../Screens/SuperHugs/SuperHugs';
 import ContestDetailsWeek1 from '../Screens/Contests/ContestDetailsWeek1';
 import SignUpwithEmail from '../Screens/SignUp/SignUpwithEmail';
 import TellusAboutyou from '../Screens/TellUsAbout/TellusAboutyou';
+import FollowAccounts from '../Screens/TellUsAbout/FollowAccounts';
+import Forgotpassword from '../Screens/CreatePassword/Forgotpassword';
+import UploadScreen from '../Screens/Leaderverification/UploadScreen';
 
 const Stack = createStackNavigator();
 if (!__DEV__) {
@@ -66,6 +69,9 @@ const index = () => {
         <Stack.Screen name="ContestDetailsWeek1" component={ContestDetailsWeek1} />
         <Stack.Screen name="SignUpwithEmail" component={SignUpwithEmail} />
         <Stack.Screen name="TellusAboutyou" component={TellusAboutyou} />
+        <Stack.Screen name="FollowAccounts" component={FollowAccounts} />
+        <Stack.Screen name="Forgotpassword" component={Forgotpassword} />
+        <Stack.Screen name="UploadScreen" component={UploadScreen} />
        
       </Stack.Navigator>
     </NavigationContainer>

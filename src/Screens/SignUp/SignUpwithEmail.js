@@ -131,6 +131,7 @@ const SignUpwithEmail = props => {
                     width={getHeight(2.3)}
                     title={'Email ID'}
                     borderColor={'white'}
+                    valuecolor={'white'}
                     // color={'#ff6666'}
                 />
                 <TextInputBox
@@ -145,17 +146,20 @@ const SignUpwithEmail = props => {
                     width={getHeight(2.3)}
                     title={'Password'}
                     borderColor={'white'}
+                    valuecolor={'white'}
                 />
 
+                <TouchableOpacity onPress={() => navigation.navigate('Forgotpassword')}>
+                    <Text style={[styles.subTxt, { textAlign: 'right' }]}>{"Forgot Password ?"}</Text>
+                </TouchableOpacity>
 
-                <Text style={[styles.subTxt, { textAlign: 'right' }]}>{"Forgot Password ?"}</Text>
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(3.5) }}>
                     <Text style={[styles.subTxt, { textAlign: 'center' }]}>{" By continuing, you agree to our Terms of use and privacy policies"}</Text>
 
                     <CommonButton
                         onPress={() => navigation.replace('TellusAboutyou')}
+                        // onPress={() => navigation.replace('UploadScreen')}
                         color={['#ffffff', '#ffffff']}
-
                         title={'Sign-in'}
                         width={getHeight(2.3)}
                         texttitle={'black'}
