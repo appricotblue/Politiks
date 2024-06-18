@@ -17,7 +17,7 @@ const TextInputBox = props => {
               {
                 minHeight: props.multiline
                   ? windowHeight / 5
-                  : 25,
+                  : 20,
                 justifyContent: props.multiline ? 'flex-start' : 'center',
                 borderColor: props.borderColor,
                 backgroundColor: props.color
@@ -41,6 +41,7 @@ const TextInputBox = props => {
               style={{
                 left: 20,
                 width: '90%',
+                height:43,
 
                 // minHeight: windowWidth / 10,
                 minHeight: 20,

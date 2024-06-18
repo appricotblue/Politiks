@@ -59,6 +59,10 @@ const images = {
   LocationArrow: require('./LocationArrow.png'),
   PlusIcon: require('./PlusIcon.png'),
   ImagePNG: require('./ImagePNG.png'),
+  ArrowLeftblack: require('./ArrowLeftblack.png'),
+  starblue: require('./starblue.png'),
+  verification: require('./verification.png'),
+  pending: require('./pending.png'),
 };
 
 export default images;

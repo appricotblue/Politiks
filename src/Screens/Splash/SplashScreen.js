@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import { requestUserPermission } from '../../services/notificationService';
 
 const SplashScreen = ({ navigation }) => {
 
@@ -41,7 +42,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('LoginScreen');
-    }, 4000); 
+    }, 2000); 
 
     return () => clearTimeout(timer);
   }, [navigation]);
