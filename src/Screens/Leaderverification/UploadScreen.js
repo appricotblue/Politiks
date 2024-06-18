@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image } from 'react-native';
-import DocumentPicker from 'react-native-document-picker';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Video from 'react-native-video';
 import { getHeight, getWidth } from '../../Theme/Constants';
@@ -24,7 +23,7 @@ const requestPermissions = async () => {
             PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
             {
                 title: 'Read External Storage Permission',
-                message: 'App needs access to your storage to read videos',
+                message: 'App needs access to your storage to read files',
                 buttonNeutral: 'Ask Me Later',
                 buttonNegative: 'Cancel',
                 buttonPositive: 'OK',
@@ -34,7 +33,7 @@ const requestPermissions = async () => {
             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
             {
                 title: 'Write External Storage Permission',
-                message: 'App needs access to your storage to save videos',
+                message: 'App needs access to your storage to save files',
                 buttonNeutral: 'Ask Me Later',
                 buttonNegative: 'Cancel',
                 buttonPositive: 'OK',
@@ -53,67 +52,74 @@ const requestPermissions = async () => {
 const UploadScreen = () => {
     const navigation = useNavigation();
     const [video, setVideo] = useState(null);
-    const [document, setDocument] = useState(null);
+    const [image, setImage] = useState(null);
+    const [videoModalVisible, setVideoModalVisible] = useState(false);
+    const [imageModalVisible, setImageModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleVideoPicker = async () => {
-        const hasPermission = await requestPermissions();
+    const openCameraOrGallery = (mediaType, option) => {
+        const hasPermission = requestPermissions();
         if (!hasPermission) {
             Alert.alert('Permission not granted');
             return;
         }
 
-        Alert.alert(
-            'Upload Video',
-            'Choose an option',
-            [
-                {
-                    text: 'From Gallery',
-                    onPress: () => launchImageLibrary({ mediaType: 'video', videoQuality: 'high' }, (response) => {
-                        if (!response.didCancel && !response.error) {
-                            setVideo(response.assets[0]);
-                        }
-                    }),
-                },
-                {
-                    text: 'Record Video',
-                    onPress: () => launchCamera({ mediaType: 'video', videoQuality: 'high', durationLimit: 30 }, (response) => {
-                        if (!response.didCancel && !response.error) {
-                            setVideo(response.assets[0]);
-                        }
-                    }),
-                },
-                { text: 'Cancel', style: 'cancel' },
-            ],
-            { cancelable: true }
-        );
+        if (option === 'gallery') {
+            launchImageLibrary({ mediaType: mediaType, videoQuality: 'high' }, (response) => {
+                if (!response.didCancel && !response.error) {
+                    if (mediaType === 'video') {
+                        setVideo(response.assets[0]);
+                    } else {
+                        setImage(response.assets[0]);
+                    }
+                }
+            });
+        } else if (option === 'camera') {
+            launchCamera({ mediaType: mediaType, videoQuality: 'high', durationLimit: 30 }, (response) => {
+                if (!response.didCancel && !response.error) {
+                    if (mediaType === 'video') {
+                        setVideo(response.assets[0]);
+                    } else {
+                        setImage(response.assets[0]);
+                    }
+                }
+            });
+        }
     };
 
-    const handleDocumentPicker = async () => {
-        try {
-            const result = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles],
-            });
-            setDocument(result[0]);
-            console.log(result[0], 'result')
-        } catch (err) {
-            if (DocumentPicker.isCancel(err)) {
-                console.log('User cancelled the picker');
-            } else {
-                throw err;
-            }
+    const handleVideoPicker = () => {
+        setVideoModalVisible(true);
+    };
+
+    const handleImagePicker = () => {
+        setImageModalVisible(true);
+    };
+
+    const handleVerify = () => {
+        if (!video || !image) {
+            setErrorMessage('Both video and image files are required');
+        } else {
+            navigation.navigate('PendingScreen')
+            // setErrorMessage('');
+            // proceed with verification
         }
     };
 
     return (
         <View style={styles.container}>
-            <View style={{ width: getWidth(1.2), marginTop: 10, marginBottom: 40, }}>
+            <View style={{ width: getWidth(1.2), marginTop: 10, marginBottom: 20, marginTop: 30, }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, }}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={images.ArrowLeft} style={styles.arrowimg} />
+                        <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
                 </TouchableOpacity>
-                <Text style={styles.TileTxt}>{"Leader Verification"}</Text>
-                <Text style={styles.subTxt}>{"To create a profile as leader, you need to verify your identity. This is a two step process that includes uploading a self explanatory video and a supporting document. "}</Text>
+                    <Text style={styles.TileTxt}>Leader Verification</Text>
+                </View>
+
+                <Text style={styles.subTxt}>
+                    To create a profile as leader, you need to verify your identity. This is a two-step process that includes uploading a self-explanatory video and a supporting document.
+                </Text>
             </View>
-            <Text style={styles.subTxt}>{"Upload Self explanatory video "}</Text>
+            <Text style={styles.subTxt}>Upload Self-explanatory video</Text>
 
             <TouchableOpacity style={styles.uploadBox} onPress={handleVideoPicker}>
                 {video ? (
@@ -124,31 +130,221 @@ const UploadScreen = () => {
                         controls={true}
                     />
                 ) : (
-                    <Text style={styles.uploadText}>Upload Video</Text>
+                        <Text style={styles.uploadText}>Upload</Text>
                 )}
             </TouchableOpacity>
             {video && <Text style={styles.uploadedText}>Video Uploaded</Text>}
-            <Text style={styles.subTxt}>{"Upload Supporting document"}</Text>
+            {!video && errorMessage && <Text style={styles.errorText}>Video file is required</Text>}
 
+            <Text style={styles.subTxt}>Upload Supporting Document</Text>
 
-            <TouchableOpacity style={styles.uploadBox} onPress={handleDocumentPicker}>
-                {document ? (
-                    // <Text style={styles.documentText}>{document.name}</Text>
-                    <Image source={{ uri: document.uri }} style={{ height: '100%', width: '100%' }} />
+            <TouchableOpacity style={styles.uploadBox} onPress={handleImagePicker}>
+                {image ? (
+                    <Image source={{ uri: image.uri }} style={{ height: '100%', width: '100%', borderRadius: 16 }} />
                 ) : (
-                    <Text style={styles.uploadText}>Upload Document</Text>
+                        <Text style={styles.uploadText}>Upload</Text>
                 )}
             </TouchableOpacity>
-            {document && <Text style={styles.uploadedText}>Document Uploaded</Text>}
-            <CommonButton
-                // onPress={() => navigation.replace('LoginScreen')}
-                // onPress={() => isvalidate()}
-                onPress={() => ''}
-                color={['black', 'black']}
-                title={'Verify'}
-                width={getWidth(1.2)}
-                texttitle={'white'}
-            />
+            {image && <Text style={styles.uploadedText}>Image Uploaded</Text>}
+            {!image && errorMessage && <Text style={styles.errorText}>Image file is required</Text>}
+
+            <View style={styles.verifyButtonContainer}>
+                <CommonButton
+                    onPress={handleVerify}
+                    color={['black', 'black']}
+                    title={'Verify'}
+                    width={getWidth(1.2)}
+                    texttitle={'white'}
+                />
+            </View>
+
+            {/* Video Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={videoModalVisible}
+                onRequestClose={() => setVideoModalVisible(false)}
+            >
+                <View style={styles.modalView}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => setVideoModalVisible(false)}>
+                            <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
+                        </TouchableOpacity>
+                        <Text style={styles.TileTxt}>Video Verification</Text>
+                    </View>
+
+                    <Image source={images.verification} style={styles.verification} />
+                    <View style={{ height: getHeight(2.8), }}>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Upload a self Introductory video
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Ensure the video is no longer than 1 minute
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Find a well-lit area to record your video.
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Minimize background noise to capture clear audio.
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Keep your device steady for a stable shot.
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Click "Next" to be directed to your camera
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Once recorded, Click on “Upload”
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
+                        <CommonButton
+                            onPress={() => {
+                                setVideoModalVisible(false);
+                                Alert.alert(
+                                    'Upload Video',
+                                    'Choose an option',
+                                    [
+                                        {
+                                            text: 'From Gallery',
+                                            onPress: () => openCameraOrGallery('video', 'gallery'),
+                                        },
+                                        {
+                                            text: 'Record Video',
+                                            onPress: () => openCameraOrGallery('video', 'camera'),
+                                        },
+                                        { text: 'Cancel', style: 'cancel' },
+                                    ],
+                                    { cancelable: true }
+                                );
+                            }}
+                            color={['black', 'black']}
+                            title={'Continue'}
+                            width={getWidth(1.2)}
+                            texttitle={'white'}
+                        />
+                        <Text style={styles.subTxt}>
+                            Our team will review and verify your profile
+                        </Text>
+                        <Text style={styles.subTxt}>
+                            within 48 hours
+                        </Text>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Image Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={imageModalVisible}
+                onRequestClose={() => setImageModalVisible(false)}
+            >
+                <View style={styles.modalView}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <TouchableOpacity onPress={() => setImageModalVisible(false)}>
+                            <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
+                        </TouchableOpacity>
+                        <Text style={styles.TileTxt}>Image Verification</Text>
+                    </View>
+
+                    <Image source={images.verification} style={styles.verification} />
+                    <View style={{ height: getHeight(2.8), }}>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Upload a supporting document
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Ensure the image is clear and readable
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Find a well-lit area to take your photo.
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Keep your device steady for a clear shot.
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Click "Next" to be directed to your camera
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Once captured, Click on “Upload”
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
+                        <CommonButton
+                            onPress={() => {
+                                setImageModalVisible(false);
+                                Alert.alert(
+                                    'Upload Image',
+                                    'Choose an option',
+                                    [
+                                        {
+                                            text: 'From Gallery',
+                                            onPress: () => openCameraOrGallery('photo', 'gallery'),
+                                        },
+                                        {
+                                            text: 'Take Photo',
+                                            onPress: () => openCameraOrGallery('photo', 'camera'),
+                                        },
+                                        { text: 'Cancel', style: 'cancel' },
+                                    ],
+                                    { cancelable: true }
+                                );
+                            }}
+                            color={['black', 'black']}
+                            title={'Continue'}
+                            width={getWidth(1.2)}
+                            texttitle={'white'}
+                        />
+                        <Text style={styles.subTxt}>
+                            Our team will review and verify your profile
+                        </Text>
+                        <Text style={styles.subTxt}>
+                            within 48 hours
+                        </Text>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -156,13 +352,13 @@ const UploadScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
-        alignItems: 'center',
+        width: getWidth(1.2),
+        alignSelf: 'center',
         backgroundColor: '#f5f5f5',
     },
     uploadBox: {
-        width: 300,
-        height: 150,
+        width: 130,
+        height: 130,
         borderWidth: 2,
         borderColor: '#d3d3d3',
         borderRadius: 5,
@@ -170,9 +366,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 20,
+        borderRadius: 15,
     },
     uploadText: {
-        fontSize: 18,
+        fontSize: 14,
         color: '#808080',
     },
     video: {
@@ -180,38 +377,79 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     documentText: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#000',
         textAlign: 'center',
         paddingHorizontal: 10,
     },
     uploadedText: {
-        fontSize: 16,
+        fontSize: 14,
         color: 'green',
-        marginTop: 10,
+        marginTop: 2,
+        marginBottom: 10
+    },
+    errorText: {
+        fontSize: 14,
+        color: 'red',
+        marginTop: 2,
+        marginBottom: 10
     },
     TileTxt: {
-        fontSize: 28,
+        fontSize: 23,
         color: 'black',
         fontFamily: 'Jost',
         fontWeight: '700',
-        paddingBottom: 2
+        paddingBottom: 2,
 
     },
     subTxt: {
         fontSize: getHeight(50),
         color: 'black',
-
-        // width: getHeight(2.6),
         fontFamily: 'Jost',
         fontWeight: '300',
-        // alignSelf:'center'
     },
     arrowimg: {
         width: 30,
         height: 20,
-        marginBottom: 10,
-        color: 'black'
+        // color: 'black',
+    },
+    stardot: {
+        width: 16,
+        height: 16,
+        marginRight: 5
+    },
+    verification: {
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
+        marginTop: 50,
+        marginBottom: 50
+    },
+    modalView: {
+        height: getHeight(1),
+        width: getWidth(1),
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: 18,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    verifyButtonContainer: {
+        position: 'absolute',
+        bottom: 20,
+        width: '100%',
+        alignItems: 'center',
     },
 });
 

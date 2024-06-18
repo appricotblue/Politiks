@@ -51,6 +51,17 @@ const FollowAccounts = props => {
         { id: 9, name: 'Item Name 3', followers: 'test gg', image: images.Welcome_2 },
     ];
 
+
+    const getuser = async () => {
+        const leaderdata = await local.getLeader();
+        console.log(leaderdata, 'leaderdata he')
+    }
+
+    useEffect(() => {
+
+        getuser()
+
+    }, [])
     const renderItem = ({ item }) => {
         const isSelected = selectedAccounts.includes(item.id);
         return (
@@ -94,11 +105,13 @@ const FollowAccounts = props => {
     };
 
     const isvalidate = async () => {
-        // if (selectedInterests?.length < 4) {
-        //     changeerror('*Please select at least four interests.')
-        // } else {
-        navigation.replace('SuccessScreen');
-        // }
+        const leaderdata = await local.getLeader();
+        console.log(leaderdata, 'leaderdata he')
+        if (leaderdata == 'Follower') {
+            navigation.replace('SuccessScreen');
+         } else {
+             navigation.replace('UploadScreen');
+         }
     };
 
     useEffect(() => {

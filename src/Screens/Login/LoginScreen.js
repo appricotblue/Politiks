@@ -22,6 +22,9 @@ import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
+GoogleSignin.configure({
+  webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+});
 
 
 var windowWidth = Dimensions.get('window').width; //full width
@@ -36,29 +39,45 @@ const LoginScreen = props => {
   const [isLogin, changeIsLogin] = useState(false);
 
   const handleGoogleSignIn = async () => {
-    console.log('here 1')
-    GoogleSignin.configure({
-      // webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', 
-      webClientId: 'Y1234567890-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com',
-    });
-
     try {
-      // setLoading(true);
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo, 'userinfo')
-      // setLoading(false);
-      navigation.replace('Home'); // Navigate to Home screen on successful login
+      console.log(userInfo, 'userinfo');
+      navigation.replace('Home');
     } catch (error) {
-      // setLoading(false);
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // User cancelled the login flow
-        console.log('User cancelled Google login');
-      } else {
-        console.log('Error in Google login:', error);
-      }
+      console.error('Error in Google login:', error);
+      console.error('Error in Google login:', error.code, error.message);
     }
   };
+
+  // const handleGoogleSignIn = async () => {
+  //   console.log('here 1')
+  //   GoogleSignin.configure({
+  //     // webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
+  //     // webClientId: 'Y1234567890-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com',
+  //     // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+  //     webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+  //   });
+
+  //   try {
+  //     // setLoading(true);
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     // const {idToken} = await GoogleSignin.signIn();
+  //     // const googleCredentials = GoodleAuthProvider
+  //     console.log(userInfo, 'userinfo')
+  //     // setLoading(false);
+  //     navigation.replace('Home'); // Navigate to Home screen on successful login
+  //   } catch (error) {
+  //     // setLoading(false);
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // User cancelled the login flow
+  //       console.log('User cancelled Google login');
+  //     } else {
+  //       console.log('Error in Google login:', error);
+  //     }
+  //   }
+  // };
 
   const getEmail = async () => {
     try {

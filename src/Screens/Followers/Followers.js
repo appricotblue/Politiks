@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import local from '../../Storage/Local';
 
 const Followers = () => {
     const navigation = useNavigation();
@@ -36,6 +37,16 @@ const Followers = () => {
     // Add more item objects as needed
   ];
 
+  const getuser = async()=>{
+    const leaderdata = await local.getLeader();
+    console.log(leaderdata, 'leaderdata he')
+  }
+
+  useEffect(()=>{
+
+    getuser()
+
+  },[])
   const handleTabPress = (tabIndex) => {
     setSelectedTab(tabIndex);
   };

@@ -34,7 +34,7 @@ const SignUpScreen = props => {
     const [checkphone, changecheckphone] = useState('');
     const [password, changepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('Fan');
+    const [selectedOption, setSelectedOption] = useState('Follower');
 
     const handleSelectOption = (option) => {
         setSelectedOption(option);
@@ -78,7 +78,9 @@ const SignUpScreen = props => {
             //   } 
        
          else {
-            navigation.replace('OtpScreen')
+            // if(selectedOption=='Follower')
+            await local.storLeader('isleader', selectedOption == 'Leader' ? 'Leader' : 'Follower');
+            navigation.replace('TellusAboutyou')
             // local.storeLogin(true);
             // local.storeLogin(true);
 
@@ -133,6 +135,8 @@ const SignUpScreen = props => {
                     width={getHeight(2.3)}
                     title={'Fullname'}
                     borderColor={'white'}
+                    valuecolor={'white'}
+                    
                 />
                 <TextInputBox
                     value={email}
@@ -146,6 +150,7 @@ const SignUpScreen = props => {
                     width={getHeight(2.3)}
                     title={'Email ID'}
                     borderColor={'white'}
+                    valuecolor={'white'}
                 />
                 <TextInputBox
                     value={phone}
@@ -159,6 +164,7 @@ const SignUpScreen = props => {
                     width={getHeight(2.3)}
                     title={'New Password'}
                     borderColor={'white'}
+                    valuecolor={'white'}
                     // isNumber={true}
                 />
                 <TextInputBox
@@ -173,6 +179,7 @@ const SignUpScreen = props => {
                     width={getHeight(2.3)}
                     title={'Re-enter Password'}
                     borderColor={'white'}
+                    valuecolor={'white'}
                 // isNumber={true}
                 />
                 <View style={{ width: getWidth(1.4), marginBottom: 20 }}>
@@ -212,8 +219,9 @@ const SignUpScreen = props => {
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(6.7) }}>
 
                     <CommonButton
-                        onPress={() => navigation.replace('UploadScreen')}
-                        // onPress={() => isvalidate()}
+                        // onPress={() => navigation.replace('UploadScreen')}
+                        // onPress={() => navigation.replace('TellusAboutyou')}
+                        onPress={() => isvalidate()}
                         color={['#ffffff', '#ffffff']}
                         title={'Continue'}
                         width={getHeight(2.3)}
