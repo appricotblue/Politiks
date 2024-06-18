@@ -32,6 +32,7 @@ import TellusAboutyou from '../Screens/TellUsAbout/TellusAboutyou';
 import FollowAccounts from '../Screens/TellUsAbout/FollowAccounts';
 import Forgotpassword from '../Screens/CreatePassword/Forgotpassword';
 import UploadScreen from '../Screens/Leaderverification/UploadScreen';
+import EditPost from '../Screens/EditPost/EditPost';
 
 const Stack = createStackNavigator();
 if (!__DEV__) {
@@ -41,14 +42,16 @@ const index = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-     
-      <Stack.Screen name="SplashScreen" component={SplashScreen} />
-      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-      <Stack.Screen name="GetStarted" component={GetStarted} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+        <Stack.Screen name="GetStarted" component={GetStarted} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        <Stack.Screen name="CreatePasswordScreen" component={CreatePasswordScreen} />
+        <Stack.Screen
+          name="CreatePasswordScreen"
+          component={CreatePasswordScreen}
+        />
         <Stack.Screen name="GenderScreen" component={GenderScreen} />
         <Stack.Screen name="DOBScreen" component={DOBScreen} />
         <Stack.Screen name="InterestSelection" component={InterestSelection} />
@@ -66,13 +69,16 @@ const index = () => {
         <Stack.Screen name="LeaderBoard" component={LeaderBoard} />
         <Stack.Screen name="Reels" component={Reels} />
         <Stack.Screen name="SuperHugs" component={SuperHugs} />
-        <Stack.Screen name="ContestDetailsWeek1" component={ContestDetailsWeek1} />
+        <Stack.Screen
+          name="ContestDetailsWeek1"
+          component={ContestDetailsWeek1}
+        />
         <Stack.Screen name="SignUpwithEmail" component={SignUpwithEmail} />
         <Stack.Screen name="TellusAboutyou" component={TellusAboutyou} />
         <Stack.Screen name="FollowAccounts" component={FollowAccounts} />
         <Stack.Screen name="Forgotpassword" component={Forgotpassword} />
         <Stack.Screen name="UploadScreen" component={UploadScreen} />
-       
+        <Stack.Screen name="EditPost" component={EditPost} />
       </Stack.Navigator>
     </NavigationContainer>
   );
