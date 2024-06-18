@@ -212,8 +212,8 @@ const SignUpScreen = props => {
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(6.7) }}>
 
                     <CommonButton
-                        // onPress={() => navigation.replace('LoginScreen')}
-                        onPress={() => isvalidate()}
+                        onPress={() => navigation.replace('UploadScreen')}
+                        // onPress={() => isvalidate()}
                         color={['#ffffff', '#ffffff']}
                         title={'Continue'}
                         width={getHeight(2.3)}

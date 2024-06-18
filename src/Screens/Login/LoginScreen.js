@@ -20,6 +20,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+
+
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -31,6 +34,31 @@ const LoginScreen = props => {
   const [checkPassword, changecheckPassword] = useState('');
   const [password, changepassword] = useState('');
   const [isLogin, changeIsLogin] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    console.log('here 1')
+    GoogleSignin.configure({
+      // webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', 
+      webClientId: 'Y1234567890-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com',
+    });
+
+    try {
+      // setLoading(true);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo, 'userinfo')
+      // setLoading(false);
+      navigation.replace('Home'); // Navigate to Home screen on successful login
+    } catch (error) {
+      // setLoading(false);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // User cancelled the login flow
+        console.log('User cancelled Google login');
+      } else {
+        console.log('Error in Google login:', error);
+      }
+    }
+  };
 
   const getEmail = async () => {
     try {
@@ -119,7 +147,8 @@ const LoginScreen = props => {
 
 
         <CommonButton
-          onPress={() => isValidate()}
+          // onPress={() => isValidate()}
+          onPress={() => handleGoogleSignIn()} 
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Google'}
