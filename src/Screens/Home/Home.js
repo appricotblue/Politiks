@@ -23,6 +23,7 @@ import images from '../../assets/Images';
 import SwiperComponent from '../../Components/SwiperComponent';
 import ListItem from '../../Components/ListItem';
 import Footer from '../../Components/Footer';
+import {getAllPost} from '../../api';
 
 const axios = require('axios').default;
 const height = Dimensions.get('window').height;
@@ -106,8 +107,19 @@ const Home = props => {
   ];
 
   useEffect(() => {
-    // getDetails();
+    getAllPosts();
   }, []);
+
+  const getAllPosts = async () => {
+    try {
+      const res = await getAllPost();
+      setProfileData(res?.data);
+      console.log(res?.data, '-------ooooooo-----------');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
   onPressStatusUpload = () => {
     alert('upload');
   };
@@ -124,9 +136,10 @@ const Home = props => {
         {/* <View style={{height:200,marginTop:10}}>
           <SwiperComponent data={swiperdata} />
         </View> */}
-        {verticalListData.map(item => (
+        {ProfileData?.map(item => (
           <ListItem key={item.id} item={item} />
         ))}
+        {/* <ListItem item={ProfileData} /> */}
       </ScrollView>
       <Footer title={'home'} />
     </SafeAreaView>

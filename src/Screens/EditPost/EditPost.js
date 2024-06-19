@@ -18,9 +18,9 @@ import {getWidth} from '../../Theme/Constants';
 import ImagePicker from 'react-native-image-crop-picker';
 import {CreatePost} from '../../api';
 
-const EditPost = () => {
+const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
 
   const createPosts = async () => {
     // const data = {
@@ -35,11 +35,16 @@ const EditPost = () => {
     formData.append('location', 'kochi');
     formData.append('tagUser', '2');
     formData.append('caption', text);
-    formData.append('image', image);
+    formData.append('image', {
+      uri: image.path,
+      type: image.mime,
+      name: image.path,
+    });
 
     try {
       const res = await CreatePost(formData);
-      console.log(res.data, '---------><><');
+      console.log(res?.data, '---------><><');
+      navigation.goBack();
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -67,8 +72,8 @@ const EditPost = () => {
       cropping: true,
     })
       .then(image => {
-        console.log(image.exif, '00000000000000000000000000000000000000000');
-        setImage(image.path);
+        console.log(image);
+        setImage(image);
       })
       .catch(error => {
         console.log('Error taking photo: ', error);
@@ -113,7 +118,7 @@ const EditPost = () => {
             </View>
             <Image source={images.PlusIcon} style={{width: 25, height: 25}} />
           </View>
-          {image?.length === 0 ? (
+          {image?.length !== 0 ? (
             <View style={styles.locationContainer}>
               <View style={styles.row1}>
                 <Image
@@ -134,7 +139,9 @@ const EditPost = () => {
           )}
           {image?.length !== 0 ? (
             <View>
-              {image && <Image source={{uri: image}} style={styles.image} />}
+              {image && (
+                <Image source={{uri: image.path}} style={styles.image} />
+              )}
             </View>
           ) : (
             <></>

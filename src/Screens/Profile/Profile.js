@@ -222,7 +222,8 @@ const Profile = () => {
                 borderWidth: 2,
                 borderColor: '#3A7BD5',
                 marginHorizontal: 7,
-              }}>
+              }}
+              onPress={() => navigation.navigate('Messege')}>
               <Text
                 style={[
                   styles.activeTabText,

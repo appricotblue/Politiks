@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     ActivityIndicator,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { register } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -33,29 +35,13 @@ const SignUpScreen = props => {
     const [phone, changephone] = useState('');
     const [checkphone, changecheckphone] = useState('');
     const [password, changepassword] = useState('');
+    const [checkpassword, changechangepassword] = useState('');
+    const [repassword, changerepassword] = useState('');
+    const [checkrepassword, changechangerepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
     const [selectedOption, setSelectedOption] = useState('Follower');
 
-    const handleSelectOption = (option) => {
-        setSelectedOption(option);
-        // You can store the selected value in state or pass it to a function to store it elsewhere
-        console.log('Selected Option:', option);
-    }
-    const getEmail = async () => {
-        try {
-            const value = await AsyncStorage.getItem('email');
-            if (value !== null) {
-                changeemail(value);
-            }
-            const paasword = await AsyncStorage.getItem('password');
-            if (paasword !== null) {
-                changepassword(paasword);
-            }
-        } catch (e) {
-            return null;
-            // error reading value
-        }
-    };
+
 
     const isvalidate = async () => {
         const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,19 +56,45 @@ const SignUpScreen = props => {
             changecheckemail('Please enter a valid email address'); // Set error message for invalid email format
             // alert('Please enter a valid email address'); // Set error message for invalid email format
           }
-            // else if (phone == '') {
-            //     changecheckphone('Please enter phone number');
-            // }
-            // else if (!phoneNumberRegex.test(phone)) {
-            //     changecheckphone('Please enter a valid phone number (6-10 digits)'); // Set error message for invalid phone number format
-            //   } 
+        else if (password == '') {
+            changechangepassword('Please enter password')
+        }
+        else if (repassword == '') {
+            changechangepassword('Please re-enter password')
+        }
+        else if (repassword != password) {
+            changechangepassword('Please enter same password')
+        }
        
          else {
+            handleRegister()
             // if(selectedOption=='Follower')
             await local.storLeader('isleader', selectedOption == 'Leader' ? 'Leader' : 'Follower');
-            navigation.replace('TellusAboutyou')
+            // navigation.replace('TellusAboutyou')
             // local.storeLogin(true);
             // local.storeLogin(true);
+
+        }
+    };
+
+    const handleRegister = async () => {
+        try {
+            const response = await register(fullname, email, password);
+            console.log(response, 'login api response')
+            if (response.message = "User registered successfully") {
+
+                await local.storeUserId('UserId', response?.user?.id.toString());
+
+                navigation.replace('TellusAboutyou');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
 
         }
     };
@@ -153,12 +165,12 @@ const SignUpScreen = props => {
                     valuecolor={'white'}
                 />
                 <TextInputBox
-                    value={phone}
+                    value={password}
                     titlecolour={'white'}
                     errorText={checkphone}
                     onChangeText={text => {
-                        changephone(text);
-                        changecheckphone('')
+                        changepassword(text);
+                        changechangepassword('')
                     }}
                     placeholder={'Phone Number'}
                     width={getHeight(2.3)}
@@ -168,12 +180,12 @@ const SignUpScreen = props => {
                     // isNumber={true}
                 />
                 <TextInputBox
-                    value={phone}
+                    value={repassword}
                     titlecolour={'white'}
                     errorText={checkphone}
                     onChangeText={text => {
-                        changephone(text);
-                        changecheckphone('')
+                        changerepassword(text);
+                        changechangerepassword('')
                     }}
                     placeholder={'Phone Number'}
                     width={getHeight(2.3)}
@@ -182,41 +194,10 @@ const SignUpScreen = props => {
                     valuecolor={'white'}
                 // isNumber={true}
                 />
-                <View style={{ width: getWidth(1.4), marginBottom: 20 }}>
-
-                    <Text style={styles.subTxt}>{"I am a (select why are you here)"}</Text>
-                    <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 25 }}>
-                        <View style={styles.optionContainer}>
-                            <TouchableOpacity
-                                style={[
-                                    styles.radioButton,
-
-                                ]}
-                                onPress={() => handleSelectOption('Follower')}>
-                                <View style={selectedOption === 'Follower' && styles.innerRadioButton} />
-                            </TouchableOpacity>
-                            <Text style={styles.optionText}>Follower</Text>
-                        </View>
-                        <View style={styles.optionContainer}>
-                            <TouchableOpacity
-                                style={[
-                                    styles.radioButton,
-
-                                ]}
-                                onPress={() => handleSelectOption('Leader')}>
-                                <View style={selectedOption === 'Leader' && styles.innerRadioButton} />
-                            </TouchableOpacity>
-                            <Text style={styles.optionText}>Leader</Text>
-                        </View>
-                    </View>
 
 
-
-
-                </View>
-                <Text style={[styles.subTxt, { textAlign: 'center' }]}>{" By continuing, you agree to our Terms of use and privacy policies"}</Text>
-
-                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(6.7) }}>
+                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(4), }}>
+                    <Text style={[styles.subTxt, { textAlign: 'center' }]}> By continuing, you agree to our Terms of use and privacy policies</Text>
 
                     <CommonButton
                         // onPress={() => navigation.replace('UploadScreen')}

@@ -34,6 +34,7 @@ import Forgotpassword from '../Screens/CreatePassword/Forgotpassword';
 import UploadScreen from '../Screens/Leaderverification/UploadScreen';
 import EditPost from '../Screens/EditPost/EditPost';
 import PendingScreen from '../Screens/Leaderverification/PendingScreen';
+import MessegeScreen from '../Screens/Messege/MessegeScreen';
 
 const Stack = createStackNavigator();
 if (!__DEV__) {
@@ -81,6 +82,7 @@ const index = () => {
         <Stack.Screen name="UploadScreen" component={UploadScreen} />
         <Stack.Screen name="PendingScreen" component={PendingScreen} />
         <Stack.Screen name="EditPost" component={EditPost} />
+        <Stack.Screen name="Messege" component={MessegeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

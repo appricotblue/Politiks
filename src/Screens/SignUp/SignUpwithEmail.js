@@ -21,7 +21,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
-import { register } from '../../api';
+import { login } from '../../api';
+import axios from 'axios';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -33,6 +34,7 @@ const SignUpwithEmail = props => {
     const [checkPassword, changecheckPassword] = useState('');
     const [password, changepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
+    const [error, setError] = useState('');
 
     const getEmail = async () => {
         try {
@@ -50,9 +52,11 @@ const SignUpwithEmail = props => {
         }
     };
 
-    const handleregister = async () => {
+    const handlelogin = async () => {
+    
+ 
         try {
-            const response = await register(email, password);
+            const response = await login(email, password);
             console.log(response, 'login api response')
             if (response.message = "OTP sent successfully") {
                 // await Local.storEexistuser('existuser', response.isExistingUser == true ? 'existuser' : 'newuser');
@@ -88,7 +92,7 @@ const SignUpwithEmail = props => {
             // alert('Please enter password'); // Set error message
         }
         else {
-            handleregister()
+            handlelogin()
             // navigation.replace('Home');
             // local.storeLogin(true);
         }

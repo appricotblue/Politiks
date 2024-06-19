@@ -6,11 +6,12 @@ const HTTP_REQUEST = axios.create({
   baseURL: env_dev,
 });
 
-export const register = async (username, password) => {
-  console.log(username, password);
+export const register = async (userName, email, password) => {
+  console.log(userName, email, password, env_dev + 'user/register');
   try {
     const response = await HTTP_REQUEST.post('user/register', {
-      username,
+      userName,
+      email,
       password,
     });
     // const response = await HTTP_REQUEST.post(`users/createUser/665af7b8f324154d973d6a48`, { username, dateOfBirth, language, place, gender, avatar, });
@@ -21,21 +22,28 @@ export const register = async (username, password) => {
   }
 };
 
-export const login = async mobileNumber => {
+export const login = async (email, password) => {
   try {
-    console.log(env_dev + 'users/userRequestOTP');
-    const response = await HTTP_REQUEST.post('users/userRequestOTP', {
-      mobileNumber,
+    console.log(env_dev + 'user/login', email, password);
+    const response = await HTTP_REQUEST.post('user/login', {
+      email,
+      password,
     });
     return response.data;
   } catch (error) {
-    console.log(error, 'login error');
+    console.log(error.message, 'login error');
     throw error;
   }
 };
 
 export const CreatePost = async data => {
-  return commonRequest('POST', 'user/createPost/1', data);
+  return commonRequest('POST', 'user/createPost/1', data, {
+    'Content-Type': 'multipart/form-data',
+  });
+};
+
+export const getAllPost = async () => {
+  return commonRequest('GET', 'user/getAllpost');
 };
 
 export const signup = async (

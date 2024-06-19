@@ -23,16 +23,16 @@ const ListItem = ({item}) => {
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
-        <Image source={item.image} style={styles.image} />
+        <Image source={images?.ViratProfile} style={styles.image} />
         <View style={styles.textContainer}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>{'User Name'}</Text>
             <Image
               style={{width: 20, height: 20, marginLeft: 10}}
               source={images.VerifiedPNG}
             />
           </View>
-          <Text style={styles.designation}>{item.designation}</Text>
+          <Text style={styles.designation}>{item.location}</Text>
         </View>
         <TouchableOpacity
           style={{
@@ -49,15 +49,12 @@ const ListItem = ({item}) => {
         </TouchableOpacity>
       </View>
 
-      {/* Like Button */}
+      <Text style={styles.description}>{item.caption}</Text>
+      <Image source={{uri: item?.image}} style={styles.media} />
 
-      {/* Description */}
-      <Text style={styles.description}>{item.description}</Text>
-
-      {/* Media */}
-      {item.type === 'image' ? (
+      {/* {item.type === 'image' ? (
         <>
-          <Image source={{uri: item.media}} style={styles.media} />
+          <Image source={{uri: item.image}} style={styles.media} />
         </>
       ) : (
         <Video
@@ -66,7 +63,7 @@ const ListItem = ({item}) => {
           paused={true} // Start the video in a paused state
           disableVolume={true} // Disable volume control if needed
         />
-      )}
+      )} */}
       <View onPress={toggleLike} style={styles.likeButton}>
         <View
           style={{

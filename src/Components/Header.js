@@ -36,11 +36,11 @@ const Header = ({title}) => {
       </TouchableOpacity>
 
       <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{marginHorizontal: 10}}
           onPress={() => navigation.navigate('DiscoverTrends')}>
           <Image style={{width: 30, height: 30}} source={images.GearPNG} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </LinearGradient>
   );
