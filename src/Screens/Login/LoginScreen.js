@@ -8,7 +8,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  ImageBackground
+  ImageBackground,
+  Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -21,10 +22,10 @@ import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-GoogleSignin.configure({
-  webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-});
+
 
 
 var windowWidth = Dimensions.get('window').width; //full width
@@ -37,6 +38,26 @@ const LoginScreen = props => {
   const [checkPassword, changecheckPassword] = useState('');
   const [password, changepassword] = useState('');
   const [isLogin, changeIsLogin] = useState(false);
+
+  const onGoogleButtonPress = async () => {
+    try {
+      console.log('here')
+      // Get the user's ID token
+      const { idToken } = await GoogleSignin.signIn();
+      console.log(idToken, 'google ids')
+      Alert.alert(idToken)
+
+      // Create a Google credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Sign-in the user with the credential
+      return auth().signInWithCredential(googleCredential);
+    } catch (error) {
+      console.error('Error in Google login:', error);
+      console.error('Error in Google login:', error.code, error.message);
+    }
+  }
+
 
   const handleGoogleSignIn = async () => {
     try {
@@ -135,13 +156,17 @@ const LoginScreen = props => {
     changepassword('');
   };
   useEffect(() => {
-    AsyncStorage.getItem('isLogin', value => {
-      if (value != null || value != undefined) {
-        navigation.reset('Home');
-      } else {
-        changeIsLogin(false);
-      }
+    GoogleSignin.configure({
+      webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+
     });
+    // AsyncStorage.getItem('isLogin', value => {
+    //   if (value != null || value != undefined) {
+    //     navigation.reset('Home');
+    //   } else {
+    //     changeIsLogin(false);
+    //   }
+    // });
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -166,8 +191,10 @@ const LoginScreen = props => {
 
 
         <CommonButton
+          onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+
           // onPress={() => isValidate()}
-          onPress={() => handleGoogleSignIn()} 
+          // onPress={() => handleGoogleSignIn()} 
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Google'}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Video from 'react-native-video';
+// import Video from 'react-native-video';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import images from '../../assets/Images';
 import { useNavigation } from '@react-navigation/native';
@@ -123,12 +123,13 @@ const UploadScreen = () => {
 
             <TouchableOpacity style={styles.uploadBox} onPress={handleVideoPicker}>
                 {video ? (
-                    <Video
-                        source={{ uri: video.uri }}
-                        style={styles.video}
-                        resizeMode="cover"
-                        controls={true}
-                    />
+                    <Text>'hi</Text>
+                    // <Video
+                    //     source={{ uri: video.uri }}
+                    //     style={styles.video}
+                    //     resizeMode="cover"
+                    //     controls={true}
+                    // />
                 ) : (
                         <Text style={styles.uploadText}>Upload</Text>
                 )}

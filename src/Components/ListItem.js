@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 // import Video from 'react-native-video';
-import Video from 'react-native-video-controls';
+// import Video from 'react-native-video-controls';
 import images from '../assets/Images';
 const windowWidth = Dimensions.get('window').width;
 const ListItem = ({item}) => {
@@ -60,12 +60,14 @@ const ListItem = ({item}) => {
           <Image source={{uri: item.media}} style={styles.media} />
         </>
       ) : (
-        <Video
-          source={{uri: item.media}}
-          style={styles.media}
-          paused={true} // Start the video in a paused state
-          disableVolume={true} // Disable volume control if needed
-        />
+          <>
+          </>
+          // <Video
+          //   source={{uri: item.media}}
+          //   style={styles.media}
+          //   paused={true} // Start the video in a paused state
+          //   disableVolume={true} // Disable volume control if needed
+          // />
       )}
       <View onPress={toggleLike} style={styles.likeButton}>
         <View

@@ -1,6 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
-apply plugin: 'com.google.gms.google-services'
+
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -103,6 +103,10 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_16
+        targetCompatibility JavaVersion.VERSION_16
+    }
 }
 
 
@@ -111,7 +115,9 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation "com.facebook.react:react-native:+"
     //   implementation 'com.google.android.gms:play-services-auth:19.0.0'
-      implementation 'com.google.android.gms:play-services-auth:19.2.0' // or the latest version
+      implementation 'com.google.android.gms:play-services-auth:21.0.0' // or the latest version
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
   implementation 'com.google.android.gms:play-services-identity:17.0.0'
 
@@ -129,3 +135,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'
