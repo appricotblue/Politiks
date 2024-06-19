@@ -8,7 +8,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  ImageBackground
+  ImageBackground,
+  Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -22,9 +23,11 @@ import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
-GoogleSignin.configure({
-  webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-});
+// GoogleSignin.configure({
+//   // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+//   webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
+ 
+// });
 
 
 var windowWidth = Dimensions.get('window').width; //full width
@@ -43,6 +46,7 @@ const LoginScreen = props => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo, 'userinfo');
+      Alert.alert(userInfo)
       navigation.replace('Home');
     } catch (error) {
       console.error('Error in Google login:', error);
@@ -50,6 +54,17 @@ const LoginScreen = props => {
     }
   };
 
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      // Handle successful sign-in
+    } catch (error) {
+      console.log(error);
+      console.error('Error in Google login:', error.code, error.message);
+    }
+  };
   // const handleGoogleSignIn = async () => {
   //   console.log('here 1')
   //   GoogleSignin.configure({
@@ -129,20 +144,28 @@ const LoginScreen = props => {
     }
   };
   
-
+  useEffect(() => {
+    GoogleSignin.configure({
+      // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+      webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
+      offlineAccess: true,
+      hostedDomain: '',
+      forceCodeForRefreshToken: true,
+    });
+  }, []);
   const clearAll = async () => {
     changeemail('');
     changepassword('');
   };
-  useEffect(() => {
-    AsyncStorage.getItem('isLogin', value => {
-      if (value != null || value != undefined) {
-        navigation.reset('Home');
-      } else {
-        changeIsLogin(false);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   AsyncStorage.getItem('isLogin', value => {
+  //     if (value != null || value != undefined) {
+  //       navigation.reset('Home');
+  //     } else {
+  //       changeIsLogin(false);
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       changeemail('');
@@ -166,8 +189,8 @@ const LoginScreen = props => {
 
 
         <CommonButton
-          // onPress={() => isValidate()}
-          onPress={() => handleGoogleSignIn()} 
+          onPress={() => signIn()}
+          // onPress={() => handleGoogleSignIn()} 
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Google'}
