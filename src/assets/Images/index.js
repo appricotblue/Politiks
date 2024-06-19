@@ -63,6 +63,7 @@ const images = {
   starblue: require('./starblue.png'),
   verification: require('./verification.png'),
   pending: require('./pending.png'),
+  VerifiedPNG: require('./VerifiedPNG.png'),
 };
 
 export default images;

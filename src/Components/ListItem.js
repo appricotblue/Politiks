@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Modal, TouchableOpacity ,Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 // import Video from 'react-native-video';
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
 const windowWidth = Dimensions.get('window').width;
-const ListItem = ({ item }) => {
+const ListItem = ({item}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [liked, setLiked] = useState(false);
 
@@ -14,28 +22,34 @@ const ListItem = ({ item }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         <Image source={item.image} style={styles.image} />
         <View style={styles.textContainer}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <Text style={styles.name}>{item.name}</Text>
             <Image
-              style={{ width: 20, height: 20, marginLeft: 10 }}
-              source={images.Greentick}
+              style={{width: 20, height: 20, marginLeft: 10}}
+              source={images.VerifiedPNG}
             />
           </View>
           <Text style={styles.designation}>{item.designation}</Text>
         </View>
-        <TouchableOpacity  style={{width:35,height:35,justifyContent:'center',alignItems:'center'}} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity
+          style={{
+            width: 35,
+            height: 35,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => setModalVisible(true)}>
           <Image
-            style={{ width: 3, height: 16, marginBottom: 5 }}
+            style={{width: 3, height: 16, marginBottom: 5}}
             source={images.Threedots}
           />
         </TouchableOpacity>
       </View>
 
       {/* Like Button */}
-   
 
       {/* Description */}
       <Text style={styles.description}>{item.description}</Text>
@@ -43,83 +57,110 @@ const ListItem = ({ item }) => {
       {/* Media */}
       {item.type === 'image' ? (
         <>
-        <Image source={{ uri: item.media }} style={styles.media} />
-     
-      </>
+          <Image source={{uri: item.media}} style={styles.media} />
+        </>
       ) : (
         <Video
-          source={{ uri: item.media }}
+          source={{uri: item.media}}
           style={styles.media}
           paused={true} // Start the video in a paused state
           disableVolume={true} // Disable volume control if needed
         />
       )}
-   <View onPress={toggleLike} style={styles.likeButton}>
-    <View style={{flexDirection:'row',width:75 ,justifyContent:'center', alignItems:'center'}}>
-    <Image
-          source={liked ? images.ThumbsUp : images.ThumbsUp}
-          style={styles.likeIcon}
-        />
-        <Text style={styles.liketext} >1.5 k</Text>
-    </View>
-       
-    <View style={{flexDirection:'row',width:75 ,justifyContent:'center', alignItems:'center'}}>
-    <Image
-          source={liked ? images.Comment : images.Comment}
-          style={styles.likeIcon}
-        />
-        <Text style={styles.liketext}  >386</Text>
-    </View>
-    <View style={{flexDirection:'row',width:75 ,justifyContent:'center', alignItems:'center'}}>
-    <Image
-          source={liked ? images.Union : images.Union}
-          style={styles.likeIcon}
-        />
-        <Text style={styles.liketext}  >251</Text>
-    </View>
+      <View onPress={toggleLike} style={styles.likeButton}>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: 75,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={liked ? images.ThumbsUp : images.ThumbsUp}
+            style={styles.likeIcon}
+          />
+          <Text style={styles.liketext}>1.5 k</Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            width: 75,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={liked ? images.Comment : images.Comment}
+            style={styles.likeIcon}
+          />
+          <Text style={styles.liketext}>386</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: 75,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={liked ? images.Union : images.Union}
+            style={styles.likeIcon}
+          />
+          <Text style={styles.liketext}>251</Text>
+        </View>
       </View>
       {/* Modal */}
       <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => setModalVisible(false)}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      {/* Close button */}
-      <View style={styles.action} onPress={() => setModalVisible(false)}>
-        <Text style={{  fontFamily:'Jost',
-    fontWeight:'800',color:'black',fontSize:20,marginLeft:10,marginBottom:20}}>Actions</Text>
-      </View>
-      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-        <Image source={images.Cross} style={styles.closeIcon} />
-      </TouchableOpacity>
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {/* Close button */}
+            <View style={styles.action} onPress={() => setModalVisible(false)}>
+              <Text
+                style={{
+                  fontFamily: 'Jost',
+                  fontWeight: '800',
+                  color: 'black',
+                  fontSize: 20,
+                  marginLeft: 10,
+                  marginBottom: 20,
+                }}>
+                Actions
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}>
+              <Image source={images.Cross} style={styles.closeIcon} />
+            </TouchableOpacity>
 
-      {/* List of items */}
-      <View style={styles.itemList}>
-        {/* Item 1 */}
-        <TouchableOpacity style={styles.item}>
-          <Image source={images.Share} style={styles.itemIcon} />
-          <Text style={styles.itemTitle}>Share Post</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.item}>
-          <Image source={images.UserMinus} style={styles.itemIcon} />
-          <Text style={styles.itemTitle}>Unfollow this account</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.item}>
-          <Image source={images.Block} style={styles.itemIcon} />
-          <Text style={styles.itemTitle}>Block this account</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.item}>
-          <Image source={images.WarningCircle} style={styles.itemIcon} />
-          <Text style={styles.itemTitle}>Report this post</Text>
-        </TouchableOpacity>
-        {/* Add more items similarly */}
-      </View>
-    </View>
-  </View>
-</Modal>
+            {/* List of items */}
+            <View style={styles.itemList}>
+              {/* Item 1 */}
+              <TouchableOpacity style={styles.item}>
+                <Image source={images.Share} style={styles.itemIcon} />
+                <Text style={styles.itemTitle}>Share Post</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.item}>
+                <Image source={images.UserMinus} style={styles.itemIcon} />
+                <Text style={styles.itemTitle}>Unfollow this account</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.item}>
+                <Image source={images.Block} style={styles.itemIcon} />
+                <Text style={styles.itemTitle}>Block this account</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.item}>
+                <Image source={images.WarningCircle} style={styles.itemIcon} />
+                <Text style={styles.itemTitle}>Report this post</Text>
+              </TouchableOpacity>
+              {/* Add more items similarly */}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -192,18 +233,18 @@ const styles = StyleSheet.create({
   likeButton: {
     position: 'absolute',
     bottom: 30,
-   
+
     zIndex: 1,
-    backgroundColor:'rgba(0, 0, 0, 0.5)',
-    width:300,
-    alignSelf:'center',
-    height:48,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: 300,
+    alignSelf: 'center',
+    height: 48,
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderRadius:25,
-    paddingLeft:10,
-    flexDirection:'row',
-    alignItems:''
+    borderRadius: 25,
+    paddingLeft: 10,
+    flexDirection: 'row',
+    alignItems: '',
   },
   likeIcon: {
     width: 26,
@@ -225,46 +266,51 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    marginBottom:10
+    marginBottom: 10,
   },
   action: {
     position: 'absolute',
     top: 10,
     left: 15,
-    bottom:100,
+    bottom: 100,
 
- height:50
+    height: 50,
   },
   closeIcon: {
     width: 26,
     height: 21,
-    marginBottom:25
+    marginBottom: 25,
   },
   itemList: {
     marginTop: 20,
-  
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    backgroundColor:'white',
-    height:50,
-    borderRadius:10
+    backgroundColor: 'white',
+    height: 50,
+    borderRadius: 10,
   },
   itemIcon: {
     width: 26,
     height: 21,
     marginRight: 10,
-    marginLeft:10
+    marginLeft: 10,
   },
   itemTitle: {
     fontSize: 18,
-    fontFamily:'Jost',
-    fontWeight:'400',
-    color:'black'
+    fontFamily: 'Jost',
+    fontWeight: '400',
+    color: 'black',
   },
-  liketext:{marginLeft:10,color:'white',fontFamily:'Jost',fontWeight:'500',fontSize:15}
+  liketext: {
+    marginLeft: 10,
+    color: 'white',
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 15,
+  },
 });
 
 export default ListItem;
