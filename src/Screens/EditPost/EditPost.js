@@ -16,10 +16,34 @@ import images from '../../assets/Images';
 import CommonButton from '../../Components/CommonButton';
 import {getWidth} from '../../Theme/Constants';
 import ImagePicker from 'react-native-image-crop-picker';
+import {CreatePost} from '../../api';
 
 const EditPost = () => {
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
+
+  const createPosts = async () => {
+    // const data = {
+    //   location: 'kochi',
+    //   tagUser: '2',
+    //   caption: text,
+    //   image: image,
+    // };
+
+    const formData = new FormData();
+
+    formData.append('location', 'kochi');
+    formData.append('tagUser', '2');
+    formData.append('caption', text);
+    formData.append('image', image);
+
+    try {
+      const res = await CreatePost(formData);
+      console.log(res.data, '---------><><');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
 
   const pickImageFromGallery = () => {
     ImagePicker.openPicker({
@@ -43,7 +67,7 @@ const EditPost = () => {
       cropping: true,
     })
       .then(image => {
-        console.log(image);
+        console.log(image.exif, '00000000000000000000000000000000000000000');
         setImage(image.path);
       })
       .catch(error => {
@@ -119,7 +143,7 @@ const EditPost = () => {
           <View style={styles.buttonView}></View>
         </KeyboardAvoidingView>
         <CommonButton
-          onPress={() => ''}
+          onPress={() => createPosts()}
           color={['#3A7BD5', '#3A7BD5']}
           title={'Publish'}
           width={getWidth(1.1)}

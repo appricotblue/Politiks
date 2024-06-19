@@ -11,14 +11,15 @@ import {
 import images from '../assets/Images';
 
 const HorizontalList = ({data, onPressStatusUpload}) => {
-  const renderItem = ({item}) => (
-    // <View style={styles.itemContainer}>
-    //   <Image source={item.imageUrl} style={styles.image} />
-    //   <Text style={styles.title}>{item.title}</Text>
-    // </View>
+  const renderItem = ({item, index}) => (
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
       <Text style={styles.title}>{item.title}</Text>
+      {index === 0 && (
+        <TouchableOpacity style={styles.addStoryStyle}>
+          <Image style={styles.logo} source={images.PlusCircle} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -32,21 +33,6 @@ const HorizontalList = ({data, onPressStatusUpload}) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal: 10, paddingLeft: 10}}
       />
-      {/* Status Upload Icon */}
-      {/* <View style={styles.statusUploadIcon} onPress={onPressStatusUpload}>
-        <TouchableOpacity
-          onPress={onPressStatusUpload}
-          style={styles.outerview}>
-          <ImageBackground
-            source={images.Profile}
-            resizeMode="cover"
-            style={styles.statusUploadBackground}>
-            <Image style={styles.logo} source={images.PlusCircle} />
-          </ImageBackground>
-        </TouchableOpacity>
-
-        <Text style={styles.title}>My Story</Text>
-      </View> */}
     </View>
   );
 };
@@ -66,7 +52,7 @@ const styles = StyleSheet.create({
     height: 65,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: 'pink',
+    borderColor: '#3A7BD5',
   },
   title: {
     marginTop: 5,
@@ -92,9 +78,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 30,
     height: 30,
-    position: 'absolute',
-    top: 43,
-    right: 14,
   },
   outerview: {
     height: 65,
@@ -104,6 +87,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: '#7E65C0',
+  },
+  addStoryStyle: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    top: 45,
+    right: 17,
   },
 });
 

@@ -1,18 +1,15 @@
 import {env_dev} from '../env/Dev';
 import axios from 'axios';
+import {commonRequest} from './CommonRequest';
 
 const HTTP_REQUEST = axios.create({
   baseURL: env_dev,
 });
 
-
-export const register = async (
-  username,
-  password,
-) => {
-  console.log(username, password,);
+export const register = async (username, password) => {
+  console.log(username, password);
   try {
-    const response = await HTTP_REQUEST.post("user/register", {
+    const response = await HTTP_REQUEST.post('user/register', {
       username,
       password,
     });
@@ -23,7 +20,6 @@ export const register = async (
     throw error;
   }
 };
-
 
 export const login = async mobileNumber => {
   try {
@@ -36,6 +32,10 @@ export const login = async mobileNumber => {
     console.log(error, 'login error');
     throw error;
   }
+};
+
+export const CreatePost = async data => {
+  return commonRequest('POST', 'user/createPost/1', data);
 };
 
 export const signup = async (
