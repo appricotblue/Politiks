@@ -46,7 +46,15 @@ const TellusAboutyou = props => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [checkdateOfBirth, changesetDateOfBirth] = useState('');
     const [showPicker, setShowPicker] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('Follower');
+    const [userid, setuserid] = useState('');
 
+
+    const handleSelectOption = (option) => {
+        setSelectedOption(option);
+        // You can store the selected value in state or pass it to a function to store it elsewhere
+        console.log('Selected Option:', option);
+    }
     const countries = [
         { id: 1, name: "India", code: "+91" },
         { id: 2, name: "Canada", code: "+786" },
@@ -71,7 +79,17 @@ const TellusAboutyou = props => {
         { id: 6, name: "United States", code: "+1" },
     ];
 
+    const getuser = async () => {
+        const userId = await local.getUserId();
+        console.log(userId, 'leaderdata he')
+        setuserid(userId)
+    };
 
+    useEffect(() => {
+
+        getuser()
+
+    }, [])
 
     const handleSelectCountry = (id) => {
         console.log("Selected country ID:", id);
@@ -198,9 +216,42 @@ const TellusAboutyou = props => {
                     }}
                     placeholder={'fullname'}
                     width={getWidth(1.2)}
-                    title={'Fullname'}
+                    title={'Choose your unique username'}
                     color={'white'}
                 />
+
+                <View style={{ width: getWidth(1.4), marginBottom: 0, marginTop: 7 }}>
+
+                    <Text style={styles.subTxt}>{"I am a (select why are you here)"}</Text>
+                    <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 25 }}>
+                        <View style={styles.optionContainer}>
+                            <TouchableOpacity
+                                style={[
+                                    styles.radioButton,
+
+                                ]}
+                                onPress={() => handleSelectOption('Follower')}>
+                                <View style={selectedOption === 'Follower' && styles.innerRadioButton} />
+                            </TouchableOpacity>
+                            <Text style={styles.optionText}>Follower</Text>
+                        </View>
+                        <View style={styles.optionContainer}>
+                            <TouchableOpacity
+                                style={[
+                                    styles.radioButton,
+
+                                ]}
+                                onPress={() => handleSelectOption('Leader')}>
+                                <View style={selectedOption === 'Leader' && styles.innerRadioButton} />
+                            </TouchableOpacity>
+                            <Text style={styles.optionText}>Leader</Text>
+                        </View>
+                    </View>
+
+
+
+
+                </View>
                 <TouchableOpacity onPress={showDatePicker} style={styles.datePickerContainer}>
                     <TextInputBox
                         value={dateOfBirth}
@@ -229,63 +280,10 @@ const TellusAboutyou = props => {
                     countries={statedata}
                     onSelectCountry={handleSelectCountry}
                 />
-                {/* <TextInputBox
-                    value={fullname}
-                    titlecolour={'black'}
-                    errorText={checkfullname}
-                    onChangeText={text => {
-                        changefullname(text);
-                        changecheckfullname('')
-                    }}
-                    placeholder={'fullname'}
-                    width={getHeight(2.3)}
-                    title={'Fullname'}
-                    color={'white'}
-                />
-                <TextInputBox
-                    value={email}
-                    titlecolour={'black'}
-                    errorText={checkemail}
-                    onChangeText={text => {
-                        changeemail(text);
-                        changecheckemail('')
-                    }}
-                    placeholder={'User Name'}
-                    width={getHeight(2.3)}
-                    title={'What’s your date of birth?'}
-                />
-                <TouchableOpacity onPress={() => handleFieldPress('gender')}>
-                    <TextInputBox
-                        value={gender}
-                        titlecolour={'black'}
-                        placeholder={'Select your gender'}
-                        width={getHeight(2.3)}
-                        title={'Select your gender'}
-                        editable={false}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleFieldPress('country')}>
-                    <TextInputBox
-                        value={country}
-                        titlecolour={'black'}
-                        placeholder={'Choose your Country'}
-                        width={getHeight(2.3)}
-                        title={'Choose your Country'}
-                        editable={false}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleFieldPress('state')}>
-                    <TextInputBox
-                        value={state}
-                        titlecolour={'black'}
-                        placeholder={'Choose your state'}
-                        width={getHeight(2.3)}
-                        title={'Choose your state'}
-                        editable={false}
-                    />
-                </TouchableOpacity> */}
 
-                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(6.7) }}>
+
+
+                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(7.7) }}>
                     <CommonButton
                         // onPress={() => isvalidate()}
                         onPress={() => navigation.replace('InterestSelection')}
@@ -386,7 +384,7 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: 'white',
+        borderColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -397,7 +395,7 @@ const styles = StyleSheet.create({
         width: 12,
         height: 12,
         borderRadius: 6,
-        backgroundColor: 'white',
+        backgroundColor: 'black',
     },
     optionText: {
         fontSize: 16,

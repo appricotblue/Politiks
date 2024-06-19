@@ -1,4 +1,4 @@
-import {env_dev} from '../env/Dev';
+import { env_dev } from '../env/Dev';
 import axios from 'axios';
 
 const HTTP_REQUEST = axios.create({
@@ -7,14 +7,18 @@ const HTTP_REQUEST = axios.create({
 
 
 export const register = async (
-  username,
-  password,
+  userName,
+  email,
+  password
 ) => {
-  console.log(username, password,);
+  console.log(userName,
+    email,
+    password, env_dev + 'user/register');
   try {
     const response = await HTTP_REQUEST.post("user/register", {
-      username,
-      password,
+      userName,
+      email,
+      password
     });
     // const response = await HTTP_REQUEST.post(`users/createUser/665af7b8f324154d973d6a48`, { username, dateOfBirth, language, place, gender, avatar, });
     return response.data;
@@ -25,15 +29,17 @@ export const register = async (
 };
 
 
-export const login = async mobileNumber => {
+export const login = async (email,
+  password,) => {
   try {
-    console.log(env_dev + 'users/userRequestOTP');
-    const response = await HTTP_REQUEST.post('users/userRequestOTP', {
-      mobileNumber,
+    console.log(env_dev + 'user/login', email, password);
+    const response = await HTTP_REQUEST.post('user/login', {
+      email,
+      password
     });
     return response.data;
   } catch (error) {
-    console.log(error, 'login error');
+    console.log(error.message, 'login error');
     throw error;
   }
 };
