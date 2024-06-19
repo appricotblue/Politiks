@@ -38,7 +38,7 @@ const Footer = ({title}) => {
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => {
-          setFooter('reel'), navigation.navigate('Reels');
+          // setFooter('reel'), navigation.navigate('Reels');
         }}>
         <Image
           source={title === 'reel' ? images.ReelFilled : images.Reel}
@@ -57,7 +57,7 @@ const Footer = ({title}) => {
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => {
-          setFooter('trophy'), navigation.navigate('Contests');
+          // setFooter('trophy'), navigation.navigate('Contests');
         }}>
         <Image
           source={title === 'trophy' ? images.TrophyFilled : images.Tropy}
@@ -67,7 +67,7 @@ const Footer = ({title}) => {
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => {
-          setFooter('contest'), navigation.navigate('Notifications');
+          // setFooter('contest'), navigation.navigate('Notifications');
         }}>
         <Image
           source={title === 'contest' ? images.ContestFilled : images.Contest}

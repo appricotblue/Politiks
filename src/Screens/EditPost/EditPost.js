@@ -6,6 +6,8 @@ import {
   KeyboardAvoidingView,
   Image,
   ScrollView,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import Header from '../../Components/Header';
@@ -19,7 +21,7 @@ const EditPost = () => {
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
 
-  const pickImage = () => {
+  const pickImageFromGallery = () => {
     ImagePicker.openPicker({
       width: 300,
       height: 400,
@@ -30,8 +32,36 @@ const EditPost = () => {
         setImage(image.path);
       })
       .catch(error => {
-        console.log('Error picking image: ', error);
+        console.log('Error picking image from gallery: ', error);
       });
+  };
+
+  const takePhoto = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
+      })
+      .catch(error => {
+        console.log('Error taking photo: ', error);
+      });
+  };
+
+  const showImagePickerOptions = () => {
+    Alert.alert(
+      'Select Image',
+      'Choose an option to select an image',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Gallery', onPress: pickImageFromGallery},
+        {text: 'Camera', onPress: takePhoto},
+      ],
+      {cancelable: true},
+    );
   };
 
   return (
@@ -68,7 +98,12 @@ const EditPost = () => {
                 />
                 <Text style={styles.locationText}>Add Image</Text>
               </View>
-              <Image source={images.PlusIcon} style={{width: 25, height: 25}} />
+              <TouchableOpacity onPress={() => showImagePickerOptions()}>
+                <Image
+                  source={images.PlusIcon}
+                  style={{width: 25, height: 25}}
+                />
+              </TouchableOpacity>
             </View>
           ) : (
             <></>
@@ -84,7 +119,7 @@ const EditPost = () => {
           <View style={styles.buttonView}></View>
         </KeyboardAvoidingView>
         <CommonButton
-          onPress={() => pickImage()}
+          onPress={() => ''}
           color={['#3A7BD5', '#3A7BD5']}
           title={'Publish'}
           width={getWidth(1.1)}

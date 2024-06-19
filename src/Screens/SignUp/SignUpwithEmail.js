@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     ActivityIndicator,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { register } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -48,16 +50,25 @@ const SignUpwithEmail = props => {
         }
     };
 
-    // const isvalidate = async () => {
-    //   if (email == '') {
-    //     alert('Please enter Email id');
-    //   } else if (password == '') {
-    //     alert('Please enter password');
-    //   }  else {
-    //     navigation.replace('Home')
-    //     // local.storeLogin(true);
-    //   }
-    // };
+    const handleregister = async () => {
+        try {
+            const response = await register(email, password);
+            console.log(response, 'login api response')
+            if (response.message = "OTP sent successfully") {
+                // await Local.storEexistuser('existuser', response.isExistingUser == true ? 'existuser' : 'newuser');
+                // navigation.replace('OtpScreen', { mobileno: mobileNumber });
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+
+        }
+    };
 
     const isValidate = async () => {
         const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email format
@@ -77,7 +88,8 @@ const SignUpwithEmail = props => {
             // alert('Please enter password'); // Set error message
         }
         else {
-            navigation.replace('Home');
+            handleregister()
+            // navigation.replace('Home');
             // local.storeLogin(true);
         }
     };
@@ -153,12 +165,13 @@ const SignUpwithEmail = props => {
                     <Text style={[styles.subTxt, { textAlign: 'right' }]}>{"Forgot Password ?"}</Text>
                 </TouchableOpacity>
 
-                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(3.5) }}>
+                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(3.5), }}>
                     <Text style={[styles.subTxt, { textAlign: 'center' }]}>{" By continuing, you agree to our Terms of use and privacy policies"}</Text>
 
                     <CommonButton
-                        onPress={() => navigation.replace('TellusAboutyou')}
-                        // onPress={() => navigation.replace('UploadScreen')}
+                        // onPress={() => navigation.replace('TellusAboutyou')}
+                        onPress={() => isValidate()}
+                        // onPress={() => Alert.alert('hi')}
                         color={['#ffffff', '#ffffff']}
                         title={'Sign-in'}
                         width={getHeight(2.3)}
