@@ -49,12 +49,14 @@ const HomeHeader = ({title}) => {
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={{marginHorizontal: 10}}
-          onPress={() => navigation.navigate('DiscoverTrends')}>
+          // onPress={() => navigation.navigate('DiscoverTrends')}
+        >
           <Image style={{width: 30, height: 30}} source={images.Search} />
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginHorizontal: 10}}
-          onPress={() => navigation.navigate('Inbox')}>
+          // onPress={() => navigation.navigate('Inbox')}
+        >
           <Image style={{width: 30, height: 30}} source={images.Chat} />
         </TouchableOpacity>
       </View>

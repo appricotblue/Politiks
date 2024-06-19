@@ -12,6 +12,10 @@ import images from '../assets/Images';
 
 const HorizontalList = ({data, onPressStatusUpload}) => {
   const renderItem = ({item}) => (
+    // <View style={styles.itemContainer}>
+    //   <Image source={item.imageUrl} style={styles.image} />
+    //   <Text style={styles.title}>{item.title}</Text>
+    // </View>
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
       <Text style={styles.title}>{item.title}</Text>
@@ -26,12 +30,10 @@ const HorizontalList = ({data, onPressStatusUpload}) => {
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{paddingHorizontal: 10, paddingLeft: 90}}
+        contentContainerStyle={{paddingHorizontal: 10, paddingLeft: 10}}
       />
       {/* Status Upload Icon */}
-      <TouchableOpacity
-        style={styles.statusUploadIcon}
-        onPress={onPressStatusUpload}>
+      {/* <View style={styles.statusUploadIcon} onPress={onPressStatusUpload}>
         <TouchableOpacity
           onPress={onPressStatusUpload}
           style={styles.outerview}>
@@ -43,8 +45,8 @@ const HorizontalList = ({data, onPressStatusUpload}) => {
           </ImageBackground>
         </TouchableOpacity>
 
-        <Text style={styles.title}>my story</Text>
-      </TouchableOpacity>
+        <Text style={styles.title}>My Story</Text>
+      </View> */}
     </View>
   );
 };
@@ -60,14 +62,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
     borderRadius: 50,
+    borderWidth: 3,
+    borderColor: 'pink',
   },
   title: {
     marginTop: 5,
     textAlign: 'center',
     color: 'black',
+    fontWeight: '600',
   },
   statusUploadIcon: {
     position: 'absolute',
@@ -76,8 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   statusUploadBackground: {
-    height: 70,
-    width: 70,
+    height: 60,
+    width: 60,
 
     borderRadius: 35, // half of height/width for perfect circle
     justifyContent: 'center',
@@ -88,17 +93,17 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     position: 'absolute',
-    top: 55,
-    right: 20,
+    top: 43,
+    right: 14,
   },
   outerview: {
-    height: 75,
-    width: 75,
+    height: 65,
+    width: 60,
     marginLeft: 5,
     borderRadius: 40, // half of height/width for perfect circle
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#7E65C0',
+    // backgroundColor: '#7E65C0',
   },
 });
 
