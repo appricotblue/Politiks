@@ -122,7 +122,7 @@ const Profile = () => {
         />
         <View style={styles.tabs}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -161,7 +161,7 @@ const Profile = () => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
