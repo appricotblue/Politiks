@@ -67,7 +67,7 @@ const Header = ({title}) => {
         <TouchableOpacity
           style={{marginHorizontal: 10}}
           onPress={() => logOut()}>
-          <Image style={{width: 30, height: 30}} source={images.GearPNG} />
+          <Image style={{ width: 30, height: 30 }} source={images.LogOutPNG} />
         </TouchableOpacity>
       </View>
     </LinearGradient>

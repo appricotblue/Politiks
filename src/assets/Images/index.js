@@ -64,6 +64,7 @@ const images = {
   verification: require('./verification.png'),
   pending: require('./pending.png'),
   VerifiedPNG: require('./VerifiedPNG.png'),
+  LogOutPNG: require('./LogOutPNG.png'),
 };
 
 export default images;
