@@ -44,7 +44,7 @@ const EditPost = ({navigation}) => {
     try {
       const res = await CreatePost(formData);
       console.log(res?.data, '---------><><');
-      navigation.goBack();
+      navigation.navigate('Home');
     } catch (error) {
       console.error('Error creating post:', error);
     }

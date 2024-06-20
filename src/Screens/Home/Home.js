@@ -15,7 +15,7 @@ import {
 import {connect} from 'react-redux';
 import {setApiData} from '../../redux/action';
 import CommonButton from '../../Components/CommonButton';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeHeader from '../../Components/HomeHeader';
 import HorizontalList from '../../Components/HorizontalList';
@@ -106,9 +106,15 @@ const Home = props => {
     // Add more items as needed
   ];
 
-  useEffect(() => {
-    getAllPosts();
-  }, []);
+  // useEffect(() => {
+  //   getAllPosts();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllPosts();
+    }, []),
+  );
 
   const getAllPosts = async () => {
     try {
@@ -136,10 +142,10 @@ const Home = props => {
         {/* <View style={{height:200,marginTop:10}}>
           <SwiperComponent data={swiperdata} />
         </View> */}
-        {ProfileData?.map(item => (
+        {/* {ProfileData?.map(item => (
           <ListItem key={item.id} item={item} />
-        ))}
-        {/* <ListItem item={ProfileData} /> */}
+        ))} */}
+        <ListItem Data={ProfileData} />
       </ScrollView>
       <Footer title={'home'} />
     </SafeAreaView>

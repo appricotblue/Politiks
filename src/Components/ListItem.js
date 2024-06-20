@@ -12,7 +12,7 @@ import {
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
 const windowWidth = Dimensions.get('window').width;
-const ListItem = ({item}) => {
+const ListItem = ({Data}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [liked, setLiked] = useState(false);
 
@@ -21,143 +21,159 @@ const ListItem = ({item}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
-        <Image source={images?.ViratProfile} style={styles.image} />
-        <View style={styles.textContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.name}>{'User Name'}</Text>
-            <Image
-              style={{width: 20, height: 20, marginLeft: 10}}
-              source={images.VerifiedPNG}
-            />
-          </View>
-          <Text style={styles.designation}>{item.location}</Text>
-        </View>
-        <TouchableOpacity
-          style={{
-            width: 35,
-            height: 35,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => setModalVisible(true)}>
-          <Image
-            style={{width: 3, height: 16, marginBottom: 5}}
-            source={images.Threedots}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.description}>{item.caption}</Text>
-      <Image source={{uri: item?.image}} style={styles.media} />
-
-      {/* {item.type === 'image' ? (
-        <>
-          <Image source={{uri: item.image}} style={styles.media} />
-        </>
-      ) : (
-        <Video
-          source={{uri: item.media}}
-          style={styles.media}
-          paused={true} // Start the video in a paused state
-          disableVolume={true} // Disable volume control if needed
-        />
-      )} */}
-      <View onPress={toggleLike} style={styles.likeButton}>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: 75,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={liked ? images.ThumbsUp : images.ThumbsUp}
-            style={styles.likeIcon}
-          />
-          <Text style={styles.liketext}>1.5 k</Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            width: 75,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={liked ? images.Comment : images.Comment}
-            style={styles.likeIcon}
-          />
-          <Text style={styles.liketext}>386</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: 75,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={liked ? images.Union : images.Union}
-            style={styles.likeIcon}
-          />
-          <Text style={styles.liketext}>251</Text>
-        </View>
-      </View>
-      {/* Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {/* Close button */}
-            <View style={styles.action} onPress={() => setModalVisible(false)}>
-              <Text
+    <View>
+      {Data?.map(item => {
+        return (
+          <View style={styles.container}>
+            <View style={{flexDirection: 'row'}}>
+              <Image source={images?.ViratProfile} style={styles.image} />
+              <View style={styles.textContainer}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.name}>{'User Name'}</Text>
+                  <Image
+                    style={{width: 20, height: 20, marginLeft: 10}}
+                    source={images.VerifiedPNG}
+                  />
+                </View>
+                <Text style={styles.designation}>{item.location}</Text>
+              </View>
+              <TouchableOpacity
                 style={{
-                  fontFamily: 'Jost',
-                  fontWeight: '800',
-                  color: 'black',
-                  fontSize: 20,
-                  marginLeft: 10,
-                  marginBottom: 20,
-                }}>
-                Actions
-              </Text>
+                  width: 35,
+                  height: 35,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => {}}>
+                <Image
+                  style={{width: 3, height: 16, marginBottom: 5}}
+                  source={images.Threedots}
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}>
-              <Image source={images.Cross} style={styles.closeIcon} />
-            </TouchableOpacity>
 
-            {/* List of items */}
-            <View style={styles.itemList}>
-              {/* Item 1 */}
-              <TouchableOpacity style={styles.item}>
-                <Image source={images.Share} style={styles.itemIcon} />
-                <Text style={styles.itemTitle}>Share Post</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.item}>
-                <Image source={images.UserMinus} style={styles.itemIcon} />
-                <Text style={styles.itemTitle}>Unfollow this account</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.item}>
-                <Image source={images.Block} style={styles.itemIcon} />
-                <Text style={styles.itemTitle}>Block this account</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.item}>
-                <Image source={images.WarningCircle} style={styles.itemIcon} />
-                <Text style={styles.itemTitle}>Report this post</Text>
-              </TouchableOpacity>
-              {/* Add more items similarly */}
+            <Text style={styles.description}>{item.caption}</Text>
+            <Image source={{uri: item?.image}} style={styles.media} />
+
+            {/* {item.type === 'image' ? (
+      <>
+        <Image source={{uri: item.image}} style={styles.media} />
+      </>
+    ) : (
+      <Video
+        source={{uri: item.media}}
+        style={styles.media}
+        paused={true} // Start the video in a paused state
+        disableVolume={true} // Disable volume control if needed
+      />
+    )} */}
+            <View onPress={toggleLike} style={styles.likeButton}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={liked ? images.ThumbsUp : images.ThumbsUp}
+                  style={styles.likeIcon}
+                />
+                <Text style={styles.liketext}>1.5 k</Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={liked ? images.Comment : images.Comment}
+                  style={styles.likeIcon}
+                />
+                <Text style={styles.liketext}>386</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={liked ? images.Union : images.Union}
+                  style={styles.likeIcon}
+                />
+                <Text style={styles.liketext}>251</Text>
+              </View>
             </View>
+            {/* Modal */}
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => setModalVisible(false)}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  {/* Close button */}
+                  <View
+                    style={styles.action}
+                    onPress={() => setModalVisible(false)}>
+                    <Text
+                      style={{
+                        fontFamily: 'Jost',
+                        fontWeight: '800',
+                        color: 'black',
+                        fontSize: 20,
+                        marginLeft: 10,
+                        marginBottom: 20,
+                      }}>
+                      Actions
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => setModalVisible(false)}>
+                    <Image source={images.Cross} style={styles.closeIcon} />
+                  </TouchableOpacity>
+
+                  {/* List of items */}
+                  <View style={styles.itemList}>
+                    {/* Item 1 */}
+                    <TouchableOpacity style={styles.item}>
+                      <Image source={images.Share} style={styles.itemIcon} />
+                      <Text style={styles.itemTitle}>Share Post</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.item}>
+                      <Image
+                        source={images.UserMinus}
+                        style={styles.itemIcon}
+                      />
+                      <Text style={styles.itemTitle}>
+                        Unfollow this account
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.item}>
+                      <Image source={images.Block} style={styles.itemIcon} />
+                      <Text style={styles.itemTitle}>Block this account</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.item}>
+                      <Image
+                        source={images.WarningCircle}
+                        style={styles.itemIcon}
+                      />
+                      <Text style={styles.itemTitle}>Report this post</Text>
+                    </TouchableOpacity>
+                    {/* Add more items similarly */}
+                  </View>
+                </View>
+              </View>
+            </Modal>
           </View>
-        </View>
-      </Modal>
+        );
+      })}
     </View>
   );
 };
