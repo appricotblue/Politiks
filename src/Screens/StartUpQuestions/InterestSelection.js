@@ -36,16 +36,27 @@ const InterestSelection = props => {
     const [interestdata, setinterestdata] = useState([]);
 
     const [selectedInterests, setSelectedInterests] = useState([]);
-    const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry',];
+    // const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry',];
+    const interests =
+        [{ "createdAt": "2024-06-19T13:56:54.541Z", "id": 1, "name": "Social Policies", "status": true, "updatedAt": "2024-06-19T13:56:54.541Z" }, { "createdAt": "2024-06-19T13:57:32.886Z", "id": 2, "name": "Road Transport", "status": true, "updatedAt": "2024-06-19T13:57:32.886Z" }, { "createdAt": "2024-06-19T13:58:22.336Z", "id": 3, "name": "Democracy", "status": true, "updatedAt": "2024-06-19T13:58:22.336Z" }, { "createdAt": "2024-06-19T13:58:50.154Z", "id": 4, "name": "Federalism", "status": true, "updatedAt": "2024-06-19T13:58:50.154Z" }, { "createdAt": "2024-06-19T13:59:24.038Z", "id": 5, "name": "Infrastructure Development", "status": true, "updatedAt": "2024-06-19T13:59:24.038Z" }, { "createdAt": "2024-06-19T13:59:38.618Z", "id": 6, "name": "Law", "status": true, "updatedAt": "2024-06-19T13:59:38.618Z" }, { "createdAt": "2024-06-19T13:59:54.002Z", "id": 7, "name": "Health Care", "status": true, "updatedAt": "2024-06-19T13:59:54.002Z" }, { "createdAt": "2024-06-19T14:00:14.409Z", "id": 8, "name": "Agriculture", "status": true, "updatedAt": "2024-06-19T14:00:14.409Z" }, { "createdAt": "2024-06-19T14:00:33.917Z", "id": 9, "name": "Foreign Policy", "status": true, "updatedAt": "2024-06-19T14:00:33.917Z" }, { "createdAt": "2024-06-19T14:01:08.861Z", "id": 10, "name": "GlobaliZation", "status": true, "updatedAt": "2024-06-19T14:01:08.861Z" }, { "createdAt": "2024-06-19T14:01:28.424Z", "id": 11, "name": "Industry", "status": true, "updatedAt": "2024-06-19T14:01:28.424Z" }];
     const [userid, setuserid] = useState('');
 
+    // const toggleInterest = (interest) => {
+    //     if (selectedInterests.includes(interest)) {
+    //         setSelectedInterests(selectedInterests.filter(item => item !== interest));
+    //     } else {
+    //         setSelectedInterests([...selectedInterests, interest]);
+    //     }
+    // };
     const toggleInterest = (interest) => {
-        if (selectedInterests.includes(interest)) {
-            setSelectedInterests(selectedInterests.filter(item => item !== interest));
+        const index = selectedInterests.findIndex(item => item.id === interest.id);
+        if (index !== -1) {
+            setSelectedInterests(selectedInterests.filter(item => item.id !== interest.id));
         } else {
             setSelectedInterests([...selectedInterests, interest]);
         }
     };
+
 
     const isvalidate = async () => {
         if (selectedInterests?.length < 4) {
@@ -84,13 +95,10 @@ const InterestSelection = props => {
 
     const handleinterest = async () => {
         try {
-            // const response = await Createinterest(selectedInterests,userid);
-            const response = await Createinterest([1, 2, 3], userid);
-            console.log(response, 'login api response')
-            if (response.message = "User interests created successfully") {
-
-                // await local.storeUserId('UserId', response?.user?.id.toString());
-
+            const selectedInterestIds = selectedInterests.map(interest => interest.id);
+            const response = await Createinterest(selectedInterestIds, userid);
+            console.log(response, 'login api response');
+            if (response.message === "User interests created successfully") {
                 navigation.replace('FollowAccounts');
             } else {
                 console.log('Error during login:',);
@@ -101,9 +109,31 @@ const InterestSelection = props => {
             } else {
                 Alert.alert('Error', 'An error occurred');
             }
-
         }
     };
+
+    // const handleinterest = async () => {
+    //     try {
+    //         // const response = await Createinterest(selectedInterests,userid);
+    //         const response = await Createinterest([1, 2, 3], userid);
+    //         console.log(response, 'login api response')
+    //         if (response.message = "User interests created successfully") {
+
+    //             // await local.storeUserId('UserId', response?.user?.id.toString());
+
+    //             navigation.replace('FollowAccounts');
+    //         } else {
+    //             console.log('Error during login:',);
+    //         }
+    //     } catch (error) {
+    //         if (error.response && error.response.data && error.response.data.message) {
+    //             Alert.alert('Error', error.response.data.message);
+    //         } else {
+    //             Alert.alert('Error', 'An error occurred');
+    //         }
+
+    //     }
+    // };
 
     useEffect(() => {
         // Getallinterest()
@@ -133,8 +163,25 @@ const InterestSelection = props => {
 
             <View style={{ width: getHeight(2.3) }}>
                 <Text style={styles.gentertxt}>Select Your Interests</Text>
-
                 <View style={styles.interestsContainer}>
+                    {interests.map(interest => (
+                        <TouchableOpacity
+                            key={interest.id}
+                            style={[
+                                styles.interest,
+                                selectedInterests.find(item => item.id === interest.id) && styles.selectedInterest
+                            ]}
+                            onPress={() => toggleInterest(interest)}>
+                            <Text style={[
+                                styles.interestText,
+                                selectedInterests.find(item => item.id === interest.id) ? styles.selectedInterestText : styles.unselectedInterestText
+                            ]}>{interest.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
+
+                {/* <View style={styles.interestsContainer}>
                     {interests.map(interest => (
                         <TouchableOpacity
                             key={interest}
@@ -149,7 +196,7 @@ const InterestSelection = props => {
                             ]}>{interest}</Text>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </View> */}
             </View>
             <Text style={{ color: '#ff6666', marginTop: 40 }}> {error}</Text>
             <View style={{ height: getHeight(5), alignSelf: 'flex-end', marginTop: 10 }}>

@@ -131,7 +131,7 @@ const FollowAccounts = props => {
 
             >
                 <View style={{ width: getWidth(8), }}>
-                    <Image source={ images.ViratBanner } style={styles.itemImage} />
+                    <Image source={{uri:item.userProfile ?item.userProfile :'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png'}} style={styles.itemImage} />
                 </View>
                 <View style={{ width: getWidth(2), marginLeft: 5 }}>
                     <Text style={styles.itemName}>{item?.userName}</Text>

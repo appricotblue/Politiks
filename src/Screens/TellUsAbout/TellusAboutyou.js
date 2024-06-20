@@ -10,7 +10,8 @@ import {
     ActivityIndicator,
     ImageBackground,
     Modal,
-    Alert
+    Alert,
+    ScrollView
 } from 'react-native';
 import TextInputBox from '../../Components/TextInputBox';
 import CommonButton from '../../Components/CommonButton';
@@ -23,7 +24,7 @@ import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import CountryPicker from '../../Components/CountryPicker';
 import DatePicker from 'react-native-date-picker';
-import { CreateData } from '../../api';
+import { CreateData, CheckuserAvailability } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -50,6 +51,8 @@ const TellusAboutyou = props => {
     const [showPicker, setShowPicker] = useState(false);
     const [selectedOption, setSelectedOption] = useState('Follower');
     const [userid, setuserid] = useState('');
+    const [usernameAvailable, setUsernameAvailable] = useState(null);
+    const [usernameMessage, setUsernameMessage] = useState('');
 
 
     const handleSelectOption = (option) => {
@@ -93,10 +96,38 @@ const TellusAboutyou = props => {
 
     }, [])
 
-    const handleSelectCountry = (id) => {
-        console.log("Selected country ID:", id);
+    const handleSelectCountry = (item) => {
+        console.log("Selected country ID:", item.name);
+        changecountry(item.name)
+    };
+    const handleSelectgender = (item) => {
+        console.log("Selected country ID:", item.name);
+        changegender(item.name)
+    };
+    const handleSelecstate = (item) => {
+        console.log("Selected country ID:", item.name);
+        changestate(item.name)
     };
 
+    const handleFullnameChange = async (text) => {
+        changefullname(text);
+        changecheckfullname('')
+        try {
+            const response = await CheckuserAvailability(text);
+            console.log(response)
+            if (response.message === "User name is available.") {
+                setUsernameAvailable(true);
+                setUsernameMessage('Username is available.');
+            } else {
+                setUsernameAvailable(false);
+                setUsernameMessage('Username is already taken.');
+            }
+        } catch (error) {
+            setUsernameAvailable(false);
+            console.error('Error checking username availability:', error);
+            setUsernameMessage('Error checking username availability.');
+        }
+    };
 
     const showDatePicker = () => {
         setShowPicker(true);
@@ -153,11 +184,20 @@ const TellusAboutyou = props => {
         if (fullname == '') {
             changecheckfullname('Please enter full name ');
         } else if (selectedOption == '') {
-            changecheckemail('Please select Follower or Leader');
+            Alert.alert('Please select Follower or Leader');
         }
-        // else if (!emailFormat.test(email)) {
-        //     changecheckemail('Please enter a valid email address');
-        // } 
+        else if (dateOfBirth == '') {
+            Alert.alert('Please enter  date of birth');
+        }
+        else if (country == '') {
+            Alert.alert('Please select country');
+        }
+        else if (state == '') {
+            Alert.alert('Please select state');
+        }
+        else if (gender == '') {
+            Alert.alert('Please select gender');
+        }
         // else if (phone == '') {
         //     changecheckphone('Please enter phone number');
         // } else if (!phoneNumberRegex.test(phone)) {
@@ -226,7 +266,7 @@ const TellusAboutyou = props => {
     }, [navigation]);
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.image}>
                 <View style={{ width: getHeight(2.3), marginTop: 30, marginBottom: 40, }}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -239,16 +279,20 @@ const TellusAboutyou = props => {
                     value={fullname}
                     titlecolour={'black'}
                     errorText={checkfullname}
-                    onChangeText={text => {
-                        changefullname(text);
-                        changecheckfullname('')
-                    }}
+
+                    onChangeText={handleFullnameChange}
+                    // onChangeText={text => {
+                    //     changefullname(text);
+                    //     changecheckfullname('')
+                    // }}
                     placeholder={'fullname'}
                     width={getWidth(1.2)}
                     title={'Choose your unique username'}
                     color={'white'}
                 />
-
+                {usernameMessage !== '' && (
+                    <Text style={[styles.usernameMessage, { color: usernameAvailable ? 'green' : 'red', }]}>{usernameMessage}</Text>
+                )}
                 <View style={{ width: getWidth(1.4), marginBottom: 0, marginTop: 7 }}>
 
                     <Text style={styles.subTxt}>{"I am a (select why are you here)"}</Text>
@@ -257,7 +301,7 @@ const TellusAboutyou = props => {
                             <TouchableOpacity
                                 style={[
                                     styles.radioButton,
-
+                                    selectedOption === 'Follower' && styles.selectedOption
                                 ]}
                                 onPress={() => handleSelectOption('Follower')}>
                                 <View style={selectedOption === 'Follower' && styles.innerRadioButton} />
@@ -268,7 +312,7 @@ const TellusAboutyou = props => {
                             <TouchableOpacity
                                 style={[
                                     styles.radioButton,
-
+                                    selectedOption === 'Leader' && styles.selectedOption
                                 ]}
                                 onPress={() => handleSelectOption('Leader')}>
                                 <View style={selectedOption === 'Leader' && styles.innerRadioButton} />
@@ -276,9 +320,6 @@ const TellusAboutyou = props => {
                             <Text style={styles.optionText}>Leader</Text>
                         </View>
                     </View>
-
-
-
 
                 </View>
                 <TouchableOpacity onPress={showDatePicker} style={styles.datePickerContainer}>
@@ -302,20 +343,17 @@ const TellusAboutyou = props => {
                 <CountryPicker
                     title="Select your gender"
                     countries={genderdata}
-                    onSelectCountry={handleSelectCountry}
+                    onSelectCountry={handleSelectgender}
                 />
                 <CountryPicker
                     title="Select your state"
                     countries={statedata}
-                    onSelectCountry={handleSelectCountry}
+                    onSelectCountry={handleSelecstate}
                 />
-
-
 
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(7.7) }}>
                     <CommonButton
                         onPress={() => isvalidate()}
-                        // onPress={() => navigation.replace('InterestSelection')}
                         color={['black', 'black']}
                         title={'Continue'}
                         width={getHeight(2.3)}
@@ -364,7 +402,7 @@ const TellusAboutyou = props => {
                     onCancel={() => setShowPicker(false)}
                 />
             )}
-        </View>
+        </ScrollView>
     );
 };
 const styles = StyleSheet.create({
@@ -375,14 +413,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: 'white'
-    },
-    text: {
-        color: 'white',
-        fontSize: 42,
-        lineHeight: 84,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        backgroundColor: '#000000c0',
     },
     TileTxt: {
         fontSize: 28,
@@ -397,15 +427,6 @@ const styles = StyleSheet.create({
         width: getHeight(2.6),
         fontFamily: 'Jost',
         fontWeight: '300',
-    },
-    subTxt2: {
-        fontSize: getHeight(50),
-        color: 'white',
-        textAlign: 'center',
-        width: getHeight(2.6),
-        fontFamily: 'Jost',
-        fontWeight: '300',
-        alignSelf: 'center',
     },
     optionContainer: {
         flexDirection: 'row',
@@ -442,8 +463,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     modalContainer: {
-        height:100,
-        // flex: 1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
@@ -467,19 +487,20 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        // backgroundColor: 'red',
-        borderRadius: 10,
-        padding: 5,
-        backgroundColor:''
+        backgroundColor: '#000',
+        borderRadius: 20,
+        padding: 10,
     },
     closeButtonText: {
-        color: 'red',
+        color: 'white',
         fontWeight: 'bold',
+        fontSize: 16,
     },
     button: {
         borderRadius: 20,
         padding: 10,
         elevation: 2,
+        marginTop: 10,
     },
     buttonOpen: {
         backgroundColor: '#F194FF',
@@ -488,7 +509,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2196F3',
     },
     textStyle: {
-        color: 'black',
+        color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -499,5 +520,12 @@ const styles = StyleSheet.create({
     datePickerContainer: {
         width: '100%',
     },
+    usernameMessage: {
+        fontSize: 14,
+
+        marginTop: 5,
+    },
 });
+
 export default TellusAboutyou;
+

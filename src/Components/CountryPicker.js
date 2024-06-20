@@ -16,7 +16,7 @@ const CountryPicker = (props) => {
         setSelectedCountryCode(country.name);
         setModalVisible(false);
         if (props.onSelectCountry) {
-            props.onSelectCountry(country.id); // Pass the selected country ID to the parent component
+            props.onSelectCountry(country); // Pass the selected country ID to the parent component
         }
     };
 

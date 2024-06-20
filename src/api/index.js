@@ -134,6 +134,21 @@ export const CreateFolowers = async (followerId, userId) => {
   }
 };
 
+
+export const CheckuserAvailability = async (userName, userId) => {
+  try {
+    console.log(env_dev + 'user/checkUsername', userName);
+    const response = await HTTP_REQUEST.post(`user/checkUsername`, {
+      userName
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+
 export const updateProfile = async (
   username,
   dateOfBirth,
