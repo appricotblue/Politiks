@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { requestUserPermission } from '../../services/notificationService';
+import local from '../../Storage/Local';
 
 const SplashScreen = ({ navigation }) => {
 
@@ -40,9 +41,16 @@ const SplashScreen = ({ navigation }) => {
 
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace('LoginScreen');
-    }, 2000); 
+    const timer = setTimeout(async () => {
+      const Eexistuser = await local.getEexistuser();
+      console.log(Eexistuser, 'existdata he')
+      if (Eexistuser == 'existuser') {
+        navigation.replace('Home');
+      } else {
+        navigation.replace('LoginScreen');
+      }
+
+    }, 3000); 
 
     return () => clearTimeout(timer);
   }, [navigation]);

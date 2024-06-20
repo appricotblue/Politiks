@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     ImageBackground,
-    Modal
+    Modal,
+    Alert
 } from 'react-native';
 import TextInputBox from '../../Components/TextInputBox';
 import CommonButton from '../../Components/CommonButton';
@@ -22,6 +23,7 @@ import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import CountryPicker from '../../Components/CountryPicker';
 import DatePicker from 'react-native-date-picker';
+import { CreateData } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -150,18 +152,45 @@ const TellusAboutyou = props => {
 
         if (fullname == '') {
             changecheckfullname('Please enter full name ');
-        } else if (email == '') {
-            changecheckemail('Please enter Email id');
-        } else if (!emailFormat.test(email)) {
-            changecheckemail('Please enter a valid email address');
-        } else if (phone == '') {
-            changecheckphone('Please enter phone number');
-        } else if (!phoneNumberRegex.test(phone)) {
-            changecheckphone('Please enter a valid phone number (6-10 digits)');
-        } else {
-            navigation.replace('InterestSelection')
+        } else if (selectedOption == '') {
+            changecheckemail('Please select Follower or Leader');
+        }
+        // else if (!emailFormat.test(email)) {
+        //     changecheckemail('Please enter a valid email address');
+        // } 
+        // else if (phone == '') {
+        //     changecheckphone('Please enter phone number');
+        // } else if (!phoneNumberRegex.test(phone)) {
+        //     changecheckphone('Please enter a valid phone number (6-10 digits)');
+        // }
+        else {
+            // navigation.replace('InterestSelection')
+            handledataRegister()
         }
     };
+    const handledataRegister = async () => {
+        try {
+            const response = await CreateData(fullname, selectedOption, dateOfBirth, 'Male', 'India', 'Kerala', userid);
+            console.log(response, 'login api response')
+
+            if (response.message = "User details created successfully") {
+
+                await local.storLeader('isleader', selectedOption);
+
+                navigation.replace('InterestSelection');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+
+        }
+    };
+
 
     const handleDateChange = (selectedDate) => {
         if (selectedDate) {
@@ -271,12 +300,12 @@ const TellusAboutyou = props => {
                     onSelectCountry={handleSelectCountry}
                 />
                 <CountryPicker
-                    title="Select your country"
+                    title="Select your gender"
                     countries={genderdata}
                     onSelectCountry={handleSelectCountry}
                 />
                 <CountryPicker
-                    title="Select your country"
+                    title="Select your state"
                     countries={statedata}
                     onSelectCountry={handleSelectCountry}
                 />
@@ -285,8 +314,8 @@ const TellusAboutyou = props => {
 
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(7.7) }}>
                     <CommonButton
-                        // onPress={() => isvalidate()}
-                        onPress={() => navigation.replace('InterestSelection')}
+                        onPress={() => isvalidate()}
+                        // onPress={() => navigation.replace('InterestSelection')}
                         color={['black', 'black']}
                         title={'Continue'}
                         width={getHeight(2.3)}
@@ -302,8 +331,13 @@ const TellusAboutyou = props => {
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={styles.centeredView}>
+                <View style={styles.modalContainer}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setModalVisible(false)}>
+                            <Text style={styles.closeButtonText}>X</Text>
+                        </TouchableOpacity>
                         {modalData.map((item, index) => (
                             <TouchableOpacity key={index} onPress={() => handleOptionSelect(item)}>
                                 <Text style={styles.modalText}>{item}</Text>
@@ -399,7 +433,7 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 16,
-        color: 'white',
+        color: 'black',
         marginLeft: 10,
     },
     arrowimg: {
@@ -407,17 +441,18 @@ const styles = StyleSheet.create({
         height: 20,
         marginBottom: 10
     },
-    centeredView: {
-        flex: 1,
+    modalContainer: {
+        height:100,
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
     modalView: {
-        margin: 20,
+        width: '80%',
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -427,6 +462,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        // backgroundColor: 'red',
+        borderRadius: 10,
+        padding: 5,
+        backgroundColor:''
+    },
+    closeButtonText: {
+        color: 'red',
+        fontWeight: 'bold',
     },
     button: {
         borderRadius: 20,
@@ -440,7 +488,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2196F3',
     },
     textStyle: {
-        color: 'white',
+        color: 'black',
         fontWeight: 'bold',
         textAlign: 'center',
     },
