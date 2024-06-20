@@ -81,6 +81,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
         debug {
@@ -108,7 +109,12 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    
+    implementation "com.facebook.react:react-native:+"
+    //   implementation 'com.google.android.gms:play-services-auth:19.0.0'
+      implementation 'com.google.android.gms:play-services-auth:19.2.0' // or the latest version
+
+  implementation 'com.google.android.gms:play-services-identity:17.0.0'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
