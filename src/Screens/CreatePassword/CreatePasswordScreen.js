@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     ActivityIndicator,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -20,12 +21,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { useRoute } from '@react-navigation/native';
+import { createpassword } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
 
 const CreatePasswordScreen = props => {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { emaildata } = route.params;
+
     const [email, changeemail] = useState('');
     const [checkEmail, changecheckEmail] = useState('');
     const [checkPassword, changecheckPassword] = useState('');
@@ -48,9 +54,34 @@ const CreatePasswordScreen = props => {
         } else if (password != repassword) {
             changecheckrepassword('Password Mismatch!');
         } else {
-            navigation.replace('SignUpwithEmail')
+            handlecreatepassword()
+
         }
     };
+
+    const handlecreatepassword = async () => {
+
+        console.log(emaildata)
+        try {
+            const response = await createpassword(emaildata, password);
+            console.log(response, 'login api response')
+            if (response.message = "Password updated successfully") {
+                // await local.storeUserId('UserId', response?.user?.id.toString());
+                // await local.storEexistuser('existuser', 'existuser');
+                navigation.replace('SignUpwithEmail');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+
+        }
+    };
+
 
     const clearAll = async () => {
         changecheckPassword('');

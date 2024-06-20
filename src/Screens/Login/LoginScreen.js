@@ -197,14 +197,14 @@ const LoginScreen = props => {
           width={getHeight(2.3)}
           texttitle={'black'}
         />
-        <CommonButton
+        {/* <CommonButton
           onPress={() => isValidate()}
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Apple'}
           width={getHeight(2.3)}
           texttitle={'black'}
-        />
+        /> */}
         <CommonButton
           onPress={() => navigation.navigate('SignUpwithEmail')}
           // onPress={() => navigation.replace('Home')}

@@ -21,12 +21,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { verifyOtp } from '../../api';
+import { useRoute } from '@react-navigation/native'; 
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
 
 const OtpScreen = props => {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { email } = route.params;
    
     const [otp_1, setotp_1] = useState('');
     const [otp_2, setotp_2] = useState('');
@@ -56,9 +60,35 @@ const OtpScreen = props => {
             setOtpError(true);
         } else {
             setOtpError(false);
-            navigation.replace('CreatePasswordScreen');
+            handleotp()
+
         }
     };
+
+
+    const handleotp = async () => {
+
+        console.log(email)
+        try {
+            const response = await verifyOtp(email, otp_1 + otp_2 + otp_3 + otp_4);
+            console.log(response, 'login api response')
+            if (response.message = "OTP verified successfully") {
+                await local.storeUserId('UserId', response?.user?.id.toString());
+                // await local.storEexistuser('existuser', 'existuser');
+                navigation.replace('CreatePasswordScreen', { emaildata: email });
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+
+        }
+    };
+
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
