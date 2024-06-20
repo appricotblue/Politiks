@@ -121,7 +121,7 @@ const TellusAboutyou = props => {
     } catch (error) {
       setUsernameAvailable(false);
       console.error('Error checking username availability:', error);
-      setUsernameMessage('Error checking username availability.');
+      setUsernameMessage('username not availabile');
     }
   };
 
@@ -189,12 +189,9 @@ const TellusAboutyou = props => {
       Alert.alert('Please select state');
     } else if (gender == '') {
       Alert.alert('Please select gender');
+    } else if (usernameAvailable != true) {
+      Alert.alert('Please select  available user name to continue');
     }
-    // else if (phone == '') {
-    //     changecheckphone('Please enter phone number');
-    // } else if (!phoneNumberRegex.test(phone)) {
-    //     changecheckphone('Please enter a valid phone number (6-10 digits)');
-    // }
     else {
       // navigation.replace('InterestSelection')
       handledataRegister();
@@ -269,7 +266,7 @@ const TellusAboutyou = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.image}>
-        <View style={{width: getHeight(2.3), marginTop: 30, marginBottom: 40}}>
+        <View style={{ width: getHeight(2.3), marginTop: 0, marginBottom: 20 }}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={images.ArrowLeft} style={styles.arrowimg} />
           </TouchableOpacity>
@@ -279,6 +276,7 @@ const TellusAboutyou = props => {
         <TextInputBox
           value={fullname}
           titlecolour={'black'}
+          valuecolor={'black'}
           errorText={checkfullname}
           onChangeText={handleFullnameChange}
           // onChangeText={text => {
@@ -340,6 +338,7 @@ const TellusAboutyou = props => {
           <TextInputBox
             value={dateOfBirth}
             isNumber={false}
+            valuecolor={'black'}
             errorText={checkdateOfBirth}
             titlecolour={'black'}
             editable={false}

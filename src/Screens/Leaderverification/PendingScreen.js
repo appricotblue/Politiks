@@ -38,7 +38,8 @@ const PendingScreen = props => {
             </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
-                    onPress={() => navigation.replace('Home')}
+                    // onPress={() => navigation.replace('Home')}
+                    onPress={() => navigation.replace('SignUpwithEmail')}
                     color={['black', 'black']}
                     title={'Go to Home'}
                     width={getHeight(2.3)}

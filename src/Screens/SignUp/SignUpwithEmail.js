@@ -187,7 +187,7 @@ const SignUpwithEmail = props => {
                 <View style={{ justifyContent: 'center', alignItems: 'center', alignSelf: 'center', }}>
                     <Text style={[styles.subTxt, { textAlign: 'center' }]}>{"New to Politics?"}</Text>
                     <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
-                        <Text style={[styles.subTxt, { textDecorationLine: 'underline', textAlign: 'center' }]}>{"Sign-up Now"}</Text>
+                        <Text style={[styles.subTxt, { textDecorationLine: 'underline', textAlign: 'center', marginTop: 10 }]}>{"Sign-up Now"}</Text>
 
                     </TouchableOpacity>
                 </View>

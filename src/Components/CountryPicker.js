@@ -67,8 +67,9 @@ const CountryPicker = props => {
 const styles = StyleSheet.create({
   container: {
     // margin: 20,
-    height: height / 10,
-    width: width / 1.05,
+    marginTop:7,
+    height: height / 8.5,
+    width: width / 1.18,
     // backgroundColor: 'red',
   },
   title: {

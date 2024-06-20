@@ -26,10 +26,11 @@ const ListItem = ({Data}) => {
         return (
           <View style={styles.container}>
             <View style={{flexDirection: 'row'}}>
-              <Image source={images?.ViratProfile} style={styles.image} />
+              {/* <Image source={{ uri: item.userDetails.userProfile ? item.userDetails.userProfile : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} /> */}
+              <Image source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} />
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.name}>{'User Name'}</Text>
+                  <Text style={styles.name}>{item.userDetails.userName}</Text>
                   <Image
                     style={{width: 20, height: 20, marginLeft: 10}}
                     source={images.VerifiedPNG}
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     width: 300,
     alignSelf: 'center',
-    height: 48,
+    height: 40,
     justifyContent: 'space-around',
     alignItems: 'center',
     borderRadius: 25,
@@ -260,8 +261,8 @@ const styles = StyleSheet.create({
     alignItems: '',
   },
   likeIcon: {
-    width: 26,
-    height: 27,
+    width: 22,
+    height: 22,
   },
   modalContainer: {
     flex: 1,

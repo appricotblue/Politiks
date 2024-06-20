@@ -36,8 +36,8 @@ export const login = async (email, password) => {
   }
 };
 
-export const CreatePost = async data => {
-  return commonRequest('POST', 'user/createPost/1', data, {
+export const CreatePost = async = (data, userId) => {
+  return commonRequest('POST', `user/createPost/${userId}`, data, {
     'Content-Type': 'multipart/form-data',
   });
 };
@@ -45,12 +45,13 @@ export const CreatePost = async data => {
 export const getAllPost = async () => {
   return commonRequest('GET', 'user/getAllpost');
 };
-export const getAllUserPost = async () => {
-  return commonRequest('GET', 'user/getUserDetails/1');
+export const getAllUserPost = async (userId) => {
+  console.log(userId)
+  return commonRequest('GET', `user/getUserDetails/${userId}`);
 };
 
-export const getAllUserImages = async () => {
-  return commonRequest('GET', 'user/getUserAllPostsByUserId/1');
+export const getAllUserImages = async (userId) => {
+  return commonRequest('GET', `user/getUserAllPostsByUserId/${userId}`);
 };
 
 export const Createinterest = async (interestIds, userId) => {

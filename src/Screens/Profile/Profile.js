@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
 import {getAllUserImages, getAllUserPost} from '../../api';
+import local from '../../Storage/Local';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -27,6 +28,7 @@ const Profile = () => {
   const [leader, setLeader] = useState(false);
   const [details, setDetails] = useState();
   const [image, setImage] = useState();
+  const [userid, setuserid] = useState('');
 
   const imageData = [
     {id: 1, imageUrl: images.Welcome_1},
@@ -54,16 +56,25 @@ const Profile = () => {
     // Add more items as needed
   ];
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getAllUserPosts();
-      getAllPosts();
-    }, []),
-  );
+ 
 
-  const getAllUserPosts = async () => {
+  const getuser = async () => {
+    const userId = await local.getUserId();
+    console.log(userId, 'leaderdata he');
+    setuserid(userId);
+    getAllUserPosts(userId);
+    getAllPosts(userId);
+  };
+
+  useEffect(
+    React.useCallback(() => {
+    getuser();
+  }, []),
+ );
+
+  const getAllUserPosts = async (userId) => {
     try {
-      const res = await getAllUserPost();
+      const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data[0]);
       // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
@@ -71,9 +82,9 @@ const Profile = () => {
       console.error('Error creating post:', error);
     }
   };
-  const getAllPosts = async () => {
+  const getAllPosts = async (userId) => {
     try {
-      const res = await getAllUserImages();
+      const res = await getAllUserImages(userId);
       setImage(res?.data);
       console.log(res?.data, 'Profileeeeeeee--------------------');
     } catch (error) {

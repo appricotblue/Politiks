@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../Components/Header';
 import {height, width} from '../../Theme/ConstantStyles';
 import images from '../../assets/Images';
@@ -17,10 +17,36 @@ import CommonButton from '../../Components/CommonButton';
 import {getWidth} from '../../Theme/Constants';
 import ImagePicker from 'react-native-image-crop-picker';
 import {CreatePost} from '../../api';
+import local from '../../Storage/Local';
 
 const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
+  const [userid, setuserid] = useState('');
+
+
+  const getuser = async () => {
+    const userId = await local.getUserId();
+    console.log(userId, 'leaderdata he');
+    setuserid(userId);
+  };
+
+  useEffect(() => {
+    getuser();
+  }, []);
+
+  const validate = () => {
+    console.log(image, 'imagee')
+    if (image == null) {
+      Alert.alert('Please add an image to continue')
+
+    } else if (text == '') {
+      Alert.alert('Please add an Content to continue')
+    } else {
+      createPosts()
+    }
+  }
+
 
   const createPosts = async () => {
     const formData = new FormData();
@@ -34,7 +60,7 @@ const EditPost = ({navigation}) => {
     });
 
     try {
-      const res = await CreatePost(formData);
+      const res = await CreatePost(formData, userid);
       // console.log(res?.data, '---------><><');
       navigation.navigate('Home');
     } catch (error) {
@@ -50,7 +76,7 @@ const EditPost = ({navigation}) => {
     })
       .then(image => {
         console.log(image);
-        setImage(image.path);
+        setImage(image);
       })
       .catch(error => {
         console.log('Error picking image from gallery: ', error);
@@ -142,7 +168,7 @@ const EditPost = ({navigation}) => {
           <View style={styles.buttonView}></View>
         </KeyboardAvoidingView>
         <CommonButton
-          onPress={() => createPosts()}
+          onPress={() => validate()}
           color={['#3A7BD5', '#3A7BD5']}
           title={'Publish'}
           width={getWidth(1.1)}
