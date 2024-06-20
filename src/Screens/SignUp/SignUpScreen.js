@@ -157,7 +157,7 @@ const SignUpScreen = props => {
                             changepassword(text);
                             changechangepassword('')
                         }}
-                        placeholder={'Phone Number'}
+                        placeholder={'Password'}
                         width={getHeight(2.3)}
                         title={'New Password'}
                         borderColor={'white'}
@@ -171,7 +171,7 @@ const SignUpScreen = props => {
                             changerepassword(text);
                             changechangerepassword('')
                         }}
-                        placeholder={'Phone Number'}
+                        placeholder={'Re-enter Password'}
                         width={getHeight(2.3)}
                         title={'Re-enter Password'}
                         borderColor={'white'}

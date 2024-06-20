@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     ActivityIndicator,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
+import { forgotPassword } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -68,17 +70,33 @@ const Forgotpassword = props => {
         } else if (!emailFormat.test(email)) {
             changecheckEmail('Please enter a valid email address'); // Set error message for invalid email format
             // alert('Please enter a valid email address'); // Set error message for invalid email format
-        } else if (password == '') {
-            changecheckPassword('Please enter password'); // Set error message
-            // alert('Please enter password'); // Set error message
-        }
-        else if (password?.length < 6) {
-            changecheckPassword('Password must be at least 6 characters long'); // Set error message
-            // alert('Please enter password'); // Set error message
-        }
+        } 
         else {
-            navigation.replace('Home');
-            // local.storeLogin(true);
+            handleforgotpassword()
+        }
+    };
+
+
+    const handleforgotpassword= async () => {
+    
+ 
+        try {
+            const response = await forgotPassword(email);
+            console.log(response, 'login api response')
+            if (response.message = "Login successful") {
+                await local.storeUserId('UserId', response?.user?.id.toString());
+                // await local.storEexistuser('existuser', 'existuser');
+                navigation.replace('OtpScreen',{email:email})
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+
         }
     };
 
@@ -141,7 +159,7 @@ const Forgotpassword = props => {
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(2), marginTop: 40, }}>
                     <Text style={[styles.subTxt, { textAlign: 'center' }]}>{"We’ll send you a verification code"}</Text>
                     <CommonButton
-                        onPress={() => navigation.replace('OtpScreen')}
+                        onPress={() => isValidate()}
                         color={['#ffffff', '#ffffff']}
                         title={'Get Code'}
                         width={getHeight(2.3)}

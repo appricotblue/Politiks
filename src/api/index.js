@@ -148,6 +148,48 @@ export const CheckuserAvailability = async (userName, userId) => {
   }
 };
 
+export const forgotPassword = async (email,) => {
+  try {
+    console.log('https://politiks.aindriya.co.uk/user/forgetPassword', email);
+    const response = await HTTP_REQUEST.post(`user/forgetPassword`, {
+      email
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+export const verifyOtp = async (email,otp) => {
+  console.log(email,otp)
+  try {
+    console.log( email,otp);
+    const response = await HTTP_REQUEST.post(`user/verifyOtp`, {
+      email,
+      otp
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+export const createpassword = async (email,password) => {
+
+  console.log(email,password)
+  try {
+   
+    const response = await HTTP_REQUEST.post(`user/createPassword`, {
+      email,
+      password
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
 
 export const updateProfile = async (
   username,
