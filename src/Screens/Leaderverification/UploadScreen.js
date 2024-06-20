@@ -392,10 +392,10 @@ const UploadScreen = () => {
                                     'Upload Video',
                                     'Choose an option',
                                     [
-                                        {
-                                            text: 'From Gallery',
-                                            onPress: () => openCameraOrGallery('video', 'gallery'),
-                                        },
+                                        // {
+                                        //     text: 'From Gallery',
+                                        //     onPress: () => openCameraOrGallery('video', 'gallery'),
+                                        // },
                                         {
                                             text: 'Record Video',
                                             onPress: () => openCameraOrGallery('video', 'camera'),

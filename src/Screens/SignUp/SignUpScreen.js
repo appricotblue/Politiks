@@ -58,7 +58,12 @@ const SignUpScreen = props => {
             changechangepassword('Please enter password')
         } else if (repassword == '') {
             changechangepassword('Please re-enter password')
-        } else if (repassword != password) {
+        }
+        else if (password?.length < 6) {
+            changechangepassword('Password must be at least 6 characters long');
+        }
+
+        else if (repassword != password) {
             changechangepassword('Please enter same password')
         } else {
             handleRegister();
@@ -129,7 +134,7 @@ const SignUpScreen = props => {
                             changefullname(text);
                             changecheckfullname('')
                         }}
-                        placeholder={'fullname'}
+                        placeholder={'Fullname'}
                         width={getHeight(2.3)}
                         title={'Fullname'}
                         borderColor={'white'}
