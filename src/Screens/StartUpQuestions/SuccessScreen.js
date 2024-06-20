@@ -6,13 +6,15 @@ import images from '../../assets/Images';
 import { getHeight } from '../../Theme/Constants';
 import LottieView from 'lottie-react-native';
 import FastImage from 'react-native-fast-image';
+import local from '../../Storage/Local';
 
 
 const SuccessScreen = props => {
     const navigation = useNavigation();
     
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        const unsubscribe = navigation.addListener('focus', async() => {
+            await local.storEexistuser('existuser', 'existuser');
             // Reset any necessary state
         });
 

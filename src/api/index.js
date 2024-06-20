@@ -46,8 +46,13 @@ export const getAllPost = async () => {
   return commonRequest('GET', 'user/getAllpost');
 };
 export const getAllUserPost = async () => {
-  return commonRequest('GET', 'user/getAllpost');
+  return commonRequest('GET', 'user/getUserDetails/1');
 };
+
+export const getAllUserImages = async () => {
+  return commonRequest('GET', 'user/getUserAllPostsByUserId/1');
+};
+
 export const Createinterest = async (interestIds, userId) => {
   try {
     console.log(env_dev + 'user/createUserInterests', interestIds);
@@ -129,6 +134,19 @@ export const CreateFolowers = async (followerId, userId) => {
     console.log(env_dev + 'user/following', followerId);
     const response = await HTTP_REQUEST.post(`user/following/${userId}`, {
       followerId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+export const CheckuserAvailability = async (userName, userId) => {
+  try {
+    console.log(env_dev + 'user/checkUsername', userName);
+    const response = await HTTP_REQUEST.post(`user/checkUsername`, {
+      userName,
     });
     return response.data;
   } catch (error) {

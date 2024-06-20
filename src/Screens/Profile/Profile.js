@@ -18,14 +18,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
-import {getAllUserPost} from '../../api';
+import {getAllUserImages, getAllUserPost} from '../../api';
 
 const Profile = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
-  const [details, setDetails] = useState([]);
+  const [details, setDetails] = useState();
+  const [image, setImage] = useState();
 
   const imageData = [
     {id: 1, imageUrl: images.Welcome_1},
@@ -56,14 +57,25 @@ const Profile = () => {
   useFocusEffect(
     React.useCallback(() => {
       getAllUserPosts();
+      getAllPosts();
     }, []),
   );
 
   const getAllUserPosts = async () => {
     try {
       const res = await getAllUserPost();
-      setDetails(res?.data);
-      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      const {data} = res;
+      setDetails(data[0]);
+      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+  const getAllPosts = async () => {
+    try {
+      const res = await getAllUserImages();
+      setImage(res?.data);
+      console.log(res?.data, 'Profileeeeeeee--------------------');
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -74,14 +86,14 @@ const Profile = () => {
   };
   function chunkArray(array, chunkSize) {
     const chunks = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
+    for (let i = 0; i < array?.length; i += chunkSize) {
       chunks.push(array.slice(i, i + chunkSize));
     }
     return chunks;
   }
   const renderImageItem = ({item}) => (
     <View style={{width: '33%', padding: 0.2}}>
-      <Image source={item.imageUrl} style={{width: '100%', height: 120}} />
+      <Image source={{uri: item?.image}} style={{width: '100%', height: 120}} />
     </View>
   );
 
@@ -183,7 +195,7 @@ const Profile = () => {
             </View>
           ) : (
             <View>
-              <Text style={styles.tabText}>Monty Mortell</Text>
+              <Text style={styles.tabText}>{details?.userName}</Text>
               <Text style={styles.idText}>monty_23mortell</Text>
             </View>
           )}
@@ -300,7 +312,7 @@ const Profile = () => {
           )}
           {selectedTab === 1 ? (
             <ScrollView contentContainerStyle={styles.flatListContent}>
-              {chunkArray(imageData, 3).map((row, index) => (
+              {chunkArray(image, 3).map((row, index) => (
                 <View style={styles.rowContainer} key={index}>
                   {row.map(
                     item => renderImageItem({item}), // Assuming renderImageItem is a function that renders the image item

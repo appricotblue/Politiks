@@ -120,7 +120,7 @@ const Home = props => {
     try {
       const res = await getAllPost();
       setProfileData(res?.data);
-      console.log(res?.data, '-------ooooooo-----------');
+      // console.log(res?.data, '-------ooooooo-----------');
     } catch (error) {
       console.error('Error creating post:', error);
     }

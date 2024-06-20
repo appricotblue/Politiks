@@ -23,15 +23,7 @@ const EditPost = ({navigation}) => {
   const [image, setImage] = useState(null);
 
   const createPosts = async () => {
-    // const data = {
-    //   location: 'kochi',
-    //   tagUser: '2',
-    //   caption: text,
-    //   image: image,
-    // };
-
     const formData = new FormData();
-
     formData.append('location', 'kochi');
     formData.append('tagUser', '2');
     formData.append('caption', text);
@@ -43,7 +35,7 @@ const EditPost = ({navigation}) => {
 
     try {
       const res = await CreatePost(formData);
-      console.log(res?.data, '---------><><');
+      // console.log(res?.data, '---------><><');
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error creating post:', error);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Alert} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 // import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Ionicons for icons
 import images from '../assets/Images';
