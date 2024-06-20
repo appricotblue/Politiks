@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Video from 'react-native-video';
@@ -6,6 +6,8 @@ import { getHeight, getWidth } from '../../Theme/Constants';
 import images from '../../assets/Images';
 import { useNavigation } from '@react-navigation/native';
 import CommonButton from '../../Components/CommonButton';
+import ImageResizer from 'react-native-image-resizer';
+import local from '../../Storage/Local';
 
 const requestPermissions = async () => {
     if (Platform.OS === 'android') {
@@ -56,7 +58,20 @@ const UploadScreen = () => {
     const [videoModalVisible, setVideoModalVisible] = useState(false);
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [userid, setuserid] = useState('');
 
+
+    const getuser = async () => {
+        const userId = await local.getUserId();
+        console.log(userId, 'userid test')
+        setuserid(userId)
+    };
+
+    useEffect(() => {
+
+        getuser()
+
+    }, [])
     const openCameraOrGallery = (mediaType, option) => {
         const hasPermission = requestPermissions();
         if (!hasPermission) {
@@ -95,23 +110,173 @@ const UploadScreen = () => {
         setImageModalVisible(true);
     };
 
-    const handleVerify = () => {
-        if (!video || !image) {
-            setErrorMessage('Both video and image files are required');
-        } else {
-            navigation.navigate('PendingScreen')
-            // setErrorMessage('');
-            // proceed with verification
+    // const handleVerify = () => {
+    //     if (!video || !image) {
+    //         setErrorMessage('Both video and image files are required');
+    //     } else {
+    //         handledataVerify()
+    //         // navigation.navigate('PendingScreen')
+    //         // setErrorMessage('');
+    //         // proceed with verification
+    //     }
+    // };
+
+    const resizeImage = async (uri, width, height) => {
+        try {
+            const response = await ImageResizer.createResizedImage(uri, width, height, 'JPEG', 80);
+            return response;
+        } catch (err) {
+            console.log(err);
+            return null;
         }
     };
+    const handleVerify = async () => {
+        if (!video || !image) {
+            setErrorMessage('Both video and image files are required');
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append('verificationVideo', {
+            uri: video.uri,
+            type: video.type,
+            name: video.fileName,
+        });
+        formData.append('verificationImage', {
+            uri: image.uri,
+            type: image.type,
+            name: image.fileName,
+        });
+    
+        // Custom fetch function with timeout
+        const fetchWithTimeout = (url, options, timeout = 180000) => { // 180000 ms = 3 minutes
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timed out')), timeout)
+                ),
+            ]);
+        };
+    
+        try {
+            console.log('Starting upload...');
+    
+            const response = await fetchWithTimeout(
+                `https://politiks.aindriya.co.uk/user/uploadVerificationFiles/${userid}`,
+                {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                },
+                180000 // Timeout set to 3 minutes
+            );
+    console.log(response,'response')
+            if (response.ok) {
+                console.log('Upload successful');
+                navigation.navigate('PendingScreen');
+            } else {
+                const responseBody = await response.text();
+                console.log('Upload failed. Server response:', responseBody);
+                setErrorMessage(`Upload failed. Server responded with: ${responseBody}`);
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+            setErrorMessage(`An error occurred: ${error.message}`);
+        }
+    };
+    
+
+    // Use this function before appending the image to FormData
+    // const handleImagePicker = async () => {
+    //     setImageModalVisible(true);
+    //     const response = await launchImageLibrary({ mediaType: 'photo', quality: 0.5 });
+    //     if (!response.didCancel && !response.error) {
+    //         const resizedImage = await resizeImage(response.assets[0].uri, 800, 600); // Adjust width and height as needed
+    //         if (resizedImage) {
+    //             setImage(resizedImage);
+    //         } else {
+    //             Alert.alert('Error', 'Failed to resize image.');
+    //         }
+    //     }
+    // };
+
+
+    // const handleVerify = async () => {
+    //     if (!video || !image) {
+    //         setErrorMessage('Both video and image files are required');
+    //         return;
+    //     }
+
+    //     // Check file sizes (example size limit: 5MB for image and 20MB for video)
+    //     // const imageSizeLimit = 5 * 1024 * 1024;
+    //     // const videoSizeLimit = 20 * 1024 * 1024;
+
+    //     // if (image.fileSize > imageSizeLimit) {
+    //     //     setErrorMessage('Image file is too large. Maximum size is 5MB.');
+    //     //     return;
+    //     // }
+
+    //     // if (video.fileSize > videoSizeLimit) {
+    //     //     setErrorMessage('Video file is too large. Maximum size is 20MB.');
+    //     //     return;
+    //     // }
+
+    //     const formData = new FormData();
+    //     formData.append('verificationVideo', {
+    //         uri: video.uri,
+    //         type: video.type,
+    //         name: video.fileName,
+    //     });
+    //     formData.append('verificationImage', {
+    //         uri: image.uri,
+    //         type: image.type,
+    //         name: image.fileName,
+    //     });
+
+    //     // Custom fetch function with timeout
+    //     const fetchWithTimeout = (url, options, timeout = 30000) => {
+    //         return Promise.race([
+    //             fetch(url, options),
+    //             new Promise((_, reject) =>
+    //                 setTimeout(() => reject(new Error('Request timed out')), timeout)
+    //             ),
+    //         ]);
+    //     };
+
+    //     try {
+    //         const response = await fetchWithTimeout(
+    //             `https://politiks.aindriya.co.uk/user/uploadVerificationFiles/${userid}`,
+    //             {
+    //                 method: 'POST',
+    //                 body: formData,
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                 },
+    //             },
+    //             180000  // Timeout set to 60 seconds
+    //         );
+    //         console.log(response)
+    //         if (response.ok) {
+    //             navigation.navigate('PendingScreen');
+    //         } else {
+    //             const responseBody = await response.text();
+    //             setErrorMessage(`Upload failed. Server responded with: ${responseBody}`);
+    //         }
+    //     } catch (error) {
+    //         setErrorMessage(`An error occurred: ${error.message}`);
+    //     }
+    // };
+
 
     return (
         <View style={styles.container}>
             <View style={{ width: getWidth(1.2), marginTop: 10, marginBottom: 20, marginTop: 30, }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, }}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
-                </TouchableOpacity>
+                    </TouchableOpacity>
                     <Text style={styles.TileTxt}>Leader Verification</Text>
                 </View>
 
@@ -130,7 +295,7 @@ const UploadScreen = () => {
                         controls={true}
                     />
                 ) : (
-                        <Text style={styles.uploadText}>Upload</Text>
+                    <Text style={styles.uploadText}>Upload</Text>
                 )}
             </TouchableOpacity>
             {video && <Text style={styles.uploadedText}>Video Uploaded</Text>}
@@ -142,7 +307,7 @@ const UploadScreen = () => {
                 {image ? (
                     <Image source={{ uri: image.uri }} style={{ height: '100%', width: '100%', borderRadius: 16 }} />
                 ) : (
-                        <Text style={styles.uploadText}>Upload</Text>
+                    <Text style={styles.uploadText}>Upload</Text>
                 )}
             </TouchableOpacity>
             {image && <Text style={styles.uploadedText}>Image Uploaded</Text>}

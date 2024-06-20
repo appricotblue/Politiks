@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     ActivityIndicator,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -21,6 +22,7 @@ import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import GradientText from '../../Components/GradientText';
+import { Createinterest, getallinterests } from '../../api';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -31,10 +33,11 @@ const InterestSelection = props => {
     const [fullname, changefullname] = useState('');
     const [error, changeerror] = useState('');
     const [password, changepassword] = useState('');
+    const [interestdata, setinterestdata] = useState([]);
 
     const [selectedInterests, setSelectedInterests] = useState([]);
     const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry',];
-
+    const [userid, setuserid] = useState('');
 
     const toggleInterest = (interest) => {
         if (selectedInterests.includes(interest)) {
@@ -49,21 +52,76 @@ const InterestSelection = props => {
             // alert('Please select at least four interests.');
             changeerror('*Please select at least four interests.')
         } else {
-            // Proceed to the next screen
-            // navigation.replace('SuccessScreen');
-            navigation.replace('FollowAccounts');
+            handleinterest()
+            // navigation.replace('FollowAccounts');
+        }
+    };
+
+    const Getallinterest = async () => {
+        try {
+            // const response = await Createinterest(selectedInterests,userid);
+            const response = await getallinterests();
+            setinterestdata(response)
+            console.log(response, 'login api response')
+            if (response.message = "User details created successfully") {
+
+                // await local.storeUserId('UserId', response?.user?.id.toString());
+
+                navigation.replace('InterestSelection');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred');
+            }
+
+        }
+    };
+
+
+    const handleinterest = async () => {
+        try {
+            // const response = await Createinterest(selectedInterests,userid);
+            const response = await Createinterest([1, 2, 3], userid);
+            console.log(response, 'login api response')
+            if (response.message = "User interests created successfully") {
+
+                // await local.storeUserId('UserId', response?.user?.id.toString());
+
+                navigation.replace('FollowAccounts');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred');
+            }
+
         }
     };
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            changeemail('');
-            changepassword('');
-            //Put your Data loading function here instead of my loadData()
-        });
+        // Getallinterest()
+    }, [userid])
 
-        return unsubscribe;
-    }, [navigation]);
+    const getuser = async () => {
+        const userId = await local.getUserId();
+        console.log(userId, 'leaderdata he')
+        setuserid(userId)
+        // Getallinterest()
+    };
+
+    useEffect(() => {
+
+        getuser()
+
+    }, [])
+
 
     return (
         <View style={styles.container}>
@@ -103,7 +161,7 @@ const InterestSelection = props => {
                     texttitle={'white'}
                 />
                 <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.navigate('TellusAboutyou')}
                     style={{ width: windowWidth, height: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{
                         textDecorationLine: 'underline', fontFamily: 'Jost',

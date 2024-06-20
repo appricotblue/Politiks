@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     ImageBackground,
-    FlatList
+    FlatList,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -22,6 +23,7 @@ import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import GradientText from '../../Components/GradientText';
+import { CreateFolowers ,getfolowers} from '../../api';
 // import Icon from 'react-native-vector-icons/MaterialIcons'; // Add this line for icons
 
 var windowWidth = Dimensions.get('window').width; //full width
@@ -33,11 +35,12 @@ const FollowAccounts = props => {
     const [fullname, changefullname] = useState('');
     const [error, changeerror] = useState('');
     const [password, changepassword] = useState('');
+    const [folowerdata, setfolowerdata] = useState([]);
 
     const [selectedInterests, setSelectedInterests] = useState([]);
-    const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry'];
 
     const [selectedAccounts, setSelectedAccounts] = useState([]);
+    const [userid, setuserid] = useState('')
 
     const itemData = [
         { id: 1, name: 'Joe Biden', followers: 'United States of America', image: images.ViratBanner },
@@ -55,29 +58,87 @@ const FollowAccounts = props => {
     const getuser = async () => {
         const leaderdata = await local.getLeader();
         console.log(leaderdata, 'leaderdata he')
+        const userId = await local.getUserId();
+        console.log(userId, 'leaderdata he')
+        setuserid(userId)
+        Getfollowers(userId)
     }
-
+    getfolowers
     useEffect(() => {
 
         getuser()
 
     }, [])
+
+    const Getfollowers = async (userid) => {
+       
+        try {
+            // const response = await Createinterest(selectedInterests,userid);
+            const response = await getfolowers(userid);
+            console.log(response, 'login api response')
+            setfolowerdata(response)
+            if (response.message = "User interests created successfully") {
+
+                // await local.storeUserId('UserId', response?.user?.id.toString());
+
+                // navigation.replace('FollowAccounts');
+            } else {
+                console.log('Error during login:',);
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred');
+            }
+
+        }
+    };
+
+    const handlefolowers = async (itemid) => {
+      
+            console.log('called',itemid)
+            try {
+                // const response = await Createinterest(selectedInterests,userid);
+                const response = await CreateFolowers(itemid, userid);
+                console.log(response, 'login api response')
+                if (response.message = "User interests created successfully") {
+    
+                    // await local.storeUserId('UserId', response?.user?.id.toString());
+    
+                    // navigation.replace('FollowAccounts');
+                } else {
+                    console.log('Error during login:',);
+                }
+            } catch (error) {
+                if (error.response && error.response.data && error.response.data.message) {
+                    Alert.alert('Error', error.response.data.message);
+                } else {
+                    Alert.alert('Error', 'An error occurred');
+                }
+    
+            }
+       
+      
+    };
+
     const renderItem = ({ item }) => {
-        const isSelected = selectedAccounts.includes(item.id);
+        const isSelected = selectedAccounts.includes(item?.userId);
         return (
             <TouchableOpacity
                 style={[styles.itemContainer, isSelected && styles.selectedItemContainer]}
+              
 
             >
                 <View style={{ width: getWidth(8), }}>
-                    <Image source={item.image} style={styles.itemImage} />
+                    <Image source={ images.ViratBanner } style={styles.itemImage} />
                 </View>
                 <View style={{ width: getWidth(2), marginLeft: 5 }}>
-                    <Text style={styles.itemName}>{item.name}</Text>
-                    <Text> {item.followers}</Text>
+                    <Text style={styles.itemName}>{item?.userName}</Text>
+                    <Text> {item?.country}</Text>
                 </View>
-                <View style={{ width: getWidth(6), justifyContent: 'center', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => toggleAccountSelection(item.id)} style={[styles.checkbox, isSelected && styles.selectedCheckbox]}>
+                <View  onPress={()=>handlefolowers(item?.userId)} style={{ width: getWidth(6), justifyContent: 'center', alignItems: 'center', }}>
+                    <TouchableOpacity onPress={() => {toggleAccountSelection(item?.userId),handlefolowers(item?.userId)}} style={[styles.checkbox, isSelected && styles.selectedCheckbox]}>
                         {isSelected &&
                             <Image source={images.Greentick} style={styles.checkbox} />
                             // <Icon name="check" size={20} color="white" />
@@ -105,6 +166,7 @@ const FollowAccounts = props => {
     };
 
     const isvalidate = async () => {
+        if(selectedAccounts?.length >= 1){
         const leaderdata = await local.getLeader();
         console.log(leaderdata, 'leaderdata he')
         if (leaderdata == 'Follower') {
@@ -112,6 +174,9 @@ const FollowAccounts = props => {
          } else {
              navigation.replace('UploadScreen');
          }
+        }else{
+            Alert.alert('Please Select atleast one account to continue')
+        }
     };
 
     useEffect(() => {
@@ -134,9 +199,9 @@ const FollowAccounts = props => {
 
             <View style={{ width: getWidth(1.1), height: getHeight(1.7), }}>
                 <FlatList
-                    data={itemData}
+                    data={folowerdata}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item?.userId?.toString()}
                     contentContainerStyle={styles.flatListContent}
                 />
             </View>

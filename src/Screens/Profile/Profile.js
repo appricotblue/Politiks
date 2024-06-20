@@ -16,14 +16,16 @@ import {getHeight, getWidth} from '../../Theme/Constants';
 import DiscoverItems from '../../Components/DiscoverItems';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
+import {getAllUserPost} from '../../api';
 
 const Profile = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
+  const [details, setDetails] = useState([]);
 
   const imageData = [
     {id: 1, imageUrl: images.Welcome_1},
@@ -50,6 +52,23 @@ const Profile = () => {
     {id: '7', title: 'Supports', imageUrl: images.Welcome_3},
     // Add more items as needed
   ];
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllUserPosts();
+    }, []),
+  );
+
+  const getAllUserPosts = async () => {
+    try {
+      const res = await getAllUserPost();
+      setDetails(res?.data);
+      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
   const handleTabPress = tabIndex => {
     setSelectedTab(tabIndex);
   };

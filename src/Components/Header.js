@@ -4,9 +4,34 @@ import LinearGradient from 'react-native-linear-gradient';
 // import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Ionicons for icons
 import images from '../assets/Images';
 import {useNavigation} from '@react-navigation/native';
+import local from '../Storage/Local';
 
 const Header = ({title}) => {
   const navigation = useNavigation();
+
+  const logOut = async () => {
+    // await local.storEexistuser('existuser', '');
+    // navigation.navigate('LoginScreen');
+    Alert.alert(
+      'Log Out',
+      'Are you sure you want to log out?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Logout canceled'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            await local.storEexistuser('existuser', '');
+            navigation.navigate('LoginScreen');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
   return (
     <LinearGradient
       colors={['white', 'white']}
@@ -17,6 +42,9 @@ const Header = ({title}) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 10,
+        borderBottomWidth: 0.4,
+        borderColor: 'grey',
+        elevation: 5,
       }}>
       {/* Back Arrow */}
       <TouchableOpacity
@@ -36,11 +64,11 @@ const Header = ({title}) => {
       </TouchableOpacity>
 
       <View style={{flexDirection: 'row'}}>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{marginHorizontal: 10}}
-          onPress={() => navigation.navigate('DiscoverTrends')}>
+          onPress={() => logOut()}>
           <Image style={{width: 30, height: 30}} source={images.GearPNG} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );

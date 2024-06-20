@@ -17,8 +17,10 @@ const HomeHeader = ({title}) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 10,
+        borderBottomWidth: 0.4,
+        borderColor: 'grey',
+        elevation: 5,
       }}>
-      {/* Back Arrow */}
       <TouchableOpacity
         style={{flexDirection: 'row'}}
         onPress={() => navigation.navigate('Profile')}>

@@ -58,9 +58,9 @@ const SignUpwithEmail = props => {
         try {
             const response = await login(email, password);
             console.log(response, 'login api response')
-            if (response.message = "OTP sent successfully") {
-                // await Local.storEexistuser('existuser', response.isExistingUser == true ? 'existuser' : 'newuser');
-                // navigation.replace('OtpScreen', { mobileno: mobileNumber });
+            if (response.message = "Login successful") {
+                await local.storEexistuser('existuser', 'existuser');
+                navigation.replace('Home');
             } else {
                 console.log('Error during login:',);
             }
