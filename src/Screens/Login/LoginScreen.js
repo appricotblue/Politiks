@@ -59,10 +59,12 @@ const LoginScreen = props => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
+      Alert.alert(userInfo)
       // Handle successful sign-in
     } catch (error) {
       console.log(error);
       console.error('Error in Google login:', error.code, error.message);
+      Alert.alert(error.code, error.message)
     }
   };
   // const handleGoogleSignIn = async () => {
@@ -146,8 +148,8 @@ const LoginScreen = props => {
   
   useEffect(() => {
     GoogleSignin.configure({
-      // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-      webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
+      webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+      // webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
       offlineAccess: true,
       hostedDomain: '',
       forceCodeForRefreshToken: true,

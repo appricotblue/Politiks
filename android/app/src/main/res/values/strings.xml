@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Politiks</string>
+    <!-- <string name="app_name">Politiks</string> -->
+    <string name="app_name">PushNotifications</string>
+     <string name="server_client_id">299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com</string>
 </resources>
