@@ -64,9 +64,11 @@ const Profile = () => {
     getAllPosts(userId);
   };
 
-  useEffect(() => {
-    getuser();
-  }, []);
+  useEffect(
+    React.useCallback(() => {
+      getuser();
+    }, []),
+  );
 
   const getAllUserPosts = async userId => {
     try {
@@ -82,7 +84,7 @@ const Profile = () => {
     try {
       const res = await getAllUserImages(userId);
       setImage(res?.data);
-      // console.log(res?.data, 'Profileeeeeeee--------------------');
+      console.log(res?.data, 'Profileeeeeeee--------------------');
     } catch (error) {
       console.error('Error creating post:', error);
     }
