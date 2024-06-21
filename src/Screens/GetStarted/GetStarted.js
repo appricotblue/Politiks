@@ -61,9 +61,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000c0',
     },
     TileTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: getHeight(40),
         color: 'white',
-        fontFamily:'Jost',
+        
         fontWeight:'700',
         paddingBottom:10,
         alignSelf:'center',
@@ -72,12 +73,13 @@ const styles = StyleSheet.create({
         
     },
     subTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: getHeight(60),
         color: 'white',
         textAlign: 'center',
         width:getHeight(2.6),
         alignSelf:'center',
-        fontFamily:'Jost',
+        
     fontWeight:'300'
     },
     bottomContainer: {

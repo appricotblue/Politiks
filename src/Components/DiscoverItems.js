@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderRadius:45
   },
   name: {
-    fontFamily:'Jost',
+    fontFamily: 'Jost-Bold',
     fontWeight: '500', 
     fontSize:18,
     marginTop:30,

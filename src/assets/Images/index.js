@@ -65,6 +65,11 @@ const images = {
   pending: require('./pending.png'),
   VerifiedPNG: require('./VerifiedPNG.png'),
   LogOutPNG: require('./LogOutPNG.png'),
+  eye: require('./eye.png'),
+  eyeslash: require('./eyeslash.png'),
+  googleicone: require('./googleicone.png'),
+  Envelope: require('./Envelope.png'),
+  apple: require('./apple.png'),
 };
 
 export default images;

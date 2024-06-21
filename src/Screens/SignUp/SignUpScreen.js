@@ -64,7 +64,7 @@ const SignUpScreen = props => {
         }
 
         else if (repassword != password) {
-            changechangepassword('Please enter same password')
+            changechangerepassword('Please enter same password')
         } else {
             handleRegister();
             await local.storLeader('isleader', selectedOption == 'Leader' ? 'Leader' : 'Follower');
@@ -136,7 +136,7 @@ const SignUpScreen = props => {
                         }}
                         placeholder={'Fullname'}
                         width={getHeight(2.3)}
-                        title={'Fullname'}
+                        title={'Full Name'}
                         borderColor={'white'}
                         valuecolor={'white'}
                     />
@@ -157,7 +157,7 @@ const SignUpScreen = props => {
                     <TextInputBox
                         value={password}
                         titlecolour={'white'}
-                        errorText={checkphone}
+                        errorText={checkpassword}
                         onChangeText={text => {
                             changepassword(text);
                             changechangepassword('')
@@ -167,11 +167,12 @@ const SignUpScreen = props => {
                         title={'New Password'}
                         borderColor={'white'}
                         valuecolor={'white'}
+                        isPassword={true}
                     />
                     <TextInputBox
                         value={repassword}
                         titlecolour={'white'}
-                        errorText={checkphone}
+                        errorText={checkrepassword}
                         onChangeText={text => {
                             changerepassword(text);
                             changechangerepassword('')
@@ -181,10 +182,16 @@ const SignUpScreen = props => {
                         title={'Re-enter Password'}
                         borderColor={'white'}
                         valuecolor={'white'}
+                        isPassword={true}
                     />
 
-                    <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(4) }}>
-                        <Text style={[styles.subTxt, { textAlign: 'center' }]}> By continuing, you agree to our Terms of use and privacy policies</Text>
+                    <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(4),marginTop:20 ,}}>
+                        <TouchableOpacity>
+                        <Text style={[styles.subTxt, { textAlign: 'center' ,alignSelf:'center'}]}> By continuing, you agree to our <Text style={[styles.subTxt, { textAlign: 'center',alignSelf:'center' ,color:'#21A0E7'}]}> Terms of use </Text></Text></TouchableOpacity>
+                        <TouchableOpacity style={{alignSelf:'center'}}>
+                        <Text style={[styles.subTxt, { textAlign: 'center',alignSelf:'center' ,color:'#21A0E7'}]}>  and privacy policies</Text>
+
+                        </TouchableOpacity>
 
                         <CommonButton
                             onPress={() => isvalidate()}
@@ -195,7 +202,7 @@ const SignUpScreen = props => {
                         />
                         <Text style={styles.subTxt2}>{"Already have an account?"}</Text>
                         <TouchableOpacity style={{alignSelf:'center',}} onPress={() => navigation.navigate('LoginScreen')}>
-                            <Text style={[styles.subTxt, { textDecorationLine: 'underline', textAlign: 'center', marginTop: 24 }]}>{"Sign-in Now"}</Text>
+                            <Text style={[styles.subTxt, { textDecorationLine: 'underline', textAlign: 'center', marginTop: 16 }]}>{"Sign-in Now"}</Text>
                         </TouchableOpacity>
                     </View>
                 </ImageBackground>
@@ -217,24 +224,25 @@ const styles = StyleSheet.create({
         height: windowHeight,
     },
     TileTxt: {
+        fontFamily: 'Jost',
         fontSize: 28,
         color: 'white',
-        fontFamily: 'Jost',
+       
         fontWeight: '700',
         paddingBottom: 2
     },
     subTxt: {
-        fontSize: getHeight(50),
+        fontSize: 14,
         color: 'white',
-        width: getHeight(2.6),
+        // width: getHeight(2.6),
         fontFamily: 'Jost',
         fontWeight: '300',
     },
     subTxt2: {
-        fontSize: getHeight(50),
+        fontSize: 14,
         color: 'white',
         textAlign: 'center',
-        width: getHeight(2.6),
+        // width: getHeight(2.6),
         fontFamily: 'Jost',
         fontWeight: '300',
         alignSelf: 'center',
