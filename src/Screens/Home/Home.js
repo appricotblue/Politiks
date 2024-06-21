@@ -11,6 +11,7 @@ import {
   Image,
   ImageBackground,
   BackHandler,
+  Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import {setApiData} from '../../redux/action';
@@ -115,6 +116,33 @@ const Home = props => {
       getAllPosts();
     }, []),
   );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent the back button from navigating back
+        Alert.alert(
+          'Exit App',
+          'Do you want to exit the app?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'OK', onPress: () => BackHandler.exitApp() },
+          ],
+          { cancelable: false }
+        );
+        return true;
+      };
+
+      // Add event listener for back button
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      // Cleanup the event listener on unmount
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
+
 
   const getAllPosts = async () => {
     try {

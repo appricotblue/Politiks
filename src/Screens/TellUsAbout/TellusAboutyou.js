@@ -344,7 +344,7 @@ const TellusAboutyou = props => {
             editable={false}
             placeholder={'DD/MM/YY'}
             width={windowWidth / 1.2}
-            title={'Date of Birth'}
+            title={'What’s your date of birth?'}
             color={'white'}
           />
         </TouchableOpacity>

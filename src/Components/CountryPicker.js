@@ -67,15 +67,16 @@ const CountryPicker = props => {
 const styles = StyleSheet.create({
   container: {
     // margin: 20,
-    marginTop:7,
+    marginTop:3,
     height: height / 8.5,
     width: width / 1.18,
     // backgroundColor: 'red',
   },
   title: {
+    fontFamily: 'Jost-Regular',
     color: 'black',
     marginLeft: 5,
-    marginBottom: 7,
+    marginBottom: 5,
     fontSize: 15,
   },
   dropdownButton: {
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   buttonText: {
+    fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: 'black',
   },
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemText: {
+    fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: 'black',
   },

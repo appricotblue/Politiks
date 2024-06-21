@@ -251,19 +251,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     TileTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: 28,
         color: 'black',
-        fontFamily: 'Jost',
-        fontWeight: '700',
+        
         paddingBottom: 5
     },
     subTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: 16,
         color: 'black',
         // textAlign: 'center',
         width: getHeight(2.6),
-        fontFamily: 'Jost',
-        fontWeight: '400',
+      
     },
     optionContainer: {
         flexDirection: 'row',
@@ -286,9 +286,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#3A7BD5'
     },
     optionText: {
+        fontFamily: 'Jost-Regular',
         fontSize: 16,
-        fontFamily: 'Jost',
-        fontWeight: '400',
+        
 
     },
     gentertxt: {

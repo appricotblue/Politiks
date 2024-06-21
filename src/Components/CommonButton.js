@@ -24,7 +24,7 @@ const CommonButton = props => {
         {props.icon &&
           <Image source={props.icon} style={styles.avatar} />
         }
-        <Text style={{ fontWeight: 'bold', color: props?.texttitle, justifyContent: 'center', alignItems: 'center', fontSize: 16 }}>
+        <Text style={{ fontFamily: 'Jost-Bold', color: props?.texttitle, justifyContent: 'center', alignItems: 'center', fontSize: 16 }}>
         {props?.title}
       </Text>
       </LinearGradient>
@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     // fontWeight:'500'
   },
   avatar: {
-    width: 18,
-    height: 21,
+    width: 19,
+    height: 22,
     marginRight:5
   // borderRadius:45
   },

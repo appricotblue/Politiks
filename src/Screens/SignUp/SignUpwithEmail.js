@@ -59,7 +59,9 @@ const SignUpwithEmail = props => {
             const response = await login(email, password);
             console.log(response, 'login api response')
             if (response.message = "Login successful") {
+
                 await local.storEexistuser('existuser', 'existuser');
+                await local.storeUserId('UserId', response?.user?.id.toString());
                 navigation.replace('Home');
             } else {
                 console.log('Error during login:',);
@@ -237,8 +239,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Jost-Bold',
         fontSize: 28,
         color: 'white',
-
-        // fontWeight: '700',
         paddingBottom: 5
 
     },
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         // textAlign: 'center',
         // width: getHeight(2.6),
 
-        fontWeight: '300',
+        // fontWeight: '300',
         // alignSelf: 'center'
     },
 });

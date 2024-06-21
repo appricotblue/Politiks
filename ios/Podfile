@@ -31,7 +31,7 @@ end
 # Use modular headers globally
 use_modular_headers!
 
-target 'PushNotification' do
+target 'Politiks' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -51,7 +51,7 @@ target 'PushNotification' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'PushNotificationTests' do
+  target 'PolitiksTests' do
     inherit! :complete
     # Pods for testing
   end

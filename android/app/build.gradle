@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.pushnotification"
+    namespace "com.politiks"
     defaultConfig {
-        applicationId "com.pushnotification"
+        applicationId "com.politiks"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
