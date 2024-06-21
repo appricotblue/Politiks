@@ -78,18 +78,20 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     title: {
+        fontFamily: 'Jost-Bold',
         fontSize: 28,
         color: 'black',
-        fontFamily:'Jost',
+   
         fontWeight:'700',
         marginBottom: 10
     },
     subTitle: {
+        fontFamily: 'Jost-Bold',
         fontSize: 16,
         color: 'black',
         textAlign: 'center',
         marginHorizontal: 20,
-        fontFamily:'Jost',
+        
         fontWeight:'400',
     },
     buttonContainer: {

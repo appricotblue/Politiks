@@ -57,7 +57,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 50, fontWeight: '700', color: 'black' }}>
+      <Text style={{ fontSize: 50, fontWeight: '700', color: 'black', fontFamily: 'Jost-Bold' }}>
         Politiks
       </Text>
       {/* <Image source={require('../../assets/Images/Splash.png')} style={styles.image} /> */}

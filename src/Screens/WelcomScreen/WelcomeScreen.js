@@ -174,10 +174,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   skipTxt: {
+    fontFamily: 'Jost-Bold',
     fontSize: getHeight(50),
     color: 'white',
     textDecorationLine: 'underline',
-    fontFamily:'Jost',
+
     fontWeight:'400'
   },
   nextTxt: {
@@ -196,11 +197,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
   },
   subTxt: {
+    fontFamily: 'Jost-Bold',
     fontSize: getHeight(60),
     color: 'white',
     textAlign: 'center',
     width: getHeight(2.6),
-    fontFamily:'Jost',
+
     fontWeight:'300'
   },
 });

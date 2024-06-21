@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 27,
   },
-  liketext:{color:'white',fontFamily:'Jost',fontWeight:'500',fontSize:15}
+  liketext: { color: 'white', fontFamily: 'Jost-Bold', fontWeight: '500', fontSize: 15 }
 });
 
 export default Reels;

@@ -176,10 +176,11 @@ const styles = StyleSheet.create({
       borderRadius: 35,
     },
     itemName: {
+      fontFamily: 'Jost-Regular',
       fontWeight: '600',
       marginTop: 5,
-      // fontFamily:'Jost',
-      fontFamily: 'Jost-Regular',
+      // fontFamily: 'Jost-Bold',
+      
       fontSize:20,
       color:'black'
     },
@@ -215,15 +216,17 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
+    fontFamily: 'Jost-Bold',
     color: 'black',
     fontSize:18,
-    fontFamily:'Jost',
+    
     fontWeight:'400'
   },
   activeTabText: {
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize:18,
-    fontFamily:'Jost',
+    
     fontWeight:'400'
   }, tabs: {
     flexDirection: 'row',
@@ -247,15 +250,17 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
+    fontFamily: 'Jost-Bold',
+    fontWeight:'400',
     color: 'black',
     fontSize:18,
-    fontFamily:'Jost',
-    fontWeight:'400'
+   
   },
   activeTabText: {
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize:18,
-    fontFamily:'Jost',
+    
     fontWeight:'400'
   },
   });

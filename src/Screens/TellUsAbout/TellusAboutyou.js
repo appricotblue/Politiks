@@ -271,7 +271,7 @@ const TellusAboutyou = props => {
             <Image source={images.ArrowLeft} style={styles.arrowimg} />
           </TouchableOpacity>
           <Text style={styles.TileTxt}>{'Tell us about you'}</Text>
-          <Text style={styles.subTxt}>{'Enter your details'}</Text>
+          <Text style={styles.subTxt}>{'This will help us to serve you better'}</Text>
         </View>
         <TextInputBox
           value={fullname}
@@ -301,7 +301,7 @@ const TellusAboutyou = props => {
           <Text style={styles.subTxt}>
             {'I am a (select why are you here)'}
           </Text>
-          <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 25}}>
+          <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 5, }}>
             <View style={styles.optionContainer}>
               <TouchableOpacity
                 style={[
@@ -349,15 +349,16 @@ const TellusAboutyou = props => {
           />
         </TouchableOpacity>
         <CountryPicker
-          title="Select your country"
-          countries={countries}
-          onSelectCountry={handleSelectCountry}
-        />
-        <CountryPicker
           title="Select your gender"
           countries={genderdata}
           onSelectCountry={handleSelectgender}
         />
+        <CountryPicker
+          title="Select your country"
+          countries={countries}
+          onSelectCountry={handleSelectCountry}
+        />
+
         <CountryPicker
           title="Select your state"
           countries={statedata}
@@ -436,24 +437,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   TileTxt: {
+    fontFamily:'Jost-Bold',
     fontSize: 28,
     color: 'black',
-    fontFamily: 'Jost',
-    fontWeight: '700',
+  
+    // fontWeight: '700',
     paddingBottom: 2,
   },
   subTxt: {
-    fontSize: getHeight(50),
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
     color: 'black',
     width: getHeight(2.6),
-    fontFamily: 'Jost',
-    fontWeight: '300',
+   
+   
   },
   optionContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     marginBottom: 10,
     marginRight: 10,
+    // backgroundColor: 'red'
   },
   radioButton: {
     width: 20,

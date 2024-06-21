@@ -5,11 +5,17 @@ import reduxStore from './src/redux/store';
 import Routes from './src/Routes';
 import messaging from '@react-native-firebase/messaging';
 import { requestUserPermission } from './src/services/notificationService';
+import GlobalFont from 'react-native-global-font';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 const App = () => {
+
+  React.useEffect(() => {
+    GlobalFont.applyGlobal('Jost-Regular'); // Apply font globally
+  }, []);
+  
   useEffect(() => {
     requestUserPermission();
 

@@ -9,47 +9,7 @@ import CommonButton from '../../Components/CommonButton';
 import ImageResizer from 'react-native-image-resizer';
 import local from '../../Storage/Local';
 
-const requestPermissions = async () => {
-    if (Platform.OS === 'android') {
-        const cameraPermission = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-                title: 'Camera Permission',
-                message: 'App needs camera permission',
-                buttonNeutral: 'Ask Me Later',
-                buttonNegative: 'Cancel',
-                buttonPositive: 'OK',
-            }
-        );
-        const readStoragePermission = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            {
-                title: 'Read External Storage Permission',
-                message: 'App needs access to your storage to read files',
-                buttonNeutral: 'Ask Me Later',
-                buttonNegative: 'Cancel',
-                buttonPositive: 'OK',
-            }
-        );
-        const writeStoragePermission = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-            {
-                title: 'Write External Storage Permission',
-                message: 'App needs access to your storage to save files',
-                buttonNeutral: 'Ask Me Later',
-                buttonNegative: 'Cancel',
-                buttonPositive: 'OK',
-            }
-        );
 
-        return (
-            cameraPermission === PermissionsAndroid.RESULTS.GRANTED &&
-            readStoragePermission === PermissionsAndroid.RESULTS.GRANTED &&
-            writeStoragePermission === PermissionsAndroid.RESULTS.GRANTED
-        );
-    }
-    return true;
-};
 
 const UploadScreen = () => {
     const navigation = useNavigation();
@@ -70,8 +30,51 @@ const UploadScreen = () => {
     useEffect(() => {
 
         getuser()
+        requestPermissions()
 
     }, [])
+
+    const requestPermissions = async () => {
+        if (Platform.OS === 'android') {
+            const cameraPermission = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: 'Camera Permission',
+                    message: 'App needs camera permission',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+            const readStoragePermission = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                {
+                    title: 'Read External Storage Permission',
+                    message: 'App needs access to your storage to read files',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+            const writeStoragePermission = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: 'Write External Storage Permission',
+                    message: 'App needs access to your storage to save files',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+
+            return (
+                cameraPermission === PermissionsAndroid.RESULTS.GRANTED &&
+                readStoragePermission === PermissionsAndroid.RESULTS.GRANTED &&
+                writeStoragePermission === PermissionsAndroid.RESULTS.GRANTED
+            );
+        }
+        return true;
+    };
     const openCameraOrGallery = (mediaType, option) => {
         const hasPermission = requestPermissions();
         if (!hasPermission) {
@@ -83,9 +86,9 @@ const UploadScreen = () => {
             launchImageLibrary({ mediaType: mediaType, videoQuality: 'high' }, (response) => {
                 if (!response.didCancel && !response.error) {
                     if (mediaType === 'video') {
-                        setVideo(response.assets[0]);
+                        setVideo(response?.assets[0]);
                     } else {
-                        setImage(response.assets[0]);
+                        setImage(response?.assets[0]);
                     }
                 }
             });
@@ -93,9 +96,9 @@ const UploadScreen = () => {
             launchCamera({ mediaType: mediaType, videoQuality: 'high', durationLimit: 30 }, (response) => {
                 if (!response.didCancel && !response.error) {
                     if (mediaType === 'video') {
-                        setVideo(response.assets[0]);
+                        setVideo(response?.assets[0]);
                     } else {
-                        setImage(response.assets[0]);
+                        setImage(response?.assets[0]);
                     }
                 }
             });
@@ -188,86 +191,6 @@ const UploadScreen = () => {
     };
     
 
-    // Use this function before appending the image to FormData
-    // const handleImagePicker = async () => {
-    //     setImageModalVisible(true);
-    //     const response = await launchImageLibrary({ mediaType: 'photo', quality: 0.5 });
-    //     if (!response.didCancel && !response.error) {
-    //         const resizedImage = await resizeImage(response.assets[0].uri, 800, 600); // Adjust width and height as needed
-    //         if (resizedImage) {
-    //             setImage(resizedImage);
-    //         } else {
-    //             Alert.alert('Error', 'Failed to resize image.');
-    //         }
-    //     }
-    // };
-
-
-    // const handleVerify = async () => {
-    //     if (!video || !image) {
-    //         setErrorMessage('Both video and image files are required');
-    //         return;
-    //     }
-
-    //     // Check file sizes (example size limit: 5MB for image and 20MB for video)
-    //     // const imageSizeLimit = 5 * 1024 * 1024;
-    //     // const videoSizeLimit = 20 * 1024 * 1024;
-
-    //     // if (image.fileSize > imageSizeLimit) {
-    //     //     setErrorMessage('Image file is too large. Maximum size is 5MB.');
-    //     //     return;
-    //     // }
-
-    //     // if (video.fileSize > videoSizeLimit) {
-    //     //     setErrorMessage('Video file is too large. Maximum size is 20MB.');
-    //     //     return;
-    //     // }
-
-    //     const formData = new FormData();
-    //     formData.append('verificationVideo', {
-    //         uri: video.uri,
-    //         type: video.type,
-    //         name: video.fileName,
-    //     });
-    //     formData.append('verificationImage', {
-    //         uri: image.uri,
-    //         type: image.type,
-    //         name: image.fileName,
-    //     });
-
-    //     // Custom fetch function with timeout
-    //     const fetchWithTimeout = (url, options, timeout = 30000) => {
-    //         return Promise.race([
-    //             fetch(url, options),
-    //             new Promise((_, reject) =>
-    //                 setTimeout(() => reject(new Error('Request timed out')), timeout)
-    //             ),
-    //         ]);
-    //     };
-
-    //     try {
-    //         const response = await fetchWithTimeout(
-    //             `https://politiks.aindriya.co.uk/user/uploadVerificationFiles/${userid}`,
-    //             {
-    //                 method: 'POST',
-    //                 body: formData,
-    //                 headers: {
-    //                     'Content-Type': 'multipart/form-data',
-    //                 },
-    //             },
-    //             180000  // Timeout set to 60 seconds
-    //         );
-    //         console.log(response)
-    //         if (response.ok) {
-    //             navigation.navigate('PendingScreen');
-    //         } else {
-    //             const responseBody = await response.text();
-    //             setErrorMessage(`Upload failed. Server responded with: ${responseBody}`);
-    //         }
-    //     } catch (error) {
-    //         setErrorMessage(`An error occurred: ${error.message}`);
-    //     }
-    // };
 
 
     return (
@@ -532,6 +455,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 20,
         borderRadius: 15,
+        overflow: 'hidden'
     },
     uploadText: {
         fontSize: 14,

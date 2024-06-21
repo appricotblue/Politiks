@@ -181,7 +181,7 @@ const LoginScreen = props => {
   return (
     <View style={styles.container}>
       <ImageBackground source={images.Welcome_3} resizeMode="cover" style={styles.image}>
-        <View style={{ width: getWidth(1), marginTop: 130, marginBottom: 40, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: getWidth(1), marginTop: 160, marginBottom: 40, justifyContent: 'center', alignItems: 'center' }}>
 
           <Text style={styles.TileTxt}>{"Welcome to Politiks"}</Text>
           <Text style={styles.subTxt}>{"A Community for Everyone."}</Text>
@@ -196,15 +196,17 @@ const LoginScreen = props => {
           title={'Sign-up/Sign-in with Google'}
           width={getHeight(2.3)}
           texttitle={'black'}
+          icon={images.googleicone}
         />
-        {/* <CommonButton
+        <CommonButton
           onPress={() => isValidate()}
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Apple'}
           width={getHeight(2.3)}
           texttitle={'black'}
-        /> */}
+          icon={images.apple}
+        />
         <CommonButton
           onPress={() => navigation.navigate('SignUpwithEmail')}
           // onPress={() => navigation.replace('Home')}
@@ -212,6 +214,7 @@ const LoginScreen = props => {
           title={'Sign-up/Sign-in with Email'}
           width={getHeight(2.3)}
           texttitle={'black'}
+          icon={images.Envelope}
         />
         {/* <View style={{justifyContent:'flex-end',alignItems:'baseline',height:getHeight(3.5)}}>
         <Text style={styles.subTxt}>{"New to Faniverse?"}</Text>
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    // justifyContent: 'flex-end',
+    // justifyContent: 'center',
     alignItems: 'center',
 
 
@@ -252,11 +255,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000c0',
   },
   TileTxt: {
+    fontFamily: 'Jost-Bold',
     fontSize: 35,
     color: 'white',
-    fontFamily:'Jost',
-    fontWeight:'700',
-    paddingBottom: 5
+    // fontWeight:'700',
+    paddingBottom: 5,
 
   },
   subTxt: {
@@ -264,7 +267,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     width: getHeight(2.6),
-    fontFamily:'Jost',
+    fontFamily: 'Jost-Regular',
     fontWeight:'300',
     alignSelf:'center'
   },

@@ -14,7 +14,7 @@ const ShowMoreText = ({ text, maxLength }) => {
         {showAll ? text : text.slice(0, maxLength)}
         {text.length > maxLength && (
           <TouchableOpacity onPress={toggleShowAll}>
-            <Text style={{ color: 'black' ,fontSize:18,fontFamily:'Jost',fontWeight:'600'}}>
+            <Text style={{ color: 'black', fontSize: 18, fontFamily: 'Jost-Bold', fontWeight: '600' }}>
               {showAll ? '..less' : ' ..More'}
             </Text>
           </TouchableOpacity>
