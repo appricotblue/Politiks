@@ -234,18 +234,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     TileTxt: {
+        fontFamily:'Jost-Bold',
         fontSize: 25,
         color: 'black',
-        fontFamily: 'Jost',
-        fontWeight: '700',
+      
         // paddingBottom: 5
     },
     subTxt: {
+        fontFamily:'Jost-Regular',
         fontSize: 14,
         color: 'black',
         // width: getHeight(2.6),
-        fontFamily: 'Jost',
-        fontWeight: '400',
+       
     },
     optionContainer: {
         flexDirection: 'row',
