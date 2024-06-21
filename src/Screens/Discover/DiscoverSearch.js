@@ -123,9 +123,10 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   itemName: {
+    fontFamily: 'Jost-Bold',
     fontWeight: '600',
     marginTop: 5,
-    fontFamily:'Jost',
+   
     fontSize:20,
     color:'black'
   },

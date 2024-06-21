@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     TileTxt: {
         fontSize: 28,
        color:'#8360C3',
-       fontFamily:'Jost',
+        fontFamily: 'Jost-Bold',
        fontWeight:'700',
         paddingBottom: 5
 
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
         width: getHeight(2.6),
-        fontFamily:'Jost',
+        fontFamily: 'Jost-Bold',
         fontWeight:'300',
     },
     optionContainer: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 16,
-        fontFamily:'Jost',
+        fontFamily: 'Jost-Bold',
         fontWeight:'300',
        
       
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
          paddingBottom: 5,
          alignSelf:'center',
          marginBottom:10,
-         fontFamily:'Jost',
+        fontFamily: 'Jost-Bold',
     fontWeight:'700',
     }
 });

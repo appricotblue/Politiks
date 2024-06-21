@@ -171,15 +171,17 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
+    fontFamily: 'Jost-Bold',
     color: 'black',
     fontSize:18,
-    fontFamily:'Jost',
+   
     fontWeight:'400'
   },
   activeTabText: {
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize:18,
-    fontFamily:'Jost',
+   
     fontWeight:'400'
   },
   flatListContent: {

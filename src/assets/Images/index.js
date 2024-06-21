@@ -68,6 +68,11 @@ const images = {
   PencilPNG: require('./PencilPNG.png'),
   CheckBoxUnSelected: require('./CheckBoxUnSelected.png'),
   CheckBoxSelected: require('./CheckBoxSelected.png'),
+  eye: require('./eye.png'),
+  eyeslash: require('./eyeslash.png'),
+  googleicone: require('./googleicone.png'),
+  Envelope: require('./Envelope.png'),
+  apple: require('./apple.png'),
 };
 
 export default images;

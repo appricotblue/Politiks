@@ -163,14 +163,20 @@ const SignUpwithEmail = props => {
                     title={'Password'}
                     borderColor={'white'}
                     valuecolor={'white'}
+                    isPassword={true}
                 />
 
                 <TouchableOpacity onPress={() => navigation.navigate('Forgotpassword')}>
-                    <Text style={[styles.subTxt, { textAlign: 'right' }]}>{"Forgot Password ?"}</Text>
+                    <Text style={[styles.subTxt, { textAlign: 'right' ,marginTop:10}]}>{"Forgot Password ?"}</Text>
                 </TouchableOpacity>
 
-                <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(3.5), }}>
-                    <Text style={[styles.subTxt, { textAlign: 'center' }]}>{" By continuing, you agree to our Terms of use and privacy policies"}</Text>
+                <View style={{ justifyContent: 'flex-end', alignItems: 'center', height: getHeight(4),marginTop:40 ,}}>
+                    <TouchableOpacity>
+                        <Text style={[styles.subTxt, { textAlign: 'center' ,alignSelf:'center'}]}> By continuing, you agree to our <Text style={[styles.subTxt, { textAlign: 'center',alignSelf:'center' ,color:'#21A0E7'}]}> Terms of use </Text></Text></TouchableOpacity>
+                        <TouchableOpacity style={{alignSelf:'center'}}>
+                        <Text style={[styles.subTxt, { textAlign: 'center',alignSelf:'center' ,color:'#21A0E7'}]}>  and privacy policies</Text>
+
+                        </TouchableOpacity>
 
                     <CommonButton
                         // onPress={() => navigation.replace('TellusAboutyou')}
@@ -219,27 +225,30 @@ const styles = StyleSheet.create({
     },
 
     text: {
+        fontFamily: 'Jost-Bold',
         color: 'white',
         fontSize: 42,
         lineHeight: 84,
-        fontWeight: 'bold',
+
         textAlign: 'center',
         backgroundColor: '#000000c0',
     },
     TileTxt: {
-        fontSize: getHeight(30),
+        fontFamily: 'Jost-Bold',
+        fontSize: 28,
         color: 'white',
-        fontFamily: 'Jost',
-        fontWeight: '700',
+
+        // fontWeight: '700',
         paddingBottom: 5
 
     },
     subTxt: {
-        fontSize: getHeight(50),
+        fontFamily: 'Jost-Bold',
+        fontSize: 16,
         color: 'white',
         // textAlign: 'center',
-        width: getHeight(2.6),
-        fontFamily: 'Jost',
+        // width: getHeight(2.6),
+
         fontWeight: '300',
         // alignSelf: 'center'
     },
