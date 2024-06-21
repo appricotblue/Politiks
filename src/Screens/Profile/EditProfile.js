@@ -20,8 +20,11 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
 import {getAllUserImages, getAllUserPost} from '../../api';
 import local from '../../Storage/Local';
+import {height, width} from '../../Theme/ConstantStyles';
+import ProfileModal from '../../Components/ProfileModal';
+import MyInterestModal from '../../Components/MyInterestModal';
 
-const Profile = () => {
+const EditProfile = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
@@ -29,31 +32,21 @@ const Profile = () => {
   const [details, setDetails] = useState();
   const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [nameText, setNameText] = useState('');
+  const [selfText, setSelfText] = useState('');
 
-  const imageData = [
-    {id: 1, imageUrl: images.Welcome_1},
-    {id: 2, imageUrl: images.Welcome_2},
-    {id: 3, imageUrl: images.Welcome_3},
-    {id: 4, imageUrl: images.ViratBanner},
-    {id: 5, imageUrl: images.Welcome_3},
-    {id: 6, imageUrl: images.Welcome_2},
-    {id: 7, imageUrl: images.Welcome_1},
-    {id: 8, imageUrl: images.Welcome_2},
-    {id: 9, imageUrl: images.Welcome_3},
-    {id: 10, imageUrl: images.ViratBanner},
-    {id: 11, imageUrl: images.Welcome_3},
-    {id: 12, imageUrl: images.Welcome_2},
-  ];
+  const [interestModalVisible, setInterestModalVisible] = useState(false);
+
+  const [selectedInterest, setSelectedInterests] = useState([]);
 
   const data = [
-    {id: '1', title: 'Campain', imageUrl: images.ViratProfile},
-    {id: '2', title: 'Fundrasing', imageUrl: images.Welcome_2},
-    {id: '3', title: 'In the News', imageUrl: images.Welcome_3},
-    {id: '4', title: 'People', imageUrl: images.Welcome_1},
-    {id: '5', title: 'White House', imageUrl: images.Welcome_2},
-    {id: '6', title: 'Donation', imageUrl: images.Welcome_3},
-    {id: '7', title: 'Supports', imageUrl: images.Welcome_3},
-    // Add more items as needed
+    {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
+    {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
+    {id: '3', title: 'Socialism', imageUrl: images.Welcome_3},
+    {id: '4', title: 'Marxism', imageUrl: images.Welcome_1},
+    {id: '5', title: 'Democracy', imageUrl: images.Welcome_2},
   ];
 
   const getuser = async () => {
@@ -64,18 +57,20 @@ const Profile = () => {
     getAllPosts(userId);
   };
 
-  useEffect(
-    React.useCallback(() => {
-      getuser();
-    }, []),
+  console.log(
+    selectedInterest,
+    '----------------------------------------------',
   );
+  useEffect(() => {
+    getuser();
+  }, []);
 
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data[0]);
-      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      //   console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -84,34 +79,27 @@ const Profile = () => {
     try {
       const res = await getAllUserImages(userId);
       setImage(res?.data);
-      console.log(res?.data, 'Profileeeeeeee--------------------');
+      //   console.log(res?.data, 'Profileeeeeeee--------------------');
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
 
-  const handleTabPress = tabIndex => {
-    setSelectedTab(tabIndex);
+  const openModal = () => {
+    setModalVisible(true);
   };
-  function chunkArray(array, chunkSize) {
-    const chunks = [];
-    for (let i = 0; i < array?.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
-    }
-    return chunks;
-  }
-  const renderImageItem = ({item}) => (
-    <View style={{width: '33%', padding: 0.2}}>
-      <Image source={{uri: item?.image}} style={{width: '100%', height: 120}} />
-    </View>
-  );
 
-  const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <Image source={item.imageUrl} style={styles.image} />
-      <Text style={{color: 'black'}}>{item.title}</Text>
-    </View>
-  );
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const openInterestModal = () => {
+    setInterestModalVisible(true);
+  };
+
+  const closeInterestModal = () => {
+    setInterestModalVisible(false);
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -208,215 +196,119 @@ const Profile = () => {
               <Text style={styles.idText}>monty_23mortell</Text>
             </View>
           )}
-
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-              style={{
-                minWidth: 100,
-                height: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 35,
-                marginTop: 10,
-                backgroundColor: '#3A7BD5',
-                padding: 5,
-                marginHorizontal: 7,
-              }}>
-              <Text style={styles.activeTabText}>Follow</Text>
-            </TouchableOpacity>
-            {leader ? (
-              <TouchableOpacity
-                style={{
-                  minWidth: 100,
-                  height: 30,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 35,
-                  marginTop: 10,
-                  padding: 5,
-                  borderWidth: 2,
-                  borderColor: '#3A7BD5',
-                  marginHorizontal: 7,
-                }}>
-                <Text
-                  style={[
-                    styles.activeTabText,
-                    {color: '#3A7BD5', fontWeight: '800'},
-                  ]}>
-                  Cast your vote
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )}
-
-            <TouchableOpacity
-              style={{
-                minWidth: 100,
-                height: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 35,
-                marginTop: 10,
-                padding: 5,
-                borderWidth: 2,
-                borderColor: '#3A7BD5',
-                marginHorizontal: 7,
-              }}
-              onPress={() => navigation.navigate('Messege')}>
-              <Text
-                style={[
-                  styles.activeTabText,
-                  {color: '#3A7BD5', fontWeight: '800'},
-                ]}>
-                Messege
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <View style={{width: getWidth(1)}}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{paddingHorizontal: 10}}>
-            {data.map(
-              item => renderItem({item}), // Assuming renderItem is a function that renders the item
-            )}
-          </ScrollView>
-
           {selectedTab === 0 ? (
             <View style={styles.selfView}>
-              <Text style={styles.subHeadText}> My Self</Text>
-              <View style={styles.selfContainer}>
-                <Text style={styles.selfText}>
+              <View style={styles.row1}>
+                <Text style={styles.subHeadText}> My Name</Text>
+              </View>
+              {/* <View style={styles.partyContainer}> */}
+              <TextInput
+                style={styles.partyContainer}
+                onChangeText={setNameText}
+                value={nameText}
+                placeholder={details?.userName}
+                keyboardType="default"
+                placeholderTextColor={'grey'}
+              />
+              {/* <Text style={styles.democraticText}>
+                  {details?.userName ? details?.userName : 'User Name'}
+                </Text> */}
+              {/* </View> */}
+              <View style={styles.row1}>
+                <Text style={styles.subHeadText}> My Self</Text>
+              </View>
+              {/* <View style={styles.selfContainer}> */}
+              {/* <Text style={styles.selfText}>
                   Joe Biden, the 46th President of the United States, has a
                   storied career in American politics spanning over five
                   decades. Born on November 20, 1942, in Scranton, Pennsylvania,
                   Biden overcame personal and professional challenges to become
                   one of the most enduring figures in modern political history
-                </Text>
+                </Text> */}
+              <TextInput
+                style={styles.selfContainer}
+                onChangeText={setSelfText}
+                value={selfText}
+                placeholder={
+                  'Joe Biden, the 46th President of the United States, has a storied career in American politics spanning over five decades Joe Biden, the 46th President of the United States, has a storied career in American politics spanning over five decades. Born on November 20, 1942, in Scranton, Pennsylvania, Biden overcame personal and professional challenges to become one of the most enduring figures in modern political history'
+                }
+                keyboardType="default"
+                placeholderTextColor={'grey'}
+                multiline={true}
+              />
+              {/* </View> */}
+              <View style={styles.row1}>
+                <Text style={styles.subHeadText}> My Party</Text>
+
+                <TouchableOpacity onPress={() => openModal()}>
+                  <Image
+                    source={images.PencilPNG}
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
               </View>
-              <Text style={styles.subHeadText}> My Party</Text>
-              <View style={styles.partyContainer}>
+              <View style={styles.partyContainer1}>
                 <Image
                   source={images.DemocraticPNG}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={styles.democraticText}>Democratic</Text>
+                <Text style={styles.democraticText}>
+                  {selectedItem?.title
+                    ? selectedItem?.title
+                    : 'Choose your Party'}
+                </Text>
               </View>
-              <Text style={styles.subHeadText}> My Interests</Text>
+              <View style={styles.row1}>
+                <Text style={styles.subHeadText}> My Interests</Text>
+
+                <TouchableOpacity onPress={() => openInterestModal()}>
+                  <Image
+                    source={images.PencilPNG}
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>
               <View style={styles.interestContainer}>
                 <ScrollView horizontal>
-                  <Text style={styles.interestText}>Communism,</Text>
                   <Text style={styles.interestText}>
-                    Evolutionary Socialism,
+                    {selectedInterest?.map((item, ind) => (
+                      <Text style={{color: 'grey'}} key={ind}>
+                        {item.title ? item.title : 'Choose your Interest'},
+                      </Text>
+                    ))}
                   </Text>
-                  <Text style={styles.interestText}>Marxism</Text>
                 </ScrollView>
               </View>
             </View>
           ) : (
             <></>
           )}
-          {selectedTab === 1 ? (
-            <ScrollView contentContainerStyle={styles.flatListContent}>
-              {chunkArray(image, 3)?.map((row, index) => (
-                <View style={styles.rowContainer} key={index}>
-                  {row.map(
-                    item => renderImageItem({item}), // Assuming renderImageItem is a function that renders the image item
-                  )}
-                </View>
-              ))}
-            </ScrollView>
-          ) : (
-            <></>
-          )}
         </View>
-        <View style={{height: getHeight(4.6)}} />
+        <View style={{height: getHeight(2.9)}} />
       </ScrollView>
-
-      <TouchableOpacity
-        style={styles.clickableGradient}
-        onPress={() => {
-          console.log('Gradient View Clicked');
-        }}>
-        <TouchableOpacity
-          onPress={() => handleTabPress(0)}
-          style={[styles.bottumtab, selectedTab === 0 && styles.activeTab]}>
-          {/* <Text style={selectedTab === 1 ? styles.activeTabText : styles.tabText}>Items</Text> */}
-          <LinearGradient
-            colors={
-              selectedTab === 0
-                ? ['black', 'black']
-                : ['transparent', 'transparent']
-            }
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderTopLeftRadius: 15,
-              borderBottomLeftRadius: 15,
-            }}>
-            <Image
-              style={{width: 35, height: 35}}
-              source={
-                selectedTab === 0 ? images.WhiteProfile : images.GreyProfile
-              }
-            />
-          </LinearGradient>
+      <View style={styles.clickableGradient}>
+        <TouchableOpacity style={styles.cancelButton}>
+          <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleTabPress(1)}
-          style={[styles.bottumtab, selectedTab === 1 && styles.activeTab]}>
-          {/* <Text style={selectedTab === 0 ? styles.activeTabText : styles.tabText}>Images</Text> */}
-          <LinearGradient
-            colors={
-              selectedTab === 1
-                ? ['black', 'black']
-                : ['transparent', 'transparent']
-            }
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{
-                width: selectedTab === 1 ? 35 : 30,
-                height: selectedTab === 1 ? 35 : 25,
-              }}
-              source={selectedTab === 1 ? images.Image : images.GrayImage}
-            />
-          </LinearGradient>
+        <TouchableOpacity style={styles.saveButton}>
+          <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleTabPress(1)}
-          style={[styles.bottumtab, selectedTab === 2 && styles.activeTab]}>
-          {/* <Text style={selectedTab === 1 ? styles.activeTabText : styles.tabText}>Items</Text> */}
-          <LinearGradient
-            colors={
-              selectedTab === 2
-                ? ['black', 'black']
-                : ['transparent', 'transparent']
-            }
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderTopRightRadius: 15,
-              borderBottomRightRadius: 15,
-            }}>
-            <Image
-              style={{width: 35, height: 35}}
-              source={selectedTab === 2 ? images.WhiteReel : images.GrayReel}
-            />
-          </LinearGradient>
-        </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
+      <ProfileModal
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        modalVisible={modalVisible}
+        onClosePress={closeModal}
+      />
+      <MyInterestModal
+        selectedItems={selectedInterest}
+        setSelectedItems={setSelectedInterests}
+        modalVisible={interestModalVisible}
+        onClosePress={closeInterestModal}
+      />
     </SafeAreaView>
   );
 };
@@ -424,10 +316,8 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    // backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'pink',
   },
   searchBar: {
     flexDirection: 'row',
@@ -586,18 +476,18 @@ const styles = StyleSheet.create({
   },
   clickableGradient: {
     position: 'absolute',
-    bottom: 10,
-    left: 70,
+    bottom: 0.5,
+    // left: 70,
     right: 0,
-    height: 50, // Adjust height as needed
-
-    width: getWidth(1.5),
-    justifyContent: 'center',
+    height: getHeight(13), // Adjust height as needed
+    width: getWidth(1),
+    justifyContent: 'space-around',
     alignItems: 'center',
     alignSelf: 'center',
     borderRadius: 15,
     flexDirection: 'row',
     backgroundColor: 'white',
+    paddingHorizontal: 20,
   },
   gradient: {
     position: 'absolute',
@@ -625,8 +515,22 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 15,
     padding: 15,
+    color: 'grey',
+    fontSize: 15,
   },
   partyContainer: {
+    height: getHeight(15),
+    width: getWidth(1.06),
+    borderColor: 'grey',
+    borderWidth: 0.5,
+    borderRadius: 15,
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: 'grey',
+    fontSize: 15,
+  },
+  partyContainer1: {
     height: getHeight(15),
     width: getWidth(1.06),
     borderColor: 'grey',
@@ -666,6 +570,45 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginVertical: 15,
   },
+  cancelButton: {
+    height: height * 0.05,
+    width: width * 0.4,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#3A7BD5',
+  },
+  saveButton: {
+    height: height * 0.05,
+    width: width * 0.4,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3A7BD5',
+  },
+  cancelText: {
+    color: '#3A7BD5',
+    fontWeight: '800',
+  },
+  saveText: {
+    color: 'white',
+    fontWeight: '800',
+  },
+  row1: {
+    width: width * 0.9,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
 });
 
-export default Profile;
+export default EditProfile;

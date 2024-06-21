@@ -153,7 +153,11 @@ const Profile = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity style={styles.outerview}>
+            <TouchableOpacity
+              style={styles.outerview}
+              onPress={() => {
+                navigation.navigate('EditProfile');
+              }}>
               <ImageBackground
                 source={images.Profile}
                 resizeMode="cover"
@@ -203,11 +207,11 @@ const Profile = () => {
           ) : (
             <View>
               <Text style={styles.tabText}>{details?.userName}</Text>
-              <Text style={styles.idText}>monty_23mortell</Text>
+              <Text style={styles.idText}>{details?.userName}_official</Text>
             </View>
           )}
 
-          <View style={{flexDirection: 'row'}}>
+          {/* <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
               style={{
                 minWidth: 100,
@@ -270,7 +274,7 @@ const Profile = () => {
                 Messege
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
         <View style={{width: getWidth(1)}}>
@@ -473,6 +477,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'Jost-SemiBold',
     fontWeight: '600',
+    alignSelf: 'center',
   },
   idText: {
     color: 'grey',

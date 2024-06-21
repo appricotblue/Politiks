@@ -65,6 +65,9 @@ const images = {
   pending: require('./pending.png'),
   VerifiedPNG: require('./VerifiedPNG.png'),
   LogOutPNG: require('./LogOutPNG.png'),
+  PencilPNG: require('./PencilPNG.png'),
+  CheckBoxUnSelected: require('./CheckBoxUnSelected.png'),
+  CheckBoxSelected: require('./CheckBoxSelected.png'),
 };
 
 export default images;
