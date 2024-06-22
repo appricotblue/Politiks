@@ -155,9 +155,10 @@ const Profile = () => {
             }}>
             <TouchableOpacity
               style={styles.outerview}
-              onPress={() => {
-                navigation.navigate('EditProfile');
-              }}>
+              // onPress={() => {
+              //   navigation.navigate('EditProfile');
+              // }}
+            >
               <ImageBackground
                 source={images.Profile}
                 resizeMode="cover"

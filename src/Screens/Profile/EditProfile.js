@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   ImageBackground,
   ScrollView,
+  Alert,
 } from 'react-native';
 import images from '../../assets/Images';
 import {getHeight, getWidth} from '../../Theme/Constants';
@@ -23,6 +24,7 @@ import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
 import ProfileModal from '../../Components/ProfileModal';
 import MyInterestModal from '../../Components/MyInterestModal';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfile = () => {
   const navigation = useNavigation();
@@ -30,7 +32,7 @@ const EditProfile = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
   const [details, setDetails] = useState();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(null);
   const [userid, setuserid] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -101,6 +103,49 @@ const EditProfile = () => {
     setInterestModalVisible(false);
   };
 
+  const pickImageFromGallery = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image);
+      })
+      .catch(error => {
+        console.log('Error picking image from gallery: ', error);
+      });
+  };
+
+  const takePhoto = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image);
+      })
+      .catch(error => {
+        console.log('Error taking photo: ', error);
+      });
+  };
+
+  const showImagePickerOptions = () => {
+    Alert.alert(
+      'Select Image',
+      'Choose an option to select an image',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Gallery', onPress: pickImageFromGallery},
+        {text: 'Camera', onPress: takePhoto},
+      ],
+      {cancelable: true},
+    );
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header title="Profile" />
@@ -143,9 +188,11 @@ const EditProfile = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity style={styles.outerview}>
+            <TouchableOpacity
+              style={styles.outerview}
+              onPress={() => showImagePickerOptions()}>
               <ImageBackground
-                source={images.Profile}
+                source={{uri: image?.path}}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></ImageBackground>
             </TouchableOpacity>
@@ -233,7 +280,7 @@ const EditProfile = () => {
                 onChangeText={setSelfText}
                 value={selfText}
                 placeholder={
-                  'Joe Biden, the 46th President of the United States, has a storied career in American politics spanning over five decades Joe Biden, the 46th President of the United States, has a storied career in American politics spanning over five decades. Born on November 20, 1942, in Scranton, Pennsylvania, Biden overcame personal and professional challenges to become one of the most enduring figures in modern political history'
+                  'Biden overcame personal and professional challenges to become one of the most enduring figures in modern political history'
                 }
                 keyboardType="default"
                 placeholderTextColor={'grey'}
@@ -287,7 +334,7 @@ const EditProfile = () => {
             <></>
           )}
         </View>
-        <View style={{height: getHeight(2.9)}} />
+        <View style={{height: getHeight(2)}} />
       </ScrollView>
       <View style={styles.clickableGradient}>
         <TouchableOpacity style={styles.cancelButton}>
@@ -422,7 +469,6 @@ const styles = StyleSheet.create({
   statusUploadBackground: {
     height: 80,
     width: 80,
-
     borderRadius: 45, // half of height/width for perfect circle
     justifyContent: 'center',
     alignItems: 'center',
