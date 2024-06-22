@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     ImageBackground,
-    TextInput
+    TextInput,
+    Alert
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -31,6 +32,7 @@ const OtpScreen = props => {
     const navigation = useNavigation();
     const route = useRoute();
     const { email } = route.params;
+    const [isLoading, setIsLoading] = useState(false); 
    
     const [otp_1, setotp_1] = useState('');
     const [otp_2, setotp_2] = useState('');
@@ -70,7 +72,9 @@ const OtpScreen = props => {
 
         console.log(email)
         try {
+            setIsLoading(true);
             const response = await verifyOtp(email, otp_1 + otp_2 + otp_3 + otp_4);
+            setIsLoading(false);
             console.log(response, 'login api response')
             if (response.message = "OTP verified successfully") {
                 await local.storeUserId('UserId', response?.user?.id.toString());
@@ -80,6 +84,7 @@ const OtpScreen = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -163,6 +168,11 @@ const OtpScreen = props => {
                         texttitle={'black'}
                     />
                 </View>
+                {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
             </ImageBackground>
         </View>
     );
@@ -230,6 +240,12 @@ const styles = StyleSheet.create({
         width: 30,
         height: 20,
         marginBottom: 30
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 
 });

@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     ImageBackground,
-    Alert
+    Alert,
+
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
@@ -35,6 +36,7 @@ const SignUpwithEmail = props => {
     const [password, changepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false); 
 
     const getEmail = async () => {
         try {
@@ -53,11 +55,13 @@ const SignUpwithEmail = props => {
     };
 
     const handlelogin = async () => {
-    
+
  
         try {
+            setIsLoading(true);
             const response = await login(email, password);
             console.log(response, 'login api response')
+            setIsLoading(false);
             if (response.message = "Login successful") {
 
                 await local.storEexistuser('existuser', 'existuser');
@@ -67,6 +71,7 @@ const SignUpwithEmail = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -199,7 +204,11 @@ const SignUpwithEmail = props => {
 
                     </TouchableOpacity>
                 </View>
-
+                {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
             </ImageBackground>
         </View>
 
@@ -251,6 +260,12 @@ const styles = StyleSheet.create({
 
         // fontWeight: '300',
         // alignSelf: 'center'
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default SignUpwithEmail;

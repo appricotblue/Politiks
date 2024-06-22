@@ -33,6 +33,7 @@ const Forgotpassword = props => {
     const [checkPassword, changecheckPassword] = useState('');
     const [password, changepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); 
 
     const getEmail = async () => {
         try {
@@ -81,8 +82,10 @@ const Forgotpassword = props => {
     
  
         try {
+            setIsLoading(true);
             const response = await forgotPassword(email);
             console.log(response, 'login api response')
+            setIsLoading(false);
             if (response.message = "Login successful") {
                 await local.storeUserId('UserId', response?.user?.id.toString());
                 // await local.storEexistuser('existuser', 'existuser');
@@ -91,6 +94,7 @@ const Forgotpassword = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -167,7 +171,11 @@ const Forgotpassword = props => {
                     />
                 </View>
 
-
+                {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
             </ImageBackground>
         </View>
 
@@ -218,6 +226,12 @@ const styles = StyleSheet.create({
         fontFamily: 'Jost',
         fontWeight: '300',
         // alignSelf: 'center'
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default Forgotpassword;

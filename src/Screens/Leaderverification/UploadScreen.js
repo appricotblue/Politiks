@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal,ActivityIndicator } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Video from 'react-native-video';
 import { getHeight, getWidth } from '../../Theme/Constants';
@@ -19,6 +19,7 @@ const UploadScreen = () => {
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userid, setuserid] = useState('');
+    const [isLoading, setIsLoading] = useState(false); 
 
 
     const getuser = async () => {
@@ -163,7 +164,7 @@ const UploadScreen = () => {
     
         try {
             console.log('Starting upload...');
-    
+            setIsLoading(true);
             const response = await fetchWithTimeout(
                 `https://politiks.aindriya.co.uk/user/uploadVerificationFiles/${userid}`,
                 {
@@ -176,6 +177,7 @@ const UploadScreen = () => {
                 180000 // Timeout set to 3 minutes
             );
     console.log(response,'response')
+    setIsLoading(false);
             if (response.ok) {
                 console.log('Upload successful');
                 navigation.navigate('PendingScreen');
@@ -185,6 +187,7 @@ const UploadScreen = () => {
                 setErrorMessage(`Upload failed. Server responded with: ${responseBody}`);
             }
         } catch (error) {
+            setIsLoading(false);
             console.error('An error occurred:', error);
             setErrorMessage(`An error occurred: ${error.message}`);
         }
@@ -433,6 +436,11 @@ const UploadScreen = () => {
                     </View>
                 </View>
             </Modal>
+            {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
         </View>
     );
 };
@@ -539,6 +547,12 @@ const styles = StyleSheet.create({
         bottom: 20,
         width: '100%',
         alignItems: 'center',
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 

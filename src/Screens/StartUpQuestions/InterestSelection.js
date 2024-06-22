@@ -34,6 +34,7 @@ const InterestSelection = props => {
     const [error, changeerror] = useState('');
     const [password, changepassword] = useState('');
     const [interestdata, setinterestdata] = useState([]);
+    const [isLoading, setIsLoading] = useState(false); 
 
     const [selectedInterests, setSelectedInterests] = useState([]);
     // const interests = ['Social Policies', 'Road Transport ', 'Democracy', 'Federalism', 'Infrastructure Development', 'Law', 'Health Care', 'Agriculture', 'Foreign Policy', 'Globalization', 'Industry',];
@@ -95,8 +96,10 @@ const InterestSelection = props => {
 
     const handleinterest = async () => {
         try {
+            setIsLoading(true);
             const selectedInterestIds = selectedInterests.map(interest => interest.id);
             const response = await Createinterest(selectedInterestIds, userid);
+            setIsLoading(false);
             console.log(response, 'login api response');
             if (response.message === "User interests created successfully") {
                 navigation.replace('FollowAccounts');
@@ -104,6 +107,7 @@ const InterestSelection = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -180,23 +184,6 @@ const InterestSelection = props => {
                     ))}
                 </View>
 
-
-                {/* <View style={styles.interestsContainer}>
-                    {interests.map(interest => (
-                        <TouchableOpacity
-                            key={interest}
-                            style={[
-                                styles.interest,
-                                selectedInterests.includes(interest) && styles.selectedInterest
-                            ]}
-                            onPress={() => toggleInterest(interest)}>
-                            <Text style={[
-                                styles.interestText,
-                                selectedInterests.includes(interest) ? styles.selectedInterestText : styles.unselectedInterestText
-                            ]}>{interest}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View> */}
             </View>
             <Text style={{ color: '#ff6666', marginTop: 40 }}> {error}</Text>
             <View style={{ height: getHeight(5), alignSelf: 'flex-end', marginTop: 10 }}>
@@ -208,17 +195,23 @@ const InterestSelection = props => {
                     texttitle={'white'}
                 />
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('TellusAboutyou')}
+                    // onPress={() => navigation.navigate('TellusAboutyou')}
                     style={{ width: windowWidth, height: 50, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{
-                        textDecorationLine: 'underline', fontFamily: 'Jost',
-                        fontWeight: '400',
-                    }}>Previous</Text>
+                    {/* <Text style={{
+                         fontFamily: 'Jost-Regular',
+                        textDecorationLine: 'underline',
+                       color:'black'
+                    }}>Previous</Text> */}
                 </TouchableOpacity>
 
 
-
             </View>
+            {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
+
         </View>
     );
 };
@@ -292,13 +285,14 @@ const styles = StyleSheet.create({
 
     },
     gentertxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: 20,
         color: 'black',
-        fontWeight: '800',
+
         paddingBottom: 5,
         // alignSelf: 'center',
         marginBottom: 10,
-        fontFamily: 'jost'
+
     },
     downArrow: {
         transform: [{ rotate: '180deg' }],
@@ -323,18 +317,27 @@ const styles = StyleSheet.create({
         borderColor: '#3A7BD5'
     },
     interestText: {
+        fontFamily: 'Jost-Regular',
         fontSize: 16,
         textAlign: 'center'
     },
     selectedInterestText: {
+        fontFamily: 'Jost-Regular',
         color: 'white'
     },
     unselectedInterestText: {
+        fontFamily: 'Jost-Regular',
         color: 'black'
     },
     selectedInterestsText: {
         marginTop: 20,
         fontSize: 16
-    }
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
 });
 export default InterestSelection;
