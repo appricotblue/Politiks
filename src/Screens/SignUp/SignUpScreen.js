@@ -57,7 +57,7 @@ const SignUpScreen = props => {
         } else if (password == '') {
             changechangepassword('Please enter password')
         } else if (repassword == '') {
-            changechangepassword('Please re-enter password')
+            changechangerepassword('Please re-enter password')
         }
         else if (password?.length < 6) {
             changechangepassword('Password must be at least 6 characters long');
@@ -224,19 +224,18 @@ const styles = StyleSheet.create({
         height: windowHeight,
     },
     TileTxt: {
-        fontFamily: 'Jost',
+        fontFamily: 'Jost-Bold',
         fontSize: 28,
         color: 'white',
        
-        fontWeight: '700',
+        // fontWeight: '700',
         paddingBottom: 2
     },
     subTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: 14,
         color: 'white',
-        // width: getHeight(2.6),
-        fontFamily: 'Jost',
-        fontWeight: '300',
+      
     },
     subTxt2: {
         fontSize: 14,

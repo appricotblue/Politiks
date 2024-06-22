@@ -22,7 +22,7 @@ import local from '../../Storage/Local';
 import images from '../../assets/Images';
 import { getHeight, getWidth } from '../../Theme/Constants';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-
+import { googleregister } from '../../api';
 // GoogleSignin.configure({
 //   // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
 //   webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
@@ -40,86 +40,60 @@ const LoginScreen = props => {
   const [checkPassword, changecheckPassword] = useState('');
   const [password, changepassword] = useState('');
   const [isLogin, changeIsLogin] = useState(false);
+  const [googledata, changegoogledata] = useState({});
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo, 'userinfo');
-      Alert.alert(userInfo)
-      navigation.replace('Home');
-    } catch (error) {
-      console.error('Error in Google login:', error);
-      console.error('Error in Google login:', error.code, error.message);
-    }
-  };
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     console.log(userInfo, 'userinfo');
+  //     Alert.alert(userInfo)
+  //     navigation.replace('Home');
+  //   } catch (error) {
+  //     console.error('Error in Google login:', error);
+  //     console.error('Error in Google login:', error.code, error.message);
+  //   }
+  // };
 
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
+      changegoogledata(userInfo)
+      handleGoogleRegister(userInfo)
       // Handle successful sign-in
     } catch (error) {
       console.log(error);
       console.error('Error in Google login:', error.code, error.message);
     }
   };
-  // const handleGoogleSignIn = async () => {
-  //   console.log('here 1')
-  //   GoogleSignin.configure({
-  //     // webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
-  //     // webClientId: 'Y1234567890-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com',
-  //     // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-  //     webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-  //   });
 
-  //   try {
-  //     // setLoading(true);
-  //     await GoogleSignin.hasPlayServices();
-  //     const userInfo = await GoogleSignin.signIn();
-  //     // const {idToken} = await GoogleSignin.signIn();
-  //     // const googleCredentials = GoodleAuthProvider
-  //     console.log(userInfo, 'userinfo')
-  //     // setLoading(false);
-  //     navigation.replace('Home'); // Navigate to Home screen on successful login
-  //   } catch (error) {
-  //     // setLoading(false);
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // User cancelled the login flow
-  //       console.log('User cancelled Google login');
-  //     } else {
-  //       console.log('Error in Google login:', error);
-  //     }
-  //   }
-  // };
 
-  const getEmail = async () => {
+  const handleGoogleRegister = async (userInfo) => {
+    console.log(userInfo?.user?.id, 'tdat')
     try {
-      const value = await AsyncStorage.getItem('email');
-      if (value !== null) {
-        changecheckEmail(value);
+      const response = await googleregister(userInfo?.user?.name, userInfo?.user?.email, userInfo?.user?.id);
+      console.log(response, 'login api response')
+      if (response.message === "User registered successfully") {
+        await local.storeUserId('UserId', response?.user?.id.toString());
+        await local.storEexistuser('existuser', 'newuser');
+        navigation.replace('TellusAboutyou');
+      } else {
+        await local.storeUserId('UserId', response?.user?.id.toString());
+        await local.storEexistuser('existuser', 'existuser');
+      navigation.replace('Home');
       }
-      const paasword = await AsyncStorage.getItem('password');
-      if (paasword !== null) {
-        changecheckPassword(paasword);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        Alert.alert('Error', error.response.data.message);
+      } else {
+        Alert.alert('Error', 'An error occurred during login.');
       }
-    } catch (e) {
-      return null;
-      // error reading value
     }
   };
 
-  // const isvalidate = async () => {
-  //   if (email == '') {
-  //     alert('Please enter Email id');
-  //   } else if (password == '') {
-  //     alert('Please enter password');
-  //   }  else {
-  //     navigation.replace('Home')
-  //     // local.storeLogin(true);
-  //   }
-  // };
+
 
   const isValidate = async () => {
     const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email format
@@ -143,16 +117,21 @@ const LoginScreen = props => {
       // local.storeLogin(true);
     }
   };
-  
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
-      // webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
+      webClientId: '792282806865-b24ig3hoaa51ioj91ttgerce3le6ao2m.apps.googleusercontent.com',
       offlineAccess: true,
-      hostedDomain: '',
-      forceCodeForRefreshToken: true,
     });
   }, []);
+  // useEffect(() => {
+  //   GoogleSignin.configure({
+  //     webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
+  //     // webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
+  //     offlineAccess: true,
+  //     hostedDomain: '',
+  //     forceCodeForRefreshToken: true,
+  //   });
+  // }, []);
   const clearAll = async () => {
     changeemail('');
     changepassword('');

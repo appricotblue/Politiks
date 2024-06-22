@@ -22,6 +22,21 @@ export const register = async (userName, email, password) => {
   }
 };
 
+export const googleregister = async (userName, email, googleId) => {
+  console.log(userName, email, googleId, env_dev + 'user/register');
+  try {
+    const response = await HTTP_REQUEST.post('user/register', {
+      userName,
+      email,
+      googleId,
+    });
+    // const response = await HTTP_REQUEST.post(`users/createUser/665af7b8f324154d973d6a48`, { username, dateOfBirth, language, place, gender, avatar, });
+    return response.data;
+  } catch (error) {
+    console.log(error, 'signup error');
+    throw error;
+  }
+};
 export const login = async (email, password) => {
   try {
     console.log(env_dev + 'user/login', email, password);

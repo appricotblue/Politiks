@@ -1,4 +1,4 @@
-package com.pushnotification;
+package com.politiks;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
