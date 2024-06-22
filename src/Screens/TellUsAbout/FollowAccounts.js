@@ -41,6 +41,7 @@ const FollowAccounts = props => {
 
     const [selectedAccounts, setSelectedAccounts] = useState([]);
     const [userid, setuserid] = useState('')
+    const [isLoading, setIsLoading] = useState(false); 
 
     const itemData = [
         { id: 1, name: 'Joe Biden', followers: 'United States of America', image: images.ViratBanner },
@@ -99,9 +100,11 @@ const FollowAccounts = props => {
       
             console.log('called',itemid)
             try {
+                setIsLoading(true);
                 // const response = await Createinterest(selectedInterests,userid);
                 const response = await CreateFolowers(itemid, userid);
                 console.log(response, 'login api response')
+                setIsLoading(false);
                 if (response.message = "User interests created successfully") {
     
                     // await local.storeUserId('UserId', response?.user?.id.toString());
@@ -111,6 +114,7 @@ const FollowAccounts = props => {
                     console.log('Error during login:',);
                 }
             } catch (error) {
+                setIsLoading(false);
                 if (error.response && error.response.data && error.response.data.message) {
                     Alert.alert('Error', error.response.data.message);
                 } else {
@@ -135,7 +139,7 @@ const FollowAccounts = props => {
                 </View>
                 <View style={{ width: getWidth(2), marginLeft: 5 }}>
                     <Text style={styles.itemName}>{item?.userName}</Text>
-                    <Text> {item?.country}</Text>
+                    <Text style={{color:'black',fontSize:10}}> {item?.country}</Text>
                 </View>
                 <View  onPress={()=>handlefolowers(item?.userId)} style={{ width: getWidth(6), justifyContent: 'center', alignItems: 'center', }}>
                     <TouchableOpacity onPress={() => {toggleAccountSelection(item?.userId),handlefolowers(item?.userId)}} style={[styles.checkbox, isSelected && styles.selectedCheckbox]}>
@@ -197,7 +201,7 @@ const FollowAccounts = props => {
                 <Text style={styles.subTxt}>{" you like to see. You can change this later"}</Text>
             </View>
 
-            <View style={{ width: getWidth(1.1), height: getHeight(1.7), }}>
+            <View style={{ width: getWidth(1.1), height: getHeight(1.57), }}>
                 <FlatList
                     data={folowerdata}
                     renderItem={renderItem}
@@ -206,7 +210,7 @@ const FollowAccounts = props => {
                 />
             </View>
 
-            <View style={{ height: getHeight(5), alignSelf: 'flex-end', marginTop: 10 }}>
+            <View style={{ height: getHeight(10), alignSelf: 'center',  justifyContent: 'flex-end', }}>
                 <CommonButton
                     onPress={isvalidate}
                     color={['black', 'black']}
@@ -214,15 +218,20 @@ const FollowAccounts = props => {
                     width={getHeight(2.3)}
                     texttitle={'white'}
                 />
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     onPress={() => navigation.goBack()}
-                    style={{ width: windowWidth, height: 50, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{
+                    style={{ width: windowWidth,  justifyContent: 'center', alignItems: 'center' }}>
+                     <Text style={{
                         textDecorationLine: 'underline', fontFamily: 'Jost',
                         fontWeight: '400',
                     }}>Previous</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>  */}
             </View>
+            {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
         </View>
     );
 };
@@ -340,9 +349,9 @@ const styles = StyleSheet.create({
         borderRadius: 35,
     },
     itemName: {
-        fontWeight: '600',
-        marginTop: 5,
-        fontFamily: 'Jost',
+       fontFamily:'Jost-Bold', 
+        marginTop: 2,
+      
         fontSize: 15,
         color: 'black'
     },
@@ -368,6 +377,12 @@ const styles = StyleSheet.create({
     },
     followButtonText: {
         color: '#fff',
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default FollowAccounts;

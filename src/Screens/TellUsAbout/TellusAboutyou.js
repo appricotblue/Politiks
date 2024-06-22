@@ -53,6 +53,7 @@ const TellusAboutyou = props => {
   const [userid, setuserid] = useState('');
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [usernameMessage, setUsernameMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
 
   const handleSelectOption = option => {
     setSelectedOption(option);
@@ -199,6 +200,7 @@ const TellusAboutyou = props => {
   };
   const handledataRegister = async () => {
     try {
+      setIsLoading(true);
       const response = await CreateData(
         fullname,
         selectedOption,
@@ -209,7 +211,7 @@ const TellusAboutyou = props => {
         userid,
       );
       console.log(response, 'login api response');
-
+      setIsLoading(false);
       if ((response.message = 'User details created successfully')) {
         await local.storLeader('isleader', selectedOption);
 
@@ -218,6 +220,7 @@ const TellusAboutyou = props => {
         console.log('Error during login:');
       }
     } catch (error) {
+      setIsLoading(false);
       if (
         error.response &&
         error.response.data &&
@@ -424,6 +427,11 @@ const TellusAboutyou = props => {
           onCancel={() => setShowPicker(false)}
         />
       )}
+      {isLoading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -550,6 +558,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
 
     marginTop: 5,
+  },
+  loader: {
+    ...StyleSheet.absoluteFillObject, // Covers the entire screen
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
 });
 

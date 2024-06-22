@@ -43,6 +43,7 @@ const SignUpScreen = props => {
     const [checkrepassword, changechangerepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
     const [selectedOption, setSelectedOption] = useState('Follower');
+    const [isLoading, setIsLoading] = useState(false); 
 
     const isvalidate = async () => {
         const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,6 +52,7 @@ const SignUpScreen = props => {
         if (fullname == '') {
             changecheckfullname('Please enter full name ');
         } else if (email == '') {
+            // Alert.alert('Please enter Email id')
             changecheckemail('Please enter Email id');
         } else if (!emailFormat.test(email)) {
             changecheckemail('Please enter a valid email address');
@@ -73,7 +75,9 @@ const SignUpScreen = props => {
 
     const handleRegister = async () => {
         try {
+            setIsLoading(true);
             const response = await register(fullname, email, password);
+            setIsLoading(false);
             console.log(response, 'login api response')
             if (response.message === "User registered successfully") {
                 await local.storeUserId('UserId', response?.user?.id.toString());
@@ -82,6 +86,7 @@ const SignUpScreen = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -148,7 +153,7 @@ const SignUpScreen = props => {
                             changeemail(text);
                             changecheckemail('')
                         }}
-                        placeholder={'User Name'}
+                        placeholder={'Email id'}
                         width={getHeight(2.3)}
                         title={'Email ID'}
                         borderColor={'white'}
@@ -205,6 +210,11 @@ const SignUpScreen = props => {
                             <Text style={[styles.subTxt, { textDecorationLine: 'underline', textAlign: 'center', marginTop: 16 }]}>{"Sign-in Now"}</Text>
                         </TouchableOpacity>
                     </View>
+                    {isLoading && (
+                        <View style={styles.loader}>
+                            <ActivityIndicator size="large" color="white" />
+                        </View>
+                    )}
                 </ImageBackground>
             </ScrollView>
         </TouchableWithoutFeedback>
@@ -279,6 +289,12 @@ const styles = StyleSheet.create({
         width: 30,
         height: 20,
         marginBottom: 10
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 

@@ -5,9 +5,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import images from '../assets/Images';
 import {useNavigation} from '@react-navigation/native';
 import local from '../Storage/Local';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 const Header = ({title}) => {
   const navigation = useNavigation();
+  React.useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '792282806865-b24ig3hoaa51ioj91ttgerce3le6ao2m.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+  }, []);
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      console.log('User signed out');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const logOut = async () => {
     // await local.storEexistuser('existuser', '');
@@ -25,6 +42,7 @@ const Header = ({title}) => {
           text: 'OK',
           onPress: async () => {
             await local.storEexistuser('existuser', '');
+            signOut();
             navigation.navigate('LoginScreen');
           },
         },

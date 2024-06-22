@@ -41,7 +41,7 @@ const PendingScreen = props => {
                     // onPress={() => navigation.replace('Home')}
                     onPress={() => navigation.replace('SignUpwithEmail')}
                     color={['black', 'black']}
-                    title={'Go to Home'}
+                    title={'Okay ill wait'}
                     width={getHeight(2.3)}
                     texttitle={'white'}
                 />

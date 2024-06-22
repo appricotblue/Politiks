@@ -39,6 +39,7 @@ const CreatePasswordScreen = props => {
     const [repassword, changerepassword] = useState('');
     const [checkrepassword, changecheckrepassword] = useState('');
     const [isLogin, changeIsLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); 
 
 
 
@@ -63,7 +64,9 @@ const CreatePasswordScreen = props => {
 
         console.log(emaildata)
         try {
+            setIsLoading(true);
             const response = await createpassword(emaildata, password);
+            setIsLoading(false);
             console.log(response, 'login api response')
             if (response.message = "Password updated successfully") {
                 // await local.storeUserId('UserId', response?.user?.id.toString());
@@ -73,6 +76,7 @@ const CreatePasswordScreen = props => {
                 console.log('Error during login:',);
             }
         } catch (error) {
+            setIsLoading(false);
             if (error.response && error.response.data && error.response.data.message) {
                 Alert.alert('Error', error.response.data.message);
             } else {
@@ -133,6 +137,7 @@ const CreatePasswordScreen = props => {
                     borderColor={'white'}
                     valuecolor={'white'}
                     titlecolour={'white'}
+                    isPassword={true}
                 />
                 <TextInputBox
                     value={repassword}
@@ -147,6 +152,7 @@ const CreatePasswordScreen = props => {
                     borderColor={'white'}
                     valuecolor={'white'}
                     titlecolour={'white'}
+                    isPassword={true}
                 />
 
                 <View style={{ justifyContent: 'flex-end', alignItems: 'baseline', height: getHeight(2.7) }}>
@@ -160,7 +166,11 @@ const CreatePasswordScreen = props => {
                     />
                 </View>
              
-
+                {isLoading && (
+                <View style={styles.loader}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
             </ImageBackground>
         </View>
 
@@ -212,6 +222,12 @@ const styles = StyleSheet.create({
         width: 30,
         height: 20,
         marginBottom: 30
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
 });
 export default CreatePasswordScreen;
