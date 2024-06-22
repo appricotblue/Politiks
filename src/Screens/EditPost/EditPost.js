@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../../Components/Header';
 import {height, width} from '../../Theme/ConstantStyles';
 import images from '../../assets/Images';
@@ -24,7 +24,6 @@ const EditPost = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [userid, setuserid] = useState('');
 
-
   const getuser = async () => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
@@ -36,17 +35,15 @@ const EditPost = ({navigation}) => {
   }, []);
 
   const validate = () => {
-    console.log(image, 'imagee')
+    console.log(image, 'imagee');
     if (image == null) {
-      Alert.alert('Please add an image to continue')
-
+      Alert.alert('Please add an image to continue');
     } else if (text == '') {
-      Alert.alert('Please add an Content to continue')
+      Alert.alert('Please add an Content to continue');
     } else {
-      createPosts()
+      createPosts();
     }
-  }
-
+  };
 
   const createPosts = async () => {
     const formData = new FormData();
@@ -113,7 +110,7 @@ const EditPost = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Edit Post" />
+      <Header title="Create Post" />
       <ScrollView>
         <KeyboardAvoidingView>
           <View style={styles.textInputContainer}>

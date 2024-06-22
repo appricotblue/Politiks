@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -6,38 +6,42 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import images from '../assets/Images';
-import {width} from '../Theme/ConstantStyles';
-
-const data = [
-  {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
-  {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
-  {id: '3', title: 'Socialism', imageUrl: images.Welcome_3},
-  {id: '4', title: 'Marxism', imageUrl: images.Welcome_1},
-  {id: '5', title: 'Democracy', imageUrl: images.Welcome_2},
-];
+import {height, width} from '../Theme/ConstantStyles';
 
 const MyInterestModal = ({
   modalVisible,
   onClosePress,
   selectedItems,
   setSelectedItems,
+  selectedItemName,
+  setSelectedItemName,
+  data,
 }) => {
-  const toggleSelection = (id, title) => {
+  const toggleSelection = item => {
+    console.log(item, 'itemmmmmmmm');
     setSelectedItems(prevSelectedItems => {
-      const itemIndex = prevSelectedItems.findIndex(item => item.id === id);
-      if (itemIndex !== -1) {
-        const updatedItems = [...prevSelectedItems];
-        updatedItems.splice(itemIndex, 1);
-        return updatedItems;
+      const isSelected = prevSelectedItems?.includes(item.id);
+      if (isSelected) {
+        return prevSelectedItems.filter(itemId => itemId !== item.id);
       } else {
-        return [...prevSelectedItems, {id, title}];
+        return [...prevSelectedItems, item.id];
+      }
+    });
+    setSelectedItemName(prevSelectedItem => {
+      const isSelected = prevSelectedItem?.includes(item.name);
+      if (isSelected) {
+        return prevSelectedItem.filter(itemName => itemName !== item.name);
+      } else {
+        return [...prevSelectedItem, item.name];
       }
     });
   };
 
   console.log(selectedItems, 'selecteeeeeee');
+  console.log(selectedItemName, 'selecteeeeeee-----------------');
 
   return (
     <View>
@@ -48,32 +52,36 @@ const MyInterestModal = ({
         onRequestClose={onClosePress}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <View style={styles.action}>
-              <Text style={styles.containerText}>My Interests</Text>
+            <View style={{height: 50}}>
+              <View style={styles.action}>
+                <Text style={styles.containerText}>My Interests</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={onClosePress}>
+                <Image source={images.Cross} style={styles.closeIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.closeButton} onPress={onClosePress}>
-              <Image source={images.Cross} style={styles.closeIcon} />
-            </TouchableOpacity>
-            <View style={styles.itemList}>
-              {data.map(item => (
-                <View style={styles.item} key={item.id}>
-                  <Text style={styles.itemTitle}>{item.title}</Text>
-                  <TouchableOpacity
-                    onPress={() => toggleSelection(item.id, item.title)}>
-                    <Image
-                      source={
-                        selectedItems?.find(
-                          selectedItem => selectedItem.id === item.id,
-                        )
-                          ? images.CheckBoxSelected
-                          : images.CheckBoxUnSelected
-                      }
-                      style={styles.itemIcon}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
+
+            <ScrollView>
+              <View style={styles.itemList}>
+                {data?.map(item => (
+                  <View style={styles.item} key={item.id}>
+                    <Text style={styles.itemTitle}>{item.name}</Text>
+                    <TouchableOpacity onPress={() => toggleSelection(item)}>
+                      <Image
+                        source={
+                          selectedItems?.includes(item.id)
+                            ? images.CheckBoxSelected
+                            : images.CheckBoxUnSelected
+                        }
+                        style={styles.itemIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -93,6 +101,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: width * 0.85,
+    height: height * 0.6,
   },
   closeButton: {
     position: 'absolute',
@@ -110,6 +119,8 @@ const styles = StyleSheet.create({
     left: 15,
     bottom: 100,
     height: 50,
+    width: width * 0.4,
+    // backgroundColor: 'pink',
   },
   itemList: {
     marginTop: 20,
@@ -146,6 +157,159 @@ const styles = StyleSheet.create({
 });
 
 export default MyInterestModal;
+
+// import React, {useState} from 'react';
+// import {
+//   View,
+//   Text,
+//   Image,
+//   StyleSheet,
+//   Modal,
+//   TouchableOpacity,
+//   ScrollView,
+// } from 'react-native';
+// import images from '../assets/Images';
+// import {height, width} from '../Theme/ConstantStyles';
+
+// const MyInterestModal = ({
+//   modalVisible,
+//   onClosePress,
+//   selectedItems,
+//   setSelectedItems,
+//   data,
+// }) => {
+//   const toggleSelection = (id, title) => {
+//     setSelectedItems(prevSelectedItems => {
+//       const itemIndex = prevSelectedItems.findIndex(item => item.id === id);
+//       if (itemIndex !== -1) {
+//         const updatedItems = [...prevSelectedItems];
+//         updatedItems.splice(itemIndex, 1);
+//         return updatedItems;
+//       } else {
+//         return [...prevSelectedItems, {id, title}];
+//       }
+//     });
+//   };
+
+//   console.log(selectedItems, 'selecteeeeeee');
+
+//   return (
+//     <View>
+//       <Modal
+//         animationType="fade"
+//         transparent={true}
+//         visible={modalVisible}
+//         onRequestClose={onClosePress}>
+//         <View style={styles.modalContainer}>
+//           <View style={styles.modalContent}>
+//             <View style={{height: 50}}>
+//               <View style={styles.action}>
+//                 <Text style={styles.containerText}>My Interests</Text>
+//               </View>
+//               <TouchableOpacity
+//                 style={styles.closeButton}
+//                 onPress={onClosePress}>
+//                 <Image source={images.Cross} style={styles.closeIcon} />
+//               </TouchableOpacity>
+//             </View>
+
+//             <ScrollView>
+//               <View style={styles.itemList}>
+//                 {data?.map(item => (
+//                   <View style={styles.item} key={item.id}>
+//                     <Text style={styles.itemTitle}>{item.name}</Text>
+//                     <TouchableOpacity
+//                       onPress={() => toggleSelection(item.id, item.name)}>
+//                       <Image
+//                         source={
+//                           selectedItems?.find(
+//                             selectedItem => selectedItem.id === item.id,
+//                           )
+//                             ? images.CheckBoxSelected
+//                             : images.CheckBoxUnSelected
+//                         }
+//                         style={styles.itemIcon}
+//                       />
+//                     </TouchableOpacity>
+//                   </View>
+//                 ))}
+//               </View>
+//             </ScrollView>
+//           </View>
+//         </View>
+//       </Modal>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   modalContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//   },
+//   modalContent: {
+//     backgroundColor: '#F4F4F4',
+//     padding: 15,
+//     borderRadius: 10,
+//     width: width * 0.85,
+//     height: height * 0.6,
+//   },
+//   closeButton: {
+//     position: 'absolute',
+//     top: 10,
+//     right: 10,
+//   },
+//   closeIcon: {
+//     width: 26,
+//     height: 21,
+//     marginBottom: 25,
+//   },
+//   action: {
+//     position: 'absolute',
+//     top: 10,
+//     left: 15,
+//     bottom: 100,
+//     height: 50,
+//     width: width * 0.4,
+//     // backgroundColor: 'pink',
+//   },
+//   itemList: {
+//     marginTop: 20,
+//   },
+//   item: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 10,
+//     backgroundColor: 'white',
+//     height: 50,
+//     borderRadius: 10,
+//     justifyContent: 'space-between',
+//     paddingHorizontal: 5,
+//   },
+//   itemIcon: {
+//     width: 26,
+//     height: 21,
+//     marginRight: 10,
+//     marginLeft: 10,
+//   },
+//   itemTitle: {
+//     fontSize: 18,
+//     fontFamily: 'Jost',
+//     fontWeight: '400',
+//     color: 'black',
+//   },
+//   containerText: {
+//     fontFamily: 'Jost',
+//     fontWeight: '800',
+//     color: 'black',
+//     fontSize: 20,
+//     marginBottom: 20,
+//   },
+// });
+
+// export default MyInterestModal;
 
 // import React, {useState} from 'react';
 // import {

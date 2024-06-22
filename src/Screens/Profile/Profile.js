@@ -20,6 +20,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
 import {getAllUserImages, getAllUserPost} from '../../api';
 import local from '../../Storage/Local';
+import {height, width} from '../../Theme/ConstantStyles';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -64,16 +65,22 @@ const Profile = () => {
     getAllPosts(userId);
   };
 
-  useEffect(() => {
-    getuser();
-  }, []);
+  // useEffect(() => {
+  //   getuser();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getuser();
+    }, []),
+  );
 
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data[0]);
-      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -117,8 +124,12 @@ const Profile = () => {
 
       <ScrollView contentContainerStyle={styles.container}>
         <Image
-          source={images.ProfileBanner}
-          style={{width: '100%', height: 150}}
+          source={{uri: details?.userBannerProfile}}
+          style={{
+            width: width * 1,
+            height: height * 0.2,
+            backgroundColor: 'white',
+          }}
         />
         <View style={styles.tabs}>
           <TouchableOpacity
@@ -153,16 +164,26 @@ const Profile = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity
-              style={styles.outerview}
-              // onPress={() => {
-              //   navigation.navigate('EditProfile');
-              // }}
-            >
-              <ImageBackground
-                source={images.Profile}
+            <View style={styles.outerview}>
+              <Image
+                source={{uri: details?.userProfile}}
                 resizeMode="cover"
-                style={styles.statusUploadBackground}></ImageBackground>
+                style={styles.statusUploadBackground}></Image>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('EditProfile');
+              }}>
+              <Image
+                source={images.PencilPNG}
+                style={{
+                  width: 35,
+                  height: 35,
+                  bottom: 1,
+                  left: 1,
+                  marginVertical: 5,
+                }}
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -293,11 +314,12 @@ const Profile = () => {
               <Text style={styles.subHeadText}> My Self</Text>
               <View style={styles.selfContainer}>
                 <Text style={styles.selfText}>
-                  Joe Biden, the 46th President of the United States, has a
+                  {/* Joe Biden, the 46th President of the United States, has a
                   storied career in American politics spanning over five
                   decades. Born on November 20, 1942, in Scranton, Pennsylvania,
                   Biden overcame personal and professional challenges to become
-                  one of the most enduring figures in modern political history
+                  one of the most enduring figures in modern political history */}
+                  {details?.mySelf}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Party</Text>
@@ -306,16 +328,23 @@ const Profile = () => {
                   source={images.DemocraticPNG}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={styles.democraticText}>Democratic</Text>
+                <Text style={styles.democraticText}>{details?.myParty}</Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
               <View style={styles.interestContainer}>
                 <ScrollView horizontal>
-                  <Text style={styles.interestText}>Communism,</Text>
+                  {/* <Text style={styles.interestText}>Communism,</Text>
                   <Text style={styles.interestText}>
                     Evolutionary Socialism,
                   </Text>
-                  <Text style={styles.interestText}>Marxism</Text>
+                  <Text style={styles.interestText}>Marxism</Text> */}
+                  <Text style={styles.interestText}>
+                    {details?.myInterestField?.map((item, ind) => (
+                      <Text style={{color: 'grey'}} key={ind}>
+                        {item ? item : 'Choose your Interest'},
+                      </Text>
+                    ))}
+                  </Text>
                 </ScrollView>
               </View>
             </View>
@@ -479,6 +508,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-SemiBold',
     fontWeight: '600',
     alignSelf: 'center',
+    marginTop: 10,
   },
   idText: {
     color: 'grey',
@@ -569,7 +599,7 @@ const styles = StyleSheet.create({
     borderRadius: 45, // half of height/width for perfect circle
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#7E65C0',
+    backgroundColor: 'white',
   },
   fanouterview: {
     height: 65,
@@ -623,7 +653,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selfContainer: {
-    minHeight: getHeight(6),
+    minHeight: getHeight(15),
     width: getWidth(1.06),
     borderColor: 'grey',
     borderWidth: 0.5,

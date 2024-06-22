@@ -14,12 +14,15 @@ import {
 } from 'react-native';
 import images from '../../assets/Images';
 import {getHeight, getWidth} from '../../Theme/Constants';
-import DiscoverItems from '../../Components/DiscoverItems';
-import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
-import {getAllUserImages, getAllUserPost} from '../../api';
+import {
+  getAllUserImages,
+  getAllUserPost,
+  getProfileInterests,
+  setUserDetails,
+} from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
 import ProfileModal from '../../Components/ProfileModal';
@@ -32,17 +35,19 @@ const EditProfile = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
   const [details, setDetails] = useState();
+  const [interests, setInterests] = useState();
+
   const [image, setImage] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
   const [userid, setuserid] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [nameText, setNameText] = useState('');
-  const [selfText, setSelfText] = useState('');
+  const [selectedItemName, setSelectedItemName] = useState([]);
 
+  const [nameText, setNameText] = useState(details?.userName);
+  const [selfText, setSelfText] = useState(details?.mySelf);
   const [interestModalVisible, setInterestModalVisible] = useState(false);
-
   const [selectedInterest, setSelectedInterests] = useState([]);
-
   const data = [
     {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
     {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
@@ -55,28 +60,40 @@ const EditProfile = () => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
     setuserid(userId);
-    getAllUserPosts(userId);
     getAllPosts(userId);
+    getAllUserPosts(userId);
+    getAllInterests();
   };
 
-  console.log(
-    selectedInterest,
-    '----------------------------------------------',
-  );
   useEffect(() => {
     getuser();
   }, []);
-
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data[0]);
-      //   console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      setSelfText(data[0].mySelf);
+      setNameText(data[0].userName);
+      setNameText(data[0].userName);
+
+      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
+  const getAllInterests = async () => {
+    try {
+      const res = await getProfileInterests();
+      const {data} = res;
+      setInterests(data);
+      // console.log(res?.data, 'Interesteeeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+  // console.log(interests, 'interestsssssssssssss');
+
   const getAllPosts = async userId => {
     try {
       const res = await getAllUserImages(userId);
@@ -145,19 +162,100 @@ const EditProfile = () => {
       {cancelable: true},
     );
   };
+  const showCoverImagePickerOptions = () => {
+    Alert.alert(
+      'Select Image',
+      'Choose an option to select an image',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Gallery', onPress: pickCoverImageFromGallery},
+        {text: 'Camera', onPress: takeCoverPhoto},
+      ],
+      {cancelable: true},
+    );
+  };
+  const pickCoverImageFromGallery = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setCoverImage(image);
+      })
+      .catch(error => {
+        console.log('Error picking image from gallery: ', error);
+      });
+  };
+  const takeCoverPhoto = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setCoverImage(image);
+      })
+      .catch(error => {
+        console.log('Error taking photo: ', error);
+      });
+  };
+
+  const updateProfile = async () => {
+    const formData = new FormData();
+    formData.append('userName', nameText);
+    formData.append('mySelf', selfText);
+    formData.append('myParty', selectedItem?.title);
+
+    formData.append('myInterest', selectedInterest);
+
+    formData.append('userProfile', {
+      uri: image?.path,
+      type: image?.mime,
+      name: image?.path,
+    });
+    formData.append('userBannerProfile', {
+      uri: coverImage?.path,
+      type: coverImage?.mime,
+      name: coverImage?.path,
+    });
+
+    try {
+      const res = await setUserDetails(formData, userid);
+      console.log(res, '---------><><------------dataaaaaaaa');
+      navigation.navigate('Profile');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Header title="Profile" />
+      <Header title="Edit Profile" />
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Image
-          source={images.ProfileBanner}
-          style={{width: '100%', height: 150}}
-        />
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}>
+        <TouchableOpacity onPress={() => showCoverImagePickerOptions()}>
+          <Image
+            source={{
+              uri: coverImage?.path
+                ? coverImage?.path
+                : details?.userBannerProfile,
+            }}
+            style={{
+              width: width * 1,
+              height: height * 0.2,
+              backgroundColor: 'grey',
+            }}
+          />
+        </TouchableOpacity>
+
         <View style={styles.tabs}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+          <View
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -181,7 +279,7 @@ const EditProfile = () => {
               }}>
               Following
             </Text>
-          </TouchableOpacity>
+          </View>
           <View
             style={{
               width: getWidth(4),
@@ -191,14 +289,16 @@ const EditProfile = () => {
             <TouchableOpacity
               style={styles.outerview}
               onPress={() => showImagePickerOptions()}>
-              <ImageBackground
-                source={{uri: image?.path}}
+              <Image
+                source={{
+                  uri: image?.path ? image?.path : details?.userProfile,
+                }}
                 resizeMode="cover"
-                style={styles.statusUploadBackground}></ImageBackground>
+                style={styles.statusUploadBackground}></Image>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+          <View
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -222,7 +322,7 @@ const EditProfile = () => {
               }}>
               Followers
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
         <View
           style={{
@@ -231,19 +331,7 @@ const EditProfile = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 20,
-          }}>
-          {leader ? (
-            <View>
-              <Text style={styles.tabText}>Joe Biden</Text>
-              <Text style={styles.idText}>joe_biden_official</Text>
-            </View>
-          ) : (
-            <View>
-              <Text style={styles.tabText}>{details?.userName}</Text>
-              <Text style={styles.idText}>monty_23mortell</Text>
-            </View>
-          )}
-        </View>
+          }}></View>
 
         <View style={{width: getWidth(1)}}>
           {selectedTab === 0 ? (
@@ -251,37 +339,25 @@ const EditProfile = () => {
               <View style={styles.row1}>
                 <Text style={styles.subHeadText}> My Name</Text>
               </View>
-              {/* <View style={styles.partyContainer}> */}
               <TextInput
                 style={styles.partyContainer}
-                onChangeText={setNameText}
+                onChangeText={text => setNameText(text)}
                 value={nameText}
-                placeholder={details?.userName}
+                // placeholder={details?.userName}
+                placeholder={'Update your Name'}
                 keyboardType="default"
                 placeholderTextColor={'grey'}
               />
-              {/* <Text style={styles.democraticText}>
-                  {details?.userName ? details?.userName : 'User Name'}
-                </Text> */}
-              {/* </View> */}
+
               <View style={styles.row1}>
                 <Text style={styles.subHeadText}> My Self</Text>
               </View>
-              {/* <View style={styles.selfContainer}> */}
-              {/* <Text style={styles.selfText}>
-                  Joe Biden, the 46th President of the United States, has a
-                  storied career in American politics spanning over five
-                  decades. Born on November 20, 1942, in Scranton, Pennsylvania,
-                  Biden overcame personal and professional challenges to become
-                  one of the most enduring figures in modern political history
-                </Text> */}
+
               <TextInput
                 style={styles.selfContainer}
-                onChangeText={setSelfText}
+                onChangeText={text => setSelfText(text)}
                 value={selfText}
-                placeholder={
-                  'Biden overcame personal and professional challenges to become one of the most enduring figures in modern political history'
-                }
+                placeholder={'Update your self intro'}
                 keyboardType="default"
                 placeholderTextColor={'grey'}
                 multiline={true}
@@ -303,9 +379,7 @@ const EditProfile = () => {
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {selectedItem?.title
-                    ? selectedItem?.title
-                    : 'Choose your Party'}
+                  {selectedItem?.title ? selectedItem?.title : details?.myParty}
                 </Text>
               </View>
               <View style={styles.row1}>
@@ -321,9 +395,9 @@ const EditProfile = () => {
               <View style={styles.interestContainer}>
                 <ScrollView horizontal>
                   <Text style={styles.interestText}>
-                    {selectedInterest?.map((item, ind) => (
+                    {selectedItemName?.map((item, ind) => (
                       <Text style={{color: 'grey'}} key={ind}>
-                        {item.title ? item.title : 'Choose your Interest'},
+                        {item ? item : 'Choose your interest'},
                       </Text>
                     ))}
                   </Text>
@@ -337,10 +411,14 @@ const EditProfile = () => {
         <View style={{height: getHeight(2)}} />
       </ScrollView>
       <View style={styles.clickableGradient}>
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => navigation.goBack()}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={() => updateProfile()}>
           <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -355,6 +433,9 @@ const EditProfile = () => {
         setSelectedItems={setSelectedInterests}
         modalVisible={interestModalVisible}
         onClosePress={closeInterestModal}
+        data={interests}
+        setSelectedItemName={setSelectedItemName}
+        selectedItemName={selectedItemName}
       />
     </SafeAreaView>
   );
@@ -497,11 +578,10 @@ const styles = StyleSheet.create({
   outerview: {
     height: 85,
     width: 85,
-
     borderRadius: 45, // half of height/width for perfect circle
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#7E65C0',
+    backgroundColor: 'grey',
   },
   fanouterview: {
     height: 65,
@@ -555,7 +635,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selfContainer: {
-    minHeight: getHeight(6),
+    minHeight: getHeight(8),
     width: getWidth(1.06),
     borderColor: 'grey',
     borderWidth: 0.5,
