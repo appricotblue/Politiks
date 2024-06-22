@@ -41,6 +41,8 @@ const LoginScreen = props => {
   const [password, changepassword] = useState('');
   const [isLogin, changeIsLogin] = useState(false);
   const [googledata, changegoogledata] = useState({});
+  const [isLoading, setIsLoading] = useState(false); 
+
 
   // const handleGoogleSignIn = async () => {
   //   try {
@@ -73,18 +75,22 @@ const LoginScreen = props => {
   const handleGoogleRegister = async (userInfo) => {
     console.log(userInfo?.user?.id, 'tdat')
     try {
+      setIsLoading(true);
       const response = await googleregister(userInfo?.user?.name, userInfo?.user?.email, userInfo?.user?.id);
+      setIsLoading(false);
       console.log(response, 'login api response')
       if (response.message === "User registered successfully") {
         await local.storeUserId('UserId', response?.user?.id.toString());
         await local.storEexistuser('existuser', 'newuser');
         navigation.replace('TellusAboutyou');
       } else {
+        setIsLoading(false);
         await local.storeUserId('UserId', response?.user?.id.toString());
         await local.storEexistuser('existuser', 'existuser');
       navigation.replace('Home');
       }
     } catch (error) {
+      setIsLoading(false);
       if (error.response && error.response.data && error.response.data.message) {
         Alert.alert('Error', error.response.data.message);
       } else {
@@ -206,7 +212,11 @@ const LoginScreen = props => {
           texttitle={'black'}
         />
         </View> */}
-    
+     {isLoading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
       </ImageBackground>
     </View>
   
@@ -250,6 +260,7 @@ const styles = StyleSheet.create({
     fontWeight:'300',
     alignSelf:'center'
   },
+  
 });
 export default LoginScreen;
 
