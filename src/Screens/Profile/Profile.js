@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
 import {getAllUserImages, getAllUserPost} from '../../api';
 import local from '../../Storage/Local';
+import {height, width} from '../../Theme/ConstantStyles';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -56,8 +57,6 @@ const Profile = () => {
     // Add more items as needed
   ];
 
- 
-
   const getuser = async () => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
@@ -66,27 +65,31 @@ const Profile = () => {
     getAllPosts(userId);
   };
 
-  useEffect(
-    React.useCallback(() => {
-    getuser();
-  }, []),
- );
+  // useEffect(() => {
+  //   getuser();
+  // }, []);
 
-  const getAllUserPosts = async (userId) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      getuser();
+    }, []),
+  );
+
+  const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data[0]);
-      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
-  const getAllPosts = async (userId) => {
+  const getAllPosts = async userId => {
     try {
       const res = await getAllUserImages(userId);
       setImage(res?.data);
-      console.log(res?.data, 'Profileeeeeeee--------------------');
+      // console.log(res?.data, 'Profileeeeeeee--------------------');
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -121,12 +124,16 @@ const Profile = () => {
 
       <ScrollView contentContainerStyle={styles.container}>
         <Image
-          source={images.ProfileBanner}
-          style={{width: '100%', height: 150}}
+          source={{uri: details?.userBannerProfile}}
+          style={{
+            width: width * 1,
+            height: height * 0.2,
+            backgroundColor: 'white',
+          }}
         />
         <View style={styles.tabs}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -157,15 +164,30 @@ const Profile = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity style={styles.outerview}>
-              <ImageBackground
-                source={images.Profile}
+            <View style={styles.outerview}>
+              <Image
+                source={{uri: details?.userProfile}}
                 resizeMode="cover"
-                style={styles.statusUploadBackground}></ImageBackground>
+                style={styles.statusUploadBackground}></Image>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('EditProfile');
+              }}>
+              <Image
+                source={images.PencilPNG}
+                style={{
+                  width: 35,
+                  height: 35,
+                  bottom: 1,
+                  left: 1,
+                  marginVertical: 5,
+                }}
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Followers')}
+            onPress={() => {}}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -207,11 +229,11 @@ const Profile = () => {
           ) : (
             <View>
               <Text style={styles.tabText}>{details?.userName}</Text>
-              <Text style={styles.idText}>monty_23mortell</Text>
+              <Text style={styles.idText}>{details?.userName}_official</Text>
             </View>
           )}
 
-          <View style={{flexDirection: 'row'}}>
+          {/* <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
               style={{
                 minWidth: 100,
@@ -274,7 +296,7 @@ const Profile = () => {
                 Messege
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
         <View style={{width: getWidth(1)}}>
@@ -292,11 +314,12 @@ const Profile = () => {
               <Text style={styles.subHeadText}> My Self</Text>
               <View style={styles.selfContainer}>
                 <Text style={styles.selfText}>
-                  Joe Biden, the 46th President of the United States, has a
+                  {/* Joe Biden, the 46th President of the United States, has a
                   storied career in American politics spanning over five
                   decades. Born on November 20, 1942, in Scranton, Pennsylvania,
                   Biden overcame personal and professional challenges to become
-                  one of the most enduring figures in modern political history
+                  one of the most enduring figures in modern political history */}
+                  {details?.mySelf}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Party</Text>
@@ -305,16 +328,23 @@ const Profile = () => {
                   source={images.DemocraticPNG}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={styles.democraticText}>Democratic</Text>
+                <Text style={styles.democraticText}>{details?.myParty}</Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
               <View style={styles.interestContainer}>
                 <ScrollView horizontal>
-                  <Text style={styles.interestText}>Communism,</Text>
+                  {/* <Text style={styles.interestText}>Communism,</Text>
                   <Text style={styles.interestText}>
                     Evolutionary Socialism,
                   </Text>
-                  <Text style={styles.interestText}>Marxism</Text>
+                  <Text style={styles.interestText}>Marxism</Text> */}
+                  <Text style={styles.interestText}>
+                    {details?.myInterestField?.map((item, ind) => (
+                      <Text style={{color: 'grey'}} key={ind}>
+                        {item ? item : 'Choose your Interest'},
+                      </Text>
+                    ))}
+                  </Text>
                 </ScrollView>
               </View>
             </View>
@@ -323,7 +353,7 @@ const Profile = () => {
           )}
           {selectedTab === 1 ? (
             <ScrollView contentContainerStyle={styles.flatListContent}>
-              {chunkArray(image, 3).map((row, index) => (
+              {chunkArray(image, 3)?.map((row, index) => (
                 <View style={styles.rowContainer} key={index}>
                   {row.map(
                     item => renderImageItem({item}), // Assuming renderImageItem is a function that renders the image item
@@ -477,6 +507,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'Jost-SemiBold',
     fontWeight: '600',
+    alignSelf: 'center',
+    marginTop: 10,
   },
   idText: {
     color: 'grey',
@@ -567,7 +599,7 @@ const styles = StyleSheet.create({
     borderRadius: 45, // half of height/width for perfect circle
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#7E65C0',
+    backgroundColor: 'white',
   },
   fanouterview: {
     height: 65,
@@ -621,7 +653,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selfContainer: {
-    minHeight: getHeight(6),
+    minHeight: getHeight(15),
     width: getWidth(1.06),
     borderColor: 'grey',
     borderWidth: 0.5,

@@ -11,7 +11,8 @@ import {
   Image,
   ImageBackground,
   BackHandler,
-  Alert
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {setApiData} from '../../redux/action';
@@ -32,6 +33,8 @@ const height = Dimensions.get('window').height;
 const Home = props => {
   const navigation = useNavigation();
   const [ProfileData, setProfileData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const data = [
     {id: '1', title: 'My Story', imageUrl: images.Profile},
     {id: '2', title: 'Virat Kohli', imageUrl: images.ViratProfile},
@@ -125,10 +128,10 @@ const Home = props => {
           'Exit App',
           'Do you want to exit the app?',
           [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'OK', onPress: () => BackHandler.exitApp() },
+            {text: 'Cancel', style: 'cancel'},
+            {text: 'OK', onPress: () => BackHandler.exitApp()},
           ],
-          { cancelable: false }
+          {cancelable: false},
         );
         return true;
       };
@@ -139,18 +142,20 @@ const Home = props => {
       // Cleanup the event listener on unmount
       return () =>
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, [])
+    }, []),
   );
-
-
 
   const getAllPosts = async () => {
     try {
+      setIsLoading(true);
       const res = await getAllPost();
+      setIsLoading(false);
+
       setProfileData(res?.data);
       // console.log(res?.data, '-------ooooooo-----------');
     } catch (error) {
       console.error('Error creating post:', error);
+      setIsLoading(false);
     }
   };
 
@@ -174,10 +179,24 @@ const Home = props => {
           <ListItem key={item.id} item={item} />
         ))} */}
         <ListItem Data={ProfileData} />
+        {isLoading && (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color="white" />
+          </View>
+        )}
       </ScrollView>
       <Footer title={'home'} />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  loader: {
+    ...StyleSheet.absoluteFillObject, // Covers the entire screen
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+});
 
 export default Home;

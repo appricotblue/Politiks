@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -15,16 +15,17 @@ import {
 } from 'react-native';
 import TextInputBox from '../../Components/TextInputBox';
 import CommonButton from '../../Components/CommonButton';
-import {connect} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {setName, setDarkmode} from '../../redux/action';
+import { connect } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { setName, setDarkmode } from '../../redux/action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
-import {getHeight, getWidth} from '../../Theme/Constants';
+import { getHeight, getWidth } from '../../Theme/Constants';
 import CountryPicker from '../../Components/CountryPicker';
 import DatePicker from 'react-native-date-picker';
-import {CreateData, CheckuserAvailability} from '../../api';
+import { CreateData, CheckuserAvailability, getCountries, getState } from '../../api';
+import { height } from '../../Theme/ConstantStyles';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -53,7 +54,9 @@ const TellusAboutyou = props => {
   const [userid, setuserid] = useState('');
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [countrydata, setcountrydata] = useState([]);
+  const [statesdata, setstatedata] = useState([]);
 
   const handleSelectOption = option => {
     setSelectedOption(option);
@@ -61,28 +64,55 @@ const TellusAboutyou = props => {
     console.log('Selected Option:', option);
   };
   const countries = [
-    {id: 1, name: 'India', code: '+91'},
-    {id: 2, name: 'Canada', code: '+786'},
-    {id: 3, name: 'United Kingdom', code: '+67'},
-    {id: 4, name: 'Australia', code: '+76'},
-    {id: 5, name: 'Germany', code: '+90'},
-    {id: 6, name: 'United States', code: '+1'},
+    { id: 1, name: 'India', code: '+91' },
+    { id: 2, name: 'Canada', code: '+786' },
+    { id: 3, name: 'United Kingdom', code: '+67' },
+    { id: 4, name: 'Australia', code: '+76' },
+    { id: 5, name: 'Germany', code: '+90' },
+    { id: 6, name: 'United States', code: '+1' },
   ];
 
   const genderdata = [
-    {id: 1, name: 'Male', code: '+91'},
-    {id: 2, name: 'Female', code: '+786'},
-    {id: 3, name: 'Other', code: '+786'},
+    { id: 1, name: 'Male', code: '+91' },
+    { id: 2, name: 'Female', code: '+786' },
+    { id: 3, name: 'Other', code: '+786' },
   ];
   const statedata = [
-    {id: 1, name: 'kerala', code: '+91'},
-    {id: 2, name: 'Texas', code: '+786'},
-    {id: 3, name: 'Karnataka ', code: '+67'},
-    {id: 4, name: 'California', code: '+76'},
-    {id: 5, name: 'Germany', code: '+90'},
-    {id: 6, name: 'United States', code: '+1'},
+    { id: 1, name: 'kerala', code: '+91' },
+    { id: 2, name: 'Texas', code: '+786' },
+    { id: 3, name: 'Karnataka ', code: '+67' },
+    { id: 4, name: 'California', code: '+76' },
+    { id: 5, name: 'Germany', code: '+90' },
+    { id: 6, name: 'United States', code: '+1' },
   ];
 
+  const GetCountries = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getCountries();
+      setIsLoading(false);
+      setcountrydata(response);
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+  const GetState = async (id) => {
+    try {
+      // setIsLoading(true);
+      const response = await getState(id);
+      // setIsLoading(false);
+      setstatedata(response);
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
   const getuser = async () => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
@@ -91,19 +121,30 @@ const TellusAboutyou = props => {
 
   useEffect(() => {
     getuser();
+    GetCountries();
   }, []);
 
   const handleSelectCountry = item => {
-    console.log('Selected country ID:', item.name);
+    GetState(item?.id)
+    console.log('Selected country ID:', item?.id, item?.name);
     changecountry(item.name);
   };
   const handleSelectgender = item => {
-    console.log('Selected country ID:', item.name);
+    console.log('Selected country ID:', item?.name);
     changegender(item.name);
   };
   const handleSelecstate = item => {
-    console.log('Selected country ID:', item.name);
-    changestate(item.name);
+    if (!country) {
+      Alert.alert('Please select a country first to continue');
+      return;
+    }
+    if (country == '') {
+      Alert.alert('Please select country first to continue');
+    } else {
+      console.log('Selected country ID:', item.name);
+      changestate(item.name);
+    }
+
   };
 
   const handleFullnameChange = async text => {
@@ -295,13 +336,13 @@ const TellusAboutyou = props => {
           <Text
             style={[
               styles.usernameMessage,
-              {color: usernameAvailable ? 'green' : 'red'},
+              { color: usernameAvailable ? 'green' : 'red' },
             ]}>
             {usernameMessage}
           </Text>
         )}
-        <View style={{width: getWidth(1.4), marginBottom: 0, marginTop: 7}}>
-          <Text style={styles.subTxt}>
+        <View style={{ width: getWidth(1.2), marginBottom: 0, marginTop: 7, }}>
+          <Text style={[styles.subTxt, { marginLeft: 7 }]}>
             {'I am a (select why are you here)'}
           </Text>
           <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 5, }}>
@@ -318,7 +359,7 @@ const TellusAboutyou = props => {
                   }
                 />
               </TouchableOpacity>
-              <Text style={styles.optionText}>Follower</Text>
+              <Text style={styles.optionText}>Political supporter</Text>
             </View>
             <View style={styles.optionContainer}>
               <TouchableOpacity
@@ -331,7 +372,7 @@ const TellusAboutyou = props => {
                   style={selectedOption === 'Leader' && styles.innerRadioButton}
                 />
               </TouchableOpacity>
-              <Text style={styles.optionText}>Leader</Text>
+              <Text style={styles.optionText}>Political Leader</Text>
             </View>
           </View>
         </View>
@@ -358,15 +399,17 @@ const TellusAboutyou = props => {
         />
         <CountryPicker
           title="Select your country"
-          countries={countries}
+          countries={countrydata}
           onSelectCountry={handleSelectCountry}
         />
+        {country != '' && (
+          <CountryPicker
+            title="Select your state"
+            countries={statesdata}
+            onSelectCountry={handleSelecstate}
+          />
+        )}
 
-        <CountryPicker
-          title="Select your state"
-          countries={statedata}
-          onSelectCountry={handleSelecstate}
-        />
 
         <View
           style={{
@@ -438,17 +481,18 @@ const TellusAboutyou = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   image: {
-    flex: 1,
+    height:height,
     alignItems: 'center',
     backgroundColor: 'white',
   },
   TileTxt: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     fontSize: 28,
     color: 'black',
-  
+
     // fontWeight: '700',
     paddingBottom: 2,
   },
@@ -457,8 +501,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     width: getHeight(2.6),
-   
-   
+
+
   },
   optionContainer: {
     flexDirection: 'row',

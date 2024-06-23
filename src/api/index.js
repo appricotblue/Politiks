@@ -51,22 +51,32 @@ export const login = async (email, password) => {
   }
 };
 
-export const CreatePost = async = (data, userId) => {
+export const CreatePost = (async = (data, userId) => {
   return commonRequest('POST', `user/createPost/${userId}`, data, {
     'Content-Type': 'multipart/form-data',
   });
-};
+});
 
 export const getAllPost = async () => {
   return commonRequest('GET', 'user/getAllpost');
 };
-export const getAllUserPost = async (userId) => {
-  console.log(userId)
+export const getAllUserPost = async userId => {
+  console.log(userId);
   return commonRequest('GET', `user/getUserDetails/${userId}`);
 };
 
-export const getAllUserImages = async (userId) => {
+export const getAllUserImages = async userId => {
   return commonRequest('GET', `user/getUserAllPostsByUserId/${userId}`);
+};
+
+export const getProfileInterests = async () => {
+  return commonRequest('GET', `user/getInterests`);
+};
+
+export const setUserDetails = async (data, userId) => {
+  return commonRequest('PUT', `user/updateUserDetails/${userId}`, data, {
+    'Content-Type': 'multipart/form-data',
+  });
 };
 
 export const Createinterest = async (interestIds, userId) => {
@@ -125,6 +135,7 @@ export const getallinterests = async () => {
   }
 };
 
+
 export const getfolowers = async userid => {
   try {
     const response = await HTTP_REQUEST.get(`user/getUserList/${userid}`);
@@ -134,7 +145,26 @@ export const getfolowers = async userid => {
     throw error;
   }
 };
+export const getCountries = async () => {
+  try {
+    const response = await HTTP_REQUEST.get(`user/getCountry`);
+    return response.data;
+  } catch (error) {
+    console.log(error, 'user error');
+    throw error;
+  }
+};
 
+export const getState = async (countryid) => {
+  console.log(countryid,'statees')
+  try {
+    const response = await HTTP_REQUEST.get(`user/getStates/${countryid}`);
+    return response.data;
+  } catch (error) {
+    console.log(error, 'user error');
+    throw error;
+  }
+};
 export const getusers = async () => {
   try {
     const response = await HTTP_REQUEST.get('users/getUsers');
