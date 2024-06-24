@@ -334,8 +334,21 @@ const Profile = () => {
               </View>
               <Text style={styles.subHeadText}> My Party</Text>
               <View style={styles.partyContainer}>
-                <Image
+                {/* <Image
                   source={images.DemocraticPNG}
+                  style={{width: 25, height: 25}}
+                /> */}
+                <Image
+                  // source={images.DemocraticPNG}
+                  source={
+                    details?.myParty === 'Democratic'
+                      ? images.DemocraticPNG
+                      : details?.myParty === 'Republican'
+                      ? images.RepublicanPNG
+                      : details?.myParty === 'Republican'
+                      ? images.LibertarianPNG
+                      : images.PartyPNG
+                  }
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>

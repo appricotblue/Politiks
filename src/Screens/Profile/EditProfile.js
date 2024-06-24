@@ -416,7 +416,16 @@ const EditProfile = () => {
               </View>
               <View style={styles.partyContainer1}>
                 <Image
-                  source={images.DemocraticPNG}
+                  // source={images.DemocraticPNG}
+                  source={
+                    selectedItem?.title === 'Democratic'
+                      ? images.DemocraticPNG
+                      : selectedItem?.title === 'Republican'
+                      ? images.RepublicanPNG
+                      : selectedItem?.title === 'Republican'
+                      ? images.LibertarianPNG
+                      : images.PartyPNG
+                  }
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>

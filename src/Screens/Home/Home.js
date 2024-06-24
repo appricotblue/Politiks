@@ -174,7 +174,7 @@ const Home = props => {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data);
-      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }

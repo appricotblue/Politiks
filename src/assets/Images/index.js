@@ -83,6 +83,9 @@ const images = {
   FundrasingPNG: require('./FundrasingPNG.png'),
   InNewsPNG: require('./InNewsPNG.png'),
   PeoplePNG: require('./PeoplePNG.png'),
+  RepublicanPNG: require('./RepublicanPNG.png'),
+  LibertarianPNG: require('./LibertarianPNG.png'),
+  PartyPNG: require('./PartyPNG.png'),
 };
 
 export default images;

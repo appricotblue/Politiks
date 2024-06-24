@@ -8,6 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Modal,
+  TouchableWithoutFeedback,
+  FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../Components/Header';
@@ -16,13 +19,46 @@ import images from '../../assets/Images';
 import CommonButton from '../../Components/CommonButton';
 import {getWidth} from '../../Theme/Constants';
 import ImagePicker from 'react-native-image-crop-picker';
-import {CreatePost} from '../../api';
+import {CreatePost, getCountries} from '../../api';
 import local from '../../Storage/Local';
+import CountryPicker from '../../Components/CountryPicker';
 
 const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
   const [userid, setuserid] = useState('');
+  const [countrydata, setcountrydata] = useState([]);
+  const [country, changecountry] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(null);
+
+  const GetCountries = async () => {
+    try {
+      const response = await getCountries();
+      setcountrydata(response);
+      console.log(response, 'getallinterests API response---------');
+    } catch (error) {
+      console.error('Error fetching interests:', error);
+    }
+  };
+
+  const toggleModal = () => {
+    console.log('==================');
+    setModalVisible(!modalVisible);
+  };
+
+  const selectCountry = country => {
+    setSelectedCountryCode(country.name);
+    setModalVisible(false);
+    if (handleSelectCountry) {
+      handleSelectCountry(country); // Pass the selected country ID to the parent component
+    }
+  };
+
+  const handleSelectCountry = item => {
+    console.log('Selected country ID:', item?.id, item?.name);
+    changecountry(item.name);
+  };
 
   const getuser = async () => {
     const userId = await local.getUserId();
@@ -32,6 +68,7 @@ const EditPost = ({navigation}) => {
 
   useEffect(() => {
     getuser();
+    GetCountries();
   }, []);
 
   const validate = () => {
@@ -40,6 +77,8 @@ const EditPost = ({navigation}) => {
       Alert.alert('Please add an image to continue');
     } else if (text == '') {
       Alert.alert('Please add an Content to continue');
+    } else if (country == '') {
+      Alert.alert('Please add an Country to continue');
     } else {
       createPosts();
     }
@@ -47,7 +86,7 @@ const EditPost = ({navigation}) => {
 
   const createPosts = async () => {
     const formData = new FormData();
-    formData.append('location', 'kochi');
+    formData.append('location', country);
     formData.append('tagUser', '2');
     formData.append('caption', text);
     formData.append('image', {
@@ -58,7 +97,7 @@ const EditPost = ({navigation}) => {
 
     try {
       const res = await CreatePost(formData, userid);
-      // console.log(res?.data, '---------><><');
+      console.log(res?.data, '---------><><');
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error creating post:', error);
@@ -129,9 +168,13 @@ const EditPost = ({navigation}) => {
                 source={images.LocationArrow}
                 style={{width: 25, height: 25}}
               />
-              <Text style={styles.locationText}>Add Location</Text>
+              <Text style={styles.locationText}>
+                {country ? country : 'Select Location'}
+              </Text>
             </View>
-            <Image source={images.PlusIcon} style={{width: 25, height: 25}} />
+            <TouchableOpacity onPress={toggleModal}>
+              <Image source={images.PlusIcon} style={{width: 25, height: 25}} />
+            </TouchableOpacity>
           </View>
           {image?.length !== 0 ? (
             <View style={styles.locationContainer}>
@@ -172,6 +215,28 @@ const EditPost = ({navigation}) => {
           texttitle={'white'}
         />
       </ScrollView>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <FlatList
+            data={countrydata}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => selectCountry(item)}
+                style={styles.item}>
+                <Text style={styles.itemText}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -230,6 +295,56 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     borderRadius: 10,
+  },
+  title: {
+    fontFamily: 'Jost-Regular',
+    color: 'black',
+    marginLeft: 5,
+    marginBottom: 5,
+    fontSize: 15,
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 9,
+    borderWidth: 1,
+    borderColor: '#271926',
+    borderRadius: 30,
+    minHeight: 45,
+    marginBottom: 7,
+  },
+  buttonText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    color: 'black',
+  },
+  arrow: {
+    fontSize: 16,
+    color: 'black',
+  },
+  modalOverlay: {
+    flex: 1,
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    // margin: 20,
+    padding: 20,
+    maxHeight: height * 0.6,
+    width: width * 1,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    borderColor: 'black',
+    borderWidth: 0.5,
+  },
+  item: {
+    padding: 10,
+  },
+  itemText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    color: 'black',
   },
 });
 
