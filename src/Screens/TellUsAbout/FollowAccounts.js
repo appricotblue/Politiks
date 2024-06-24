@@ -170,7 +170,7 @@ const FollowAccounts = props => {
     };
 
     const isvalidate = async () => {
-        if(selectedAccounts?.length >= 1){
+        // if(selectedAccounts?.length >= 1){
         const leaderdata = await local.getLeader();
         console.log(leaderdata, 'leaderdata he')
         if (leaderdata == 'Follower') {
@@ -178,9 +178,9 @@ const FollowAccounts = props => {
          } else {
              navigation.replace('UploadScreen');
          }
-        }else{
-            Alert.alert('Please Select atleast one account to continue')
-        }
+        // }else{
+        //     Alert.alert('Please Select atleast one account to continue')
+        // }
     };
 
     useEffect(() => {

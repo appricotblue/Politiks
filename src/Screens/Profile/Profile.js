@@ -28,6 +28,7 @@ const Profile = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
   const [details, setDetails] = useState();
+  const [interestdata, setinterestdata] = useState();
   const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
 
@@ -79,8 +80,9 @@ const Profile = () => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data[0]);
+      setDetails(data);
       console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      setinterestdata(res?.data?.myInterestField)
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -171,10 +173,12 @@ const Profile = () => {
                 style={styles.statusUploadBackground}></Image>
             </View>
             <TouchableOpacity
+              style={{ width: 96, height: 30, borderRadius: 10, backgroundColor: '#3A7BD5', justifyContent: 'center', alignItems: 'center' }}
               onPress={() => {
                 navigation.navigate('EditProfile');
               }}>
-              <Image
+              <Text style={{ color: 'white', fontSize: 14, fontFamily: 'Jost-Regular' }}>Edit Profile</Text>
+              {/* <Image
                 source={images.PencilPNG}
                 style={{
                   width: 35,
@@ -183,7 +187,7 @@ const Profile = () => {
                   left: 1,
                   marginVertical: 5,
                 }}
-              />
+              /> */}
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -339,8 +343,8 @@ const Profile = () => {
                   </Text>
                   <Text style={styles.interestText}>Marxism</Text> */}
                   <Text style={styles.interestText}>
-                    {details?.myInterestField?.map((item, ind) => (
-                      <Text style={{color: 'grey'}} key={ind}>
+                    {interestdata?.map((item,) => (
+                      <Text style={{color: 'grey'}}>
                         {item ? item : 'Choose your Interest'},
                       </Text>
                     ))}
@@ -508,7 +512,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-SemiBold',
     fontWeight: '600',
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 14,
   },
   idText: {
     color: 'grey',
@@ -693,6 +697,7 @@ const styles = StyleSheet.create({
   selfText: {
     color: 'grey',
     fontSize: 17,
+    marginTop:5
   },
   subHeadText: {
     color: 'black',

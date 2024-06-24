@@ -73,6 +73,11 @@ const images = {
   googleicone: require('./googleicone.png'),
   Envelope: require('./Envelope.png'),
   apple: require('./apple.png'),
+  CameraPNG: require('./CameraPNG.png'),
+  test1: require('./test1.png'),
+  test2: require('./test2.png'),
+  test3: require('./test3.png'),
+  test4: require('./test4.png'),
 };
 
 export default images;

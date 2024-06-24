@@ -35,12 +35,23 @@ const Home = props => {
   const [ProfileData, setProfileData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // const data = [
+  //   {id: '1', title: 'My Story', imageUrl: images.Profile},
+  //   {id: '2', title: 'Virat Kohli', imageUrl: images.ViratProfile},
+  //   {id: '3', title: 'Virat Kohli', imageUrl: images.Welcome_2},
+  //   {id: '4', title: 'Item 3', imageUrl: images.Welcome_1},
+  //   {id: '5', title: 'Item 2', imageUrl: images.Welcome_1},
+  //   {id: '6', title: 'Item 3', imageUrl: images.Welcome_2},
+  //   {id: '7', title: 'Item 2', imageUrl: images.Welcome_3},
+  //   {id: '8', title: 'Item 3', imageUrl: images.Welcome_3},
+  //   // Add more items as needed
+  // ];
   const data = [
     {id: '1', title: 'My Story', imageUrl: images.Profile},
-    {id: '2', title: 'Virat Kohli', imageUrl: images.ViratProfile},
-    {id: '3', title: 'Virat Kohli', imageUrl: images.Welcome_2},
-    {id: '4', title: 'Item 3', imageUrl: images.Welcome_1},
-    {id: '5', title: 'Item 2', imageUrl: images.Welcome_1},
+    {id: '2', title: 'Joe Bidan', imageUrl: images.test1},
+    {id: '3', title: 'Emilia', imageUrl: images.test2},
+    {id: '4', title: 'Benedic', imageUrl: images.test3},
+    {id: '5', title: 'Dr Robert', imageUrl: images.test4},
     {id: '6', title: 'Item 3', imageUrl: images.Welcome_2},
     {id: '7', title: 'Item 2', imageUrl: images.Welcome_3},
     {id: '8', title: 'Item 3', imageUrl: images.Welcome_3},
