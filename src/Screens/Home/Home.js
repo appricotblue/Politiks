@@ -52,9 +52,7 @@ const Home = props => {
     {id: '3', title: 'Emilia', imageUrl: images.test2},
     {id: '4', title: 'Benedic', imageUrl: images.test3},
     {id: '5', title: 'Dr Robert', imageUrl: images.test4},
-    {id: '6', title: 'Item 3', imageUrl: images.Welcome_2},
-    {id: '7', title: 'Item 2', imageUrl: images.Welcome_3},
-    {id: '8', title: 'Item 3', imageUrl: images.Welcome_3},
+
     // Add more items as needed
   ];
   const swiperdata = [
@@ -120,10 +118,6 @@ const Home = props => {
     },
     // Add more items as needed
   ];
-
-  // useEffect(() => {
-  //   getAllPosts();
-  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {
