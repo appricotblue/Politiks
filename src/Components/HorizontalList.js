@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import images from '../assets/Images';
 
-const HorizontalList = ({data, onPressStatusUpload}) => {
+const HorizontalList = ({data, onPressStatusUpload, profileImage}) => {
   const renderItem = ({item, index}) => (
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
