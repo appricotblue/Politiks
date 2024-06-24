@@ -25,7 +25,7 @@ import CountryPicker from '../../Components/CountryPicker';
 
 const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
   const [countrydata, setcountrydata] = useState([]);
   const [country, changecountry] = useState('');

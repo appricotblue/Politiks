@@ -25,7 +25,7 @@ const ListItem = ({Data}) => {
       {Data?.map(item => {
         return (
           <View style={styles.container}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', padding: 10}}>
               {/* <Image source={{ uri: item.userDetails.userProfile ? item.userDetails.userProfile : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} /> */}
               <Image
                 source={{
@@ -36,10 +36,10 @@ const ListItem = ({Data}) => {
                 style={styles.image}
               />
               <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
                   <Image
-                    style={{width: 20, height: 20, marginLeft: 10}}
+                    style={{width: 20, height: 20, marginLeft: 6}}
                     source={images.VerifiedPNG}
                   />
                 </View>
@@ -48,13 +48,19 @@ const ListItem = ({Data}) => {
               <TouchableOpacity
                 style={{
                   width: 35,
-                  height: 35,
+                  height: 45,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  // backgroundColor: 'pink',
                 }}
                 onPress={() => {}}>
                 <Image
-                  style={{width: 3, height: 16, marginBottom: 5}}
+                  style={{
+                    width: 3,
+                    height: 16,
+                    // marginBottom: 5,
+                    resizeMode: 'contain',
+                  }}
                   source={images.Threedots}
                 />
               </TouchableOpacity>
@@ -189,7 +195,7 @@ const ListItem = ({Data}) => {
 const styles = StyleSheet.create({
   container: {
     // alignItems: 'center',
-    padding: 10,
+    // padding: 10,
   },
   image: {
     width: 50,
@@ -216,6 +222,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     color: 'black',
     lineHeight: 20,
+    paddingHorizontal: 13,
   },
   media: {
     width: '100%',
