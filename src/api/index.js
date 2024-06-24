@@ -135,6 +135,7 @@ export const getallinterests = async () => {
   }
 };
 
+
 export const getfolowers = async userid => {
   try {
     const response = await HTTP_REQUEST.get(`user/getUserList/${userid}`);
@@ -144,7 +145,26 @@ export const getfolowers = async userid => {
     throw error;
   }
 };
+export const getCountries = async () => {
+  try {
+    const response = await HTTP_REQUEST.get(`user/getCountry`);
+    return response.data;
+  } catch (error) {
+    console.log(error, 'user error');
+    throw error;
+  }
+};
 
+export const getState = async (countryid) => {
+  console.log(countryid,'statees')
+  try {
+    const response = await HTTP_REQUEST.get(`user/getStates/${countryid}`);
+    return response.data;
+  } catch (error) {
+    console.log(error, 'user error');
+    throw error;
+  }
+};
 export const getusers = async () => {
   try {
     const response = await HTTP_REQUEST.get('users/getUsers');

@@ -24,7 +24,13 @@ import images from '../../assets/Images';
 import {getHeight, getWidth} from '../../Theme/Constants';
 import CountryPicker from '../../Components/CountryPicker';
 import DatePicker from 'react-native-date-picker';
-import {CreateData, CheckuserAvailability} from '../../api';
+import {
+  CreateData,
+  CheckuserAvailability,
+  getCountries,
+  getState,
+} from '../../api';
+import {height} from '../../Theme/ConstantStyles';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -53,7 +59,9 @@ const TellusAboutyou = props => {
   const [userid, setuserid] = useState('');
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [countrydata, setcountrydata] = useState([]);
+  const [statesdata, setstatedata] = useState([]);
 
   const handleSelectOption = option => {
     setSelectedOption(option);
@@ -83,6 +91,33 @@ const TellusAboutyou = props => {
     {id: 6, name: 'United States', code: '+1'},
   ];
 
+  const GetCountries = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getCountries();
+      setIsLoading(false);
+      setcountrydata(response);
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+  const GetState = async id => {
+    try {
+      // setIsLoading(true);
+      const response = await getState(id);
+      // setIsLoading(false);
+      setstatedata(response);
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
   const getuser = async () => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
@@ -91,19 +126,29 @@ const TellusAboutyou = props => {
 
   useEffect(() => {
     getuser();
+    GetCountries();
   }, []);
 
   const handleSelectCountry = item => {
-    console.log('Selected country ID:', item.name);
+    GetState(item?.id);
+    console.log('Selected country ID:', item?.id, item?.name);
     changecountry(item.name);
   };
   const handleSelectgender = item => {
-    console.log('Selected country ID:', item.name);
+    console.log('Selected country ID:', item?.name);
     changegender(item.name);
   };
   const handleSelecstate = item => {
-    console.log('Selected country ID:', item.name);
-    changestate(item.name);
+    if (!country) {
+      Alert.alert('Please select a country first to continue');
+      return;
+    }
+    if (country == '') {
+      Alert.alert('Please select country first to continue');
+    } else {
+      console.log('Selected country ID:', item.name);
+      changestate(item.name);
+    }
   };
 
   const handleFullnameChange = async text => {
@@ -192,8 +237,7 @@ const TellusAboutyou = props => {
       Alert.alert('Please select gender');
     } else if (usernameAvailable != true) {
       Alert.alert('Please select  available user name to continue');
-    }
-    else {
+    } else {
       // navigation.replace('InterestSelection')
       handledataRegister();
     }
@@ -269,12 +313,14 @@ const TellusAboutyou = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.image}>
-        <View style={{ width: getHeight(2.3), marginTop: 0, marginBottom: 20 }}>
+        <View style={{width: getHeight(2.3), marginTop: 0, marginBottom: 20}}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={images.ArrowLeft} style={styles.arrowimg} />
           </TouchableOpacity>
           <Text style={styles.TileTxt}>{'Tell us about you'}</Text>
-          <Text style={styles.subTxt}>{'This will help us to serve you better'}</Text>
+          <Text style={styles.subTxt}>
+            {'This will help us to serve you better'}
+          </Text>
         </View>
         <TextInputBox
           value={fullname}
@@ -300,11 +346,11 @@ const TellusAboutyou = props => {
             {usernameMessage}
           </Text>
         )}
-        <View style={{width: getWidth(1.4), marginBottom: 0, marginTop: 7}}>
-          <Text style={styles.subTxt}>
+        <View style={{width: getWidth(1.2), marginBottom: 0, marginTop: 7}}>
+          <Text style={[styles.subTxt, {marginLeft: 7}]}>
             {'I am a (select why are you here)'}
           </Text>
-          <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 5, }}>
+          <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 5}}>
             <View style={styles.optionContainer}>
               <TouchableOpacity
                 style={[
@@ -318,7 +364,7 @@ const TellusAboutyou = props => {
                   }
                 />
               </TouchableOpacity>
-              <Text style={styles.optionText}>Follower</Text>
+              <Text style={styles.optionText}>Political supporter</Text>
             </View>
             <View style={styles.optionContainer}>
               <TouchableOpacity
@@ -331,7 +377,7 @@ const TellusAboutyou = props => {
                   style={selectedOption === 'Leader' && styles.innerRadioButton}
                 />
               </TouchableOpacity>
-              <Text style={styles.optionText}>Leader</Text>
+              <Text style={styles.optionText}>Political Leader</Text>
             </View>
           </View>
         </View>
@@ -358,15 +404,16 @@ const TellusAboutyou = props => {
         />
         <CountryPicker
           title="Select your country"
-          countries={countries}
+          countries={countrydata}
           onSelectCountry={handleSelectCountry}
         />
-
-        <CountryPicker
-          title="Select your state"
-          countries={statedata}
-          onSelectCountry={handleSelecstate}
-        />
+        {country != '' && (
+          <CountryPicker
+            title="Select your state"
+            countries={statesdata}
+            onSelectCountry={handleSelecstate}
+          />
+        )}
 
         <View
           style={{
@@ -440,15 +487,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    flex: 1,
+    height: height,
     alignItems: 'center',
     backgroundColor: 'white',
   },
   TileTxt: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     fontSize: 28,
     color: 'black',
-  
+
     // fontWeight: '700',
     paddingBottom: 2,
   },
@@ -457,8 +504,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     width: getHeight(2.6),
-   
-   
   },
   optionContainer: {
     flexDirection: 'row',

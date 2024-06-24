@@ -269,15 +269,10 @@ const UploadScreen = () => {
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Upload a self Introductory video
+                                Record a video reading the texts shown below
                             </Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Ensure the video is no longer than 1 minute
-                            </Text>
-                        </View>
+
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
@@ -366,37 +361,43 @@ const UploadScreen = () => {
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Upload a supporting document
+                                Take a picture of your ID and upload
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Ensure the image is clear and readable
+                                You can choose US Passport card, US Drivers License or State issued photo ID card
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Find a well-lit area to take your photo.
+                                Ensure the document is clear and legible.
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Keep your device steady for a clear shot.
+                                Find a well-lit area to capture the document.
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Click "Next" to be directed to your camera
+                                Place the document Straight for a better shot.
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                             <Image source={images.starblue} style={styles.stardot} />
                             <Text style={styles.subTxt}>
-                                Once captured, Click on “Upload”
+                                Scan or take a high-quality photo of the document
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                            <Image source={images.starblue} style={styles.stardot} />
+                            <Text style={styles.subTxt}>
+                                Once Shot, Click on “Upload” 
                             </Text>
                         </View>
                     </View>
@@ -492,18 +493,19 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     TileTxt: {
+        fontFamily: 'Jost-Bold',
         fontSize: 23,
         color: 'black',
-        fontFamily: 'Jost',
-        fontWeight: '700',
+
         paddingBottom: 2,
 
     },
     subTxt: {
+        fontFamily: 'Jost-Regular',
         fontSize: getHeight(50),
         color: 'black',
-        fontFamily: 'Jost',
-        fontWeight: '300',
+
+
     },
     arrowimg: {
         width: 30,

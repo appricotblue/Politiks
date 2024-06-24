@@ -72,10 +72,10 @@ const EditProfile = () => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data[0]);
-      setSelfText(data[0].mySelf);
-      setNameText(data[0].userName);
-      setNameText(data[0].userName);
+      setDetails(data);
+      setSelfText(data?.mySelf);
+      setNameText(data?.userName);
+      setNameText(data?.userName);
 
       // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
