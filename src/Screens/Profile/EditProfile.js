@@ -238,7 +238,7 @@ const EditProfile = () => {
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}>
-        <TouchableOpacity onPress={() => showCoverImagePickerOptions()}>
+        <View>
           <Image
             source={{
               uri: coverImage?.path
@@ -249,6 +249,28 @@ const EditProfile = () => {
               width: width * 1,
               height: height * 0.2,
               backgroundColor: 'grey',
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={() => showCoverImagePickerOptions()}
+          style={{
+            width: 30,
+            height: 30,
+            position: 'absolute',
+            top: 5,
+            alignSelf: 'flex-end',
+            marginHorizontal: 10,
+          }}>
+          <Image
+            source={images?.CameraPNG}
+            style={{
+              width: 30,
+              height: 30,
+              position: 'absolute',
+              top: 5,
+              alignSelf: 'flex-end',
+              marginHorizontal: 10,
             }}
           />
         </TouchableOpacity>
@@ -286,15 +308,34 @@ const EditProfile = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity
-              style={styles.outerview}
-              onPress={() => showImagePickerOptions()}>
+            <View style={styles.outerview}>
               <Image
                 source={{
                   uri: image?.path ? image?.path : details?.userProfile,
                 }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
+            </View>
+            <TouchableOpacity
+              onPress={() => showImagePickerOptions()}
+              style={{
+                width: 30,
+                height: 30,
+                position: 'absolute',
+                top: 47,
+                right: 10,
+              }}>
+              <Image
+                source={images?.CameraPNG}
+                style={{
+                  width: 30,
+                  height: 30,
+                  position: 'absolute',
+                  top: 5,
+                  alignSelf: 'flex-end',
+                  marginHorizontal: 10,
+                }}
+              />
             </TouchableOpacity>
           </View>
           <View
