@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,26 +9,28 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
-  Alert
+  Alert,
 } from 'react-native';
 
 import TextInputBox from '../../Components/TextInputBox';
 import CommonButton from '../../Components/CommonButton';
-import { connect } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { setName, setDarkmode } from '../../redux/action';
+import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {setName, setDarkmode} from '../../redux/action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
-import { getHeight, getWidth } from '../../Theme/Constants';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import { googleregister } from '../../api';
+import {getHeight, getWidth} from '../../Theme/Constants';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {googleregister} from '../../api';
 // GoogleSignin.configure({
 //   // webClientId: '299321119503-rigbrd2tgj9sr1ka0eleoskt2orvpnps.apps.googleusercontent.com',
 //   webClientId: '299321119503-k2vd3046eqvod4ssacjpl6jvd1ttfufl.apps.googleusercontent.com',
- 
-// });
 
+// });
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -41,8 +43,7 @@ const LoginScreen = props => {
   const [password, changepassword] = useState('');
   const [isLogin, changeIsLogin] = useState(false);
   const [googledata, changegoogledata] = useState({});
-  const [isLoading, setIsLoading] = useState(false); 
-
+  const [isLoading, setIsLoading] = useState(false);
 
   // const handleGoogleSignIn = async () => {
   //   try {
@@ -62,24 +63,26 @@ const LoginScreen = props => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
-      changegoogledata(userInfo)
-      handleGoogleRegister(userInfo)
-      // Handle successful sign-in
+      changegoogledata(userInfo);
+      handleGoogleRegister(userInfo);
     } catch (error) {
       console.log(error);
       console.error('Error in Google login:', error.code, error.message);
     }
   };
 
-
-  const handleGoogleRegister = async (userInfo) => {
-    console.log(userInfo?.user?.id, 'tdat')
+  const handleGoogleRegister = async userInfo => {
+    console.log(userInfo?.user?.id, 'tdat');
     try {
       setIsLoading(true);
-      const response = await googleregister(userInfo?.user?.name, userInfo?.user?.email, userInfo?.user?.id);
+      const response = await googleregister(
+        userInfo?.user?.name,
+        userInfo?.user?.email,
+        userInfo?.user?.id,
+      );
       setIsLoading(false);
-      console.log(response, 'login api response')
-      if (response.message === "User registered successfully") {
+      console.log(response, 'login api response');
+      if (response.message === 'User registered successfully') {
         await local.storeUserId('UserId', response?.user?.id.toString());
         await local.storEexistuser('existuser', 'newuser');
         navigation.replace('TellusAboutyou');
@@ -87,11 +90,15 @@ const LoginScreen = props => {
         setIsLoading(false);
         await local.storeUserId('UserId', response?.user?.id.toString());
         await local.storEexistuser('existuser', 'existuser');
-      navigation.replace('Home');
+        navigation.replace('Home');
       }
     } catch (error) {
       setIsLoading(false);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         Alert.alert('Error', error.response.data.message);
       } else {
         Alert.alert('Error', 'An error occurred during login.');
@@ -99,11 +106,9 @@ const LoginScreen = props => {
     }
   };
 
-
-
   const isValidate = async () => {
     const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email format
-    
+
     if (email === '') {
       changecheckEmail('Please enter Email id'); // Set error message
       // alert('Please enter Email id'); // Set error message
@@ -113,19 +118,18 @@ const LoginScreen = props => {
     } else if (password == '') {
       changecheckPassword('Please enter password'); // Set error message
       // alert('Please enter password'); // Set error message
-    } 
-    else if (password?.length < 6) {
+    } else if (password?.length < 6) {
       changecheckPassword('Password must be at least 6 characters long'); // Set error message
       // alert('Please enter password'); // Set error message
-    }
-    else {
+    } else {
       navigation.replace('Home');
       // local.storeLogin(true);
     }
   };
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '792282806865-b24ig3hoaa51ioj91ttgerce3le6ao2m.apps.googleusercontent.com',
+      webClientId:
+        '792282806865-b24ig3hoaa51ioj91ttgerce3le6ao2m.apps.googleusercontent.com',
       offlineAccess: true,
     });
   }, []);
@@ -161,21 +165,27 @@ const LoginScreen = props => {
     return unsubscribe;
   }, [navigation]);
 
-
-
   return (
     <View style={styles.container}>
-      <ImageBackground source={images.Welcome_3} resizeMode="cover" style={styles.image}>
-        <View style={{ width: getWidth(1), marginTop: 160, marginBottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-
-          <Text style={styles.TileTxt}>{"Welcome to Politiks"}</Text>
-          <Text style={styles.subTxt}>{"A Community for Everyone."}</Text>
+      <ImageBackground
+        source={images.Welcome_3}
+        resizeMode="cover"
+        style={styles.image}>
+        <View
+          style={{
+            width: getWidth(1),
+            marginTop: 160,
+            marginBottom: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.TileTxt}>{'Welcome to Politiks'}</Text>
+          <Text style={styles.subTxt}>{'A Community for Everyone.'}</Text>
         </View>
-
 
         <CommonButton
           onPress={() => signIn()}
-          // onPress={() => handleGoogleSignIn()} 
+          // onPress={() => handleGoogleSignIn()}
           // onPress={() => navigation.replace('Home')}
           color={['white', 'white']}
           title={'Sign-up/Sign-in with Google'}
@@ -212,17 +222,15 @@ const LoginScreen = props => {
           texttitle={'black'}
         />
         </View> */}
-     {isLoading && (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="white" />
-        </View>
-      )}
+        {isLoading && (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color="white" />
+          </View>
+        )}
       </ImageBackground>
     </View>
-  
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -232,8 +240,6 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     alignItems: 'center',
-
-
   },
   text: {
     color: 'white',
@@ -249,7 +255,6 @@ const styles = StyleSheet.create({
     color: 'white',
     // fontWeight:'700',
     paddingBottom: 5,
-
   },
   subTxt: {
     fontSize: getHeight(50),
@@ -257,10 +262,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: getHeight(2.6),
     fontFamily: 'Jost-Regular',
-    fontWeight:'300',
-    alignSelf:'center'
+    fontWeight: '300',
+    alignSelf: 'center',
   },
-  
 });
 export default LoginScreen;
-
