@@ -115,7 +115,7 @@ const Profile = () => {
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
-      <Text style={{color: 'black'}}>{item.title}</Text>
+      <Text style={{color: 'black',  fontFamily:'Jost-Regular',}}>{item.title}</Text>
     </View>
   );
 
@@ -155,9 +155,9 @@ const Profile = () => {
             </Text>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+            
                 color: 'grey',
               }}>
               Following
@@ -210,18 +210,18 @@ const Profile = () => {
             }}>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 16,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+            
                 color: 'black',
               }}>
               698
             </Text>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Followers
@@ -510,22 +510,22 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
+    fontFamily:'Jost-Bold',
     color: 'black',
     fontSize: 24,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+ 
     alignSelf: 'center',
     marginTop: 14,
   },
   idText: {
+    fontFamily:'Jost-Bold',
     color: 'grey',
     fontSize: 14,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+  
     alignSelf: 'center',
   },
   activeTabText: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily:'Jost-Bold',
     color: 'white',
     fontSize: 13,
     fontWeight: '800',
@@ -688,6 +688,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   democraticText: {
+    fontFamily:'Jost-Regular',
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
@@ -699,14 +700,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   selfText: {
+    fontFamily:'Jost-Regular',
     color: 'grey',
     fontSize: 17,
     marginTop: 5,
   },
   subHeadText: {
+    fontFamily:'Jost-Bold',
     color: 'black',
     fontSize: 20,
-    fontWeight: '800',
+   
     marginVertical: 15,
   },
 });

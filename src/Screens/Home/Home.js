@@ -197,10 +197,11 @@ const Home = props => {
   };
   return (
     <SafeAreaView style={{flex: 1}}>
-      <HomeHeader title="Home" />
+      <HomeHeader title="Home" profileImage={details} />
       <ScrollView style={{backgroundColor: 'white'}}>
         <View style={{marginTop: 15}}>
           <HorizontalList
+            profileImage={details}
             data={data}
             onPressStatusUpload={() => onPressStatusUpload()}
           />

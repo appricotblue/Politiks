@@ -76,7 +76,7 @@ const Header = ({title}) => {
           source={images.LeftBackPNG}
           style={{width: 32, height: 32, marginRight: 15}}
         />
-        <Text style={{color: 'black', fontSize: 20, fontWeight: '700'}}>
+        <Text style={{color: 'black', fontSize: 20,   fontFamily:'Jost-Bold',}}>
           {title}
         </Text>
       </TouchableOpacity>

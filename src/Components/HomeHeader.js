@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import images from '../assets/Images';
 import {useNavigation} from '@react-navigation/native';
 
-const HomeHeader = ({title}) => {
+const HomeHeader = ({title, profileImage}) => {
   const navigation = useNavigation();
   return (
     <LinearGradient
@@ -25,13 +25,18 @@ const HomeHeader = ({title}) => {
         style={{flexDirection: 'row'}}
         onPress={() => navigation.navigate('Profile')}>
         <Image
-          source={images.Profile}
+          source={{
+            uri: profileImage?.userProfile
+              ? profileImage?.userProfile
+              : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+          }}
           style={{width: 44, height: 44, marginRight: 15}}
         />
         <Text
           style={{
+            fontFamily:'Jost-Bold',
             fontSize: 19,
-            fontWeight: '700',
+          
             color: 'black',
             marginTop: 10,
           }}>
