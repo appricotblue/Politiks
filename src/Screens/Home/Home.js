@@ -193,7 +193,7 @@ const Home = props => {
   };
 
   onPressStatusUpload = () => {
-    alert('upload');
+    console.log('upload');
   };
   return (
     <SafeAreaView style={{flex: 1}}>

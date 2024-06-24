@@ -27,10 +27,15 @@ const SuccessScreen = props => {
 
 
                 <FastImage
-                    source={require('../../assets/flightup.gif')} // replace with your gif path
+                    source={images?.flight} // replace with your gif path
                     style={styles.lottie}
                     resizeMode={FastImage.resizeMode.contain}
                 />
+                {/* <FastImage
+                    source={require('../../assets/flightup.gif')} // replace with your gif path
+                    style={styles.lottie}
+                    resizeMode={FastImage.resizeMode.contain}
+                /> */}
                 {/* <Image
                     source={require('../../assets/flightup.gif')} // replace with your gif path
                     style={styles.lottie}

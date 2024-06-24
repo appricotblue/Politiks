@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   FlatList,
+  ActivityIndicator
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../Components/Header';
@@ -31,6 +32,7 @@ const EditPost = ({navigation}) => {
   const [country, changecountry] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const GetCountries = async () => {
     try {
@@ -96,10 +98,13 @@ const EditPost = ({navigation}) => {
     });
 
     try {
+      setIsLoading(true);
       const res = await CreatePost(formData, userid);
+      setIsLoading(false);
       console.log(res?.data, '---------><><');
       navigation.navigate('Home');
     } catch (error) {
+      setIsLoading(false);
       console.error('Error creating post:', error);
     }
   };
@@ -237,6 +242,11 @@ const EditPost = ({navigation}) => {
           />
         </View>
       </Modal>
+      {isLoading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
     </View>
   );
 };
@@ -345,6 +355,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: 'black',
+  },
+  loader: {
+    ...StyleSheet.absoluteFillObject, // Covers the entire screen
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
 });
 

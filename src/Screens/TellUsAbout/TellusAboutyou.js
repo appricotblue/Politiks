@@ -465,7 +465,7 @@ const TellusAboutyou = props => {
         <DatePicker
           modal
           open={showPicker}
-          date={new Date()}
+          date={new Date('1980-01-01')}
           mode="date"
           maximumDate={
             new Date(new Date().setFullYear(new Date().getFullYear() - 18))
