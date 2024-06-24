@@ -285,18 +285,18 @@ const EditProfile = () => {
             }}>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 18,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+              
                 color: 'black',
               }}>
               565
             </Text>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Following
@@ -347,18 +347,18 @@ const EditProfile = () => {
             }}>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 16,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+              
                 color: 'black',
               }}>
               698
             </Text>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Followers
@@ -536,14 +536,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   idText: {
+    fontFamily: 'Jost-Bold',
     color: 'grey',
     fontSize: 14,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+   
     alignSelf: 'center',
   },
   activeTabText: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize: 13,
     fontWeight: '800',
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   itemName: {
-    fontWeight: 'bold',
+    fontFamily: 'Jost-Bold',
     marginTop: 5,
   },
   followButton: {
@@ -676,6 +676,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selfContainer: {
+    fontFamily:'Jost-Regular',
     minHeight: getHeight(8),
     width: getWidth(1.06),
     borderColor: 'grey',
@@ -718,6 +719,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   democraticText: {
+    fontFamily: 'Jost-Bold',
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
@@ -755,12 +757,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#3A7BD5',
   },
   cancelText: {
+    fontFamily: 'Jost-Bold',
     color: '#3A7BD5',
-    fontWeight: '800',
+   
   },
   saveText: {
+    fontFamily: 'Jost-Bold',
     color: 'white',
-    fontWeight: '800',
+  
   },
   row1: {
     width: width * 0.9,
@@ -769,6 +773,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   input: {
+    fontFamily: 'Jost-Bold',
     height: 40,
     width: '100%',
     borderColor: 'gray',

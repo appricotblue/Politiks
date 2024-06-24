@@ -30,7 +30,7 @@ const HomeHeader = ({title, profileImage}) => {
               ? profileImage?.userProfile
               : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
           }}
-          style={{width: 44, height: 44, marginRight: 15}}
+          style={{width: 44, height: 44, marginRight: 15, borderRadius: 22}}
         />
         <Text
           style={{
