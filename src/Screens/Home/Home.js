@@ -25,7 +25,8 @@ import images from '../../assets/Images';
 import SwiperComponent from '../../Components/SwiperComponent';
 import ListItem from '../../Components/ListItem';
 import Footer from '../../Components/Footer';
-import {getAllPost} from '../../api';
+import {getAllPost, getAllUserPost} from '../../api';
+import local from '../../Storage/Local';
 
 const axios = require('axios').default;
 const height = Dimensions.get('window').height;
@@ -34,6 +35,8 @@ const Home = props => {
   const navigation = useNavigation();
   const [ProfileData, setProfileData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [details, setDetails] = useState();
+  const [userid, setuserid] = useState('');
 
   // const data = [
   //   {id: '1', title: 'My Story', imageUrl: images.Profile},
@@ -119,9 +122,23 @@ const Home = props => {
     // Add more items as needed
   ];
 
+  // useEffect(() => {
+  //   getAllPosts();
+  // }, []);
+
+  const getuser = async () => {
+    const userId = await local.getUserId();
+    console.log(userId, 'leaderdata he');
+    setuserid(userId);
+    getAllUserPosts(userId);
+    getAllPosts(userId);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       getAllPosts();
+      getAllUserPosts();
+      getuser();
     }, []),
   );
 
@@ -150,6 +167,17 @@ const Home = props => {
     }, []),
   );
 
+  const getAllUserPosts = async userId => {
+    try {
+      const res = await getAllUserPost(userId);
+      const {data} = res;
+      setDetails(data);
+      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
   const getAllPosts = async () => {
     try {
       setIsLoading(true);
@@ -157,7 +185,7 @@ const Home = props => {
       setIsLoading(false);
 
       setProfileData(res?.data);
-      // console.log(res?.data, '-------ooooooo-----------');
+      // console.log(res?.data, '-------ooooooo--GET ALL POST---------');
     } catch (error) {
       console.error('Error creating post:', error);
       setIsLoading(false);

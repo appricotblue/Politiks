@@ -48,14 +48,13 @@ const Profile = () => {
   ];
 
   const data = [
-    {id: '1', title: 'Campain', imageUrl: images.ViratProfile},
-    {id: '2', title: 'Fundrasing', imageUrl: images.Welcome_2},
-    {id: '3', title: 'In the News', imageUrl: images.Welcome_3},
-    {id: '4', title: 'People', imageUrl: images.Welcome_1},
+    {id: '1', title: 'Campain', imageUrl: images.CampaignPNG},
+    {id: '2', title: 'Fundrasing', imageUrl: images.FundrasingPNG},
+    {id: '3', title: 'In the News', imageUrl: images.InNewsPNG},
+    {id: '4', title: 'People', imageUrl: images.PeoplePNG},
     {id: '5', title: 'White House', imageUrl: images.Welcome_2},
     {id: '6', title: 'Donation', imageUrl: images.Welcome_3},
     {id: '7', title: 'Supports', imageUrl: images.Welcome_3},
-    // Add more items as needed
   ];
 
   const getuser = async () => {
@@ -82,7 +81,7 @@ const Profile = () => {
       const {data} = res;
       setDetails(data);
       console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
-      setinterestdata(res?.data?.myInterestField)
+      setinterestdata(res?.data?.myInterestField);
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -126,7 +125,11 @@ const Profile = () => {
 
       <ScrollView contentContainerStyle={styles.container}>
         <Image
-          source={{uri: details?.userBannerProfile}}
+          source={{
+            uri: details?.userBannerProfile
+              ? details?.userBannerProfile
+              : 'https://images.musicfy.lol/misc/dummy_background.png',
+          }}
           style={{
             width: width * 1,
             height: height * 0.2,
@@ -168,26 +171,34 @@ const Profile = () => {
             }}>
             <View style={styles.outerview}>
               <Image
-                source={{uri: details?.userProfile}}
+                source={{
+                  uri: details?.userProfile
+                    ? details?.userProfile
+                    : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
             </View>
             <TouchableOpacity
-              style={{ width: 96, height: 30, borderRadius: 10, backgroundColor: '#3A7BD5', justifyContent: 'center', alignItems: 'center' }}
+              style={{
+                width: 96,
+                height: 30,
+                borderRadius: 10,
+                backgroundColor: '#3A7BD5',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
               onPress={() => {
                 navigation.navigate('EditProfile');
               }}>
-              <Text style={{ color: 'white', fontSize: 14, fontFamily: 'Jost-Regular' }}>Edit Profile</Text>
-              {/* <Image
-                source={images.PencilPNG}
+              <Text
                 style={{
-                  width: 35,
-                  height: 35,
-                  bottom: 1,
-                  left: 1,
-                  marginVertical: 5,
-                }}
-              /> */}
+                  color: 'white',
+                  fontSize: 14,
+                  fontFamily: 'Jost-Regular',
+                }}>
+                Edit Profile
+              </Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -318,12 +329,7 @@ const Profile = () => {
               <Text style={styles.subHeadText}> My Self</Text>
               <View style={styles.selfContainer}>
                 <Text style={styles.selfText}>
-                  {/* Joe Biden, the 46th President of the United States, has a
-                  storied career in American politics spanning over five
-                  decades. Born on November 20, 1942, in Scranton, Pennsylvania,
-                  Biden overcame personal and professional challenges to become
-                  one of the most enduring figures in modern political history */}
-                  {details?.mySelf}
+                  {details?.mySelf ? details?.mySelf : 'Update Self details'}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Party</Text>
@@ -332,18 +338,15 @@ const Profile = () => {
                   source={images.DemocraticPNG}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={styles.democraticText}>{details?.myParty}</Text>
+                <Text style={styles.democraticText}>
+                  {details?.myParty ? details?.myParty : 'Update your party'}
+                </Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
               <View style={styles.interestContainer}>
                 <ScrollView horizontal>
-                  {/* <Text style={styles.interestText}>Communism,</Text>
                   <Text style={styles.interestText}>
-                    Evolutionary Socialism,
-                  </Text>
-                  <Text style={styles.interestText}>Marxism</Text> */}
-                  <Text style={styles.interestText}>
-                    {interestdata?.map((item,) => (
+                    {interestdata?.map(item => (
                       <Text style={{color: 'grey'}}>
                         {item ? item : 'Choose your Interest'},
                       </Text>
@@ -688,6 +691,7 @@ const styles = StyleSheet.create({
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
+    height: 23,
   },
   interestText: {
     color: 'grey',
@@ -697,7 +701,7 @@ const styles = StyleSheet.create({
   selfText: {
     color: 'grey',
     fontSize: 17,
-    marginTop:5
+    marginTop: 5,
   },
   subHeadText: {
     color: 'black',

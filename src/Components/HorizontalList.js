@@ -55,10 +55,11 @@ const styles = StyleSheet.create({
     borderColor: '#3A7BD5',
   },
   title: {
+    fontFamily:'Jost-Regular',
     marginTop: 5,
     textAlign: 'center',
     color: 'black',
-    fontWeight: '600',
+    
   },
   statusUploadIcon: {
     position: 'absolute',

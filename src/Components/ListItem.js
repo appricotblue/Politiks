@@ -27,10 +27,17 @@ const ListItem = ({Data}) => {
           <View style={styles.container}>
             <View style={{flexDirection: 'row'}}>
               {/* <Image source={{ uri: item.userDetails.userProfile ? item.userDetails.userProfile : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} /> */}
-              <Image source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} />
+              <Image
+                source={{
+                  uri: item.userDetails.userProfile
+                    ? item.userDetails.userProfile
+                    : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                }}
+                style={styles.image}
+              />
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.name}>{item.userDetails.userName}</Text>
+                  <Text style={styles.name}>{item?.userDetails?.userName}</Text>
                   <Image
                     style={{width: 20, height: 20, marginLeft: 10}}
                     source={images.VerifiedPNG}
@@ -194,16 +201,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
+    fontFamily:'Jost-Bold',
     fontSize: 18,
-    fontWeight: 'bold',
+    
     color: 'black',
   },
   designation: {
+    fontFamily:'Jost-Regular',
     fontSize: 14,
     color: '#888',
     color: 'black',
   },
   description: {
+    fontFamily:'Jost-Regular',
     fontSize: 14,
     color: '#555',
     marginTop: 5,

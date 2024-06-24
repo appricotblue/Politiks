@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,17 +15,22 @@ import {
 } from 'react-native';
 import TextInputBox from '../../Components/TextInputBox';
 import CommonButton from '../../Components/CommonButton';
-import { connect } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { setName, setDarkmode } from '../../redux/action';
+import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {setName, setDarkmode} from '../../redux/action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../../Storage/Local';
 import images from '../../assets/Images';
-import { getHeight, getWidth } from '../../Theme/Constants';
+import {getHeight, getWidth} from '../../Theme/Constants';
 import CountryPicker from '../../Components/CountryPicker';
 import DatePicker from 'react-native-date-picker';
-import { CreateData, CheckuserAvailability, getCountries, getState } from '../../api';
-import { height } from '../../Theme/ConstantStyles';
+import {
+  CreateData,
+  CheckuserAvailability,
+  getCountries,
+  getState,
+} from '../../api';
+import {height} from '../../Theme/ConstantStyles';
 
 var windowWidth = Dimensions.get('window').width; //full width
 var windowHeight = Dimensions.get('window').height; //full height
@@ -64,26 +69,26 @@ const TellusAboutyou = props => {
     console.log('Selected Option:', option);
   };
   const countries = [
-    { id: 1, name: 'India', code: '+91' },
-    { id: 2, name: 'Canada', code: '+786' },
-    { id: 3, name: 'United Kingdom', code: '+67' },
-    { id: 4, name: 'Australia', code: '+76' },
-    { id: 5, name: 'Germany', code: '+90' },
-    { id: 6, name: 'United States', code: '+1' },
+    {id: 1, name: 'India', code: '+91'},
+    {id: 2, name: 'Canada', code: '+786'},
+    {id: 3, name: 'United Kingdom', code: '+67'},
+    {id: 4, name: 'Australia', code: '+76'},
+    {id: 5, name: 'Germany', code: '+90'},
+    {id: 6, name: 'United States', code: '+1'},
   ];
 
   const genderdata = [
-    { id: 1, name: 'Male', code: '+91' },
-    { id: 2, name: 'Female', code: '+786' },
-    { id: 3, name: 'Other', code: '+786' },
+    {id: 1, name: 'Male', code: '+91'},
+    {id: 2, name: 'Female', code: '+786'},
+    {id: 3, name: 'Other', code: '+786'},
   ];
   const statedata = [
-    { id: 1, name: 'kerala', code: '+91' },
-    { id: 2, name: 'Texas', code: '+786' },
-    { id: 3, name: 'Karnataka ', code: '+67' },
-    { id: 4, name: 'California', code: '+76' },
-    { id: 5, name: 'Germany', code: '+90' },
-    { id: 6, name: 'United States', code: '+1' },
+    {id: 1, name: 'kerala', code: '+91'},
+    {id: 2, name: 'Texas', code: '+786'},
+    {id: 3, name: 'Karnataka ', code: '+67'},
+    {id: 4, name: 'California', code: '+76'},
+    {id: 5, name: 'Germany', code: '+90'},
+    {id: 6, name: 'United States', code: '+1'},
   ];
 
   const GetCountries = async () => {
@@ -100,7 +105,7 @@ const TellusAboutyou = props => {
     }
   };
 
-  const GetState = async (id) => {
+  const GetState = async id => {
     try {
       // setIsLoading(true);
       const response = await getState(id);
@@ -125,7 +130,7 @@ const TellusAboutyou = props => {
   }, []);
 
   const handleSelectCountry = item => {
-    GetState(item?.id)
+    GetState(item?.id);
     console.log('Selected country ID:', item?.id, item?.name);
     changecountry(item.name);
   };
@@ -144,7 +149,6 @@ const TellusAboutyou = props => {
       console.log('Selected country ID:', item.name);
       changestate(item.name);
     }
-
   };
 
   const handleFullnameChange = async text => {
@@ -233,8 +237,7 @@ const TellusAboutyou = props => {
       Alert.alert('Please select gender');
     } else if (usernameAvailable != true) {
       Alert.alert('Please select  available user name to continue');
-    }
-    else {
+    } else {
       // navigation.replace('InterestSelection')
       handledataRegister();
     }
@@ -310,12 +313,14 @@ const TellusAboutyou = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.image}>
-        <View style={{ width: getHeight(2.3), marginTop: 0, marginBottom: 20 }}>
+        <View style={{width: getHeight(2.3), marginTop: 0, marginBottom: 20}}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={images.ArrowLeft} style={styles.arrowimg} />
           </TouchableOpacity>
           <Text style={styles.TileTxt}>{'Tell us about you'}</Text>
-          <Text style={styles.subTxt}>{'This will help us to serve you better'}</Text>
+          <Text style={styles.subTxt}>
+            {'This will help us to serve you better'}
+          </Text>
         </View>
         <TextInputBox
           value={fullname}
@@ -336,16 +341,16 @@ const TellusAboutyou = props => {
           <Text
             style={[
               styles.usernameMessage,
-              { color: usernameAvailable ? 'green' : 'red' },
+              {color: usernameAvailable ? 'green' : 'red'},
             ]}>
             {usernameMessage}
           </Text>
         )}
-        <View style={{ width: getWidth(1.2), marginBottom: 0, marginTop: 7, }}>
-          <Text style={[styles.subTxt, { marginLeft: 7 }]}>
+        <View style={{width: getWidth(1.2), marginBottom: 0, marginTop: 7}}>
+          <Text style={[styles.subTxt, {marginLeft: 7}]}>
             {'I am a (select why are you here)'}
           </Text>
-          <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 5, }}>
+          <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 5}}>
             <View style={styles.optionContainer}>
               <TouchableOpacity
                 style={[
@@ -409,7 +414,6 @@ const TellusAboutyou = props => {
             onSelectCountry={handleSelecstate}
           />
         )}
-
 
         <View
           style={{
@@ -481,10 +485,9 @@ const TellusAboutyou = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
   image: {
-    height:height,
+    height: height,
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -501,8 +504,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     width: getHeight(2.6),
-
-
   },
   optionContainer: {
     flexDirection: 'row',
