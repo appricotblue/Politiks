@@ -135,7 +135,6 @@ export const getallinterests = async () => {
   }
 };
 
-
 export const getfolowers = async userid => {
   try {
     const response = await HTTP_REQUEST.get(`user/getUserList/${userid}`);
@@ -155,8 +154,8 @@ export const getCountries = async () => {
   }
 };
 
-export const getState = async (countryid) => {
-  console.log(countryid,'statees')
+export const getState = async countryid => {
+  console.log(countryid, 'statees');
   try {
     const response = await HTTP_REQUEST.get(`user/getStates/${countryid}`);
     return response.data;

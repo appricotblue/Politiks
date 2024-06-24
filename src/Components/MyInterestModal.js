@@ -40,9 +40,6 @@ const MyInterestModal = ({
     });
   };
 
-  console.log(selectedItems, 'selecteeeeeee');
-  console.log(selectedItemName, 'selecteeeeeee-----------------');
-
   return (
     <View>
       <Modal

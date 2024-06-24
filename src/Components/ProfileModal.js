@@ -8,14 +8,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import images from '../assets/Images';
-import {width} from '../Theme/ConstantStyles';
+import {height, width} from '../Theme/ConstantStyles';
 
 const data = [
-  {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
-  {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
-  {id: '3', title: 'Socialism', imageUrl: images.Welcome_3},
-  {id: '4', title: 'Marxism', imageUrl: images.Welcome_1},
-  {id: '5', title: 'Democracy', imageUrl: images.Welcome_2},
+  {id: '1', title: 'Democratic', imageUrl: images.ViratProfile},
+  {id: '2', title: 'Republican', imageUrl: images.Welcome_2},
+  {id: '3', title: 'Libertarian', imageUrl: images.Welcome_3},
 ];
 
 const ProfileModal = ({
@@ -39,10 +37,20 @@ const ProfileModal = ({
         onRequestClose={onClosePress}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={onClosePress}>
+            {/* <TouchableOpacity style={styles.closeButton} onPress={onClosePress}>
               <Image source={images.Cross} style={styles.closeIcon} />
             </TouchableOpacity>
-            <Text style={styles.containerText}>My Interests</Text>
+            <Text style={styles.containerText}>My Party</Text> */}
+            <View style={{height: 50}}>
+              <View style={styles.action}>
+                <Text style={styles.containerText}>My Interests</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={onClosePress}>
+                <Image source={images.Cross} style={styles.closeIcon} />
+              </TouchableOpacity>
+            </View>
             <View style={styles.itemList}>
               {data.map(item => (
                 <View style={styles.item} key={item.id}>
@@ -79,6 +87,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: width * 0.85,
+    height: height * 0.4,
   },
   closeButton: {
     position: 'absolute',
@@ -121,6 +130,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
+  },
+  action: {
+    position: 'absolute',
+    top: 10,
+    left: 15,
+    bottom: 100,
+    height: 50,
+    width: width * 0.4,
+    // backgroundColor: 'pink',
   },
 });
 
