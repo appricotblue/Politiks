@@ -18,7 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
-import {getAllUserImages, getAllUserPost} from '../../api';
+import {getAllUserImages, getAllUserPost,getParties} from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
 
@@ -28,6 +28,7 @@ const Profile = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
   const [details, setDetails] = useState();
+  const [parties, setparties] = useState();
   const [interestdata, setinterestdata] = useState();
   const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
@@ -59,10 +60,11 @@ const Profile = () => {
 
   const getuser = async () => {
     const userId = await local.getUserId();
-    console.log(userId, 'leaderdata he');
+    console.log(userId, 'userid he');
     setuserid(userId);
     getAllUserPosts(userId);
     getAllPosts(userId);
+    getAllParties()
   };
 
   // useEffect(() => {
@@ -74,6 +76,17 @@ const Profile = () => {
       getuser();
     }, []),
   );
+  const getAllParties = async () => {
+    try {
+      const res = await getParties();
+       console.log(res, 'Parties--------------------');
+      setparties(res?.data);
+     
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
 
   const getAllUserPosts = async userId => {
     try {
@@ -243,8 +256,8 @@ const Profile = () => {
             </View>
           ) : (
             <View>
-              <Text style={styles.tabText}>{details?.userName}</Text>
-              <Text style={styles.idText}>{details?.userName}_official</Text>
+              <Text style={styles.tabText}>{details?.fullName}</Text>
+              <Text style={styles.idText}>{details?.userName}</Text>
             </View>
           )}
 

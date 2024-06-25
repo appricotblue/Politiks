@@ -22,6 +22,7 @@ import {
   getAllUserPost,
   getProfileInterests,
   setUserDetails,
+  getParties
 } from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
@@ -48,6 +49,7 @@ const EditProfile = () => {
   const [selfText, setSelfText] = useState(details?.mySelf);
   const [interestModalVisible, setInterestModalVisible] = useState(false);
   const [selectedInterest, setSelectedInterests] = useState([]);
+  const [parties, setparties] = useState();
   const data = [
     {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
     {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
@@ -67,6 +69,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     getuser();
+    getAllParties()
   }, []);
   const getAllUserPosts = async userId => {
     try {
@@ -78,6 +81,17 @@ const EditProfile = () => {
       setNameText(data?.userName);
 
       // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
+  const getAllParties = async () => {
+    try {
+      const res = await getParties();
+       console.log(res, 'Parties--------------------');
+      setparties(res?.data);
+     
     } catch (error) {
       console.error('Error creating post:', error);
     }

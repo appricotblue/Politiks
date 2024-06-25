@@ -266,5 +266,15 @@ export const updateProfile = async (
   }
 };
 
+export const getParties = async () => {
+  try {
+    const response = await HTTP_REQUEST.get('user/getAllMyParties');
+    return response.data;
+  } catch (error) {
+    console.log(error, 'user error');
+    throw error;
+  }
+};
+
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);
