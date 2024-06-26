@@ -42,8 +42,8 @@ const EditProfile = () => {
   const [coverImage, setCoverImage] = useState(null);
   const [userid, setuserid] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedItemName, setSelectedItemName] = useState([]);
+  const [selectedItem, setSelectedItem] = useState({icons:'',name:details?.myParty});
+  const [selectedItemName, setSelectedItemName] = useState(details?.myInterestField);
 
   const [nameText, setNameText] = useState(details?.userName);
   const [selfText, setSelfText] = useState(details?.mySelf);
@@ -75,10 +75,13 @@ const EditProfile = () => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data);
+      console.log(res,'data resp')
+      setDetails(res);
       setSelfText(data?.mySelf);
       setNameText(data?.userName);
       setNameText(data?.userName);
+      setSelectedItemName(data?.myInterestField)
+      setSelectedItem(data?.myParty)
 
       // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
@@ -90,7 +93,7 @@ const EditProfile = () => {
     try {
       const res = await getParties();
        console.log(res, 'Parties--------------------');
-      setparties(res?.data);
+      setparties(res);
      
     } catch (error) {
       console.error('Error creating post:', error);
@@ -221,7 +224,7 @@ const EditProfile = () => {
     const formData = new FormData();
     formData.append('userName', nameText);
     formData.append('mySelf', selfText);
-    formData.append('myParty', selectedItem?.title);
+    formData.append('myParty', selectedItem?.name);
 
     formData.append('myInterest', selectedInterest);
 
@@ -257,7 +260,9 @@ const EditProfile = () => {
             source={{
               uri: coverImage?.path
                 ? coverImage?.path
-                : details?.userBannerProfile,
+                : details?.userBannerProfile ?details?.userBannerProfile:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+
+
             }}
             style={{
               width: width * 1,
@@ -325,7 +330,7 @@ const EditProfile = () => {
             <View style={styles.outerview}>
               <Image
                 source={{
-                  uri: image?.path ? image?.path : details?.userProfile,
+                  uri: image?.path ? image?.path : details?.userProfile?details?.userProfile  :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
@@ -431,19 +436,12 @@ const EditProfile = () => {
               <View style={styles.partyContainer1}>
                 <Image
                   // source={images.DemocraticPNG}
-                  source={
-                    selectedItem?.title === 'Democratic'
-                      ? images.DemocraticPNG
-                      : selectedItem?.title === 'Republican'
-                      ? images.RepublicanPNG
-                      : selectedItem?.title === 'Republican'
-                      ? images.LibertarianPNG
-                      : images.PartyPNG
-                  }
+                  source={{uri:selectedItem?.icons}}
+      
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {selectedItem?.title ? selectedItem?.title : details?.myParty}
+                  {selectedItem?.name ? selectedItem?.name : details?.myParty}
                 </Text>
               </View>
               <View style={styles.row1}>
@@ -487,6 +485,7 @@ const EditProfile = () => {
         </TouchableOpacity>
       </View>
       <ProfileModal
+       partydata={parties}
         selectedItem={selectedItem}
         setSelectedItem={setSelectedItem}
         modalVisible={modalVisible}
@@ -746,6 +745,8 @@ const styles = StyleSheet.create({
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
+    // backgroundColor:'red',
+    height:22
   },
   interestText: {
     color: 'grey',

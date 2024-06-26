@@ -11,6 +11,7 @@ import {
 // import Video from 'react-native-video';
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
+import { getWidth } from '../Theme/Constants';
 const windowWidth = Dimensions.get('window').width;
 const ListItem = ({Data}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -38,10 +39,13 @@ const ListItem = ({Data}) => {
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
-                  <Image
-                    style={{width: 20, height: 20, marginLeft: 6}}
-                    source={images.VerifiedPNG}
-                  />
+                  {item.userDetails.role !== "Follower" && (
+                    <Image
+                      style={{ width: 20, height: 20, marginLeft: 6 }}
+                      source={images.VerifiedPNG}
+                    />
+                  )}
+
                 </View>
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
@@ -262,20 +266,21 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   likeButton: {
-    position: 'absolute',
-    bottom: 30,
+    // position: 'absolute',
+    // bottom: 30,
 
     zIndex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width: 300,
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: getWidth(1),
     alignSelf: 'center',
     height: 40,
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderRadius: 25,
+    // borderRadius: 25,
     paddingLeft: 10,
     flexDirection: 'row',
     alignItems: '',
+    backgroundColor:'red'
   },
   likeIcon: {
     width: 22,

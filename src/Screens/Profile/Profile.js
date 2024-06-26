@@ -27,7 +27,7 @@ const Profile = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
-  const [details, setDetails] = useState();
+  const [details, setDetails] = useState('');
   const [parties, setparties] = useState();
   const [interestdata, setinterestdata] = useState();
   const [image, setImage] = useState();
@@ -92,8 +92,9 @@ const Profile = () => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data);
       console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+       setDetails(res?.data);
+     
       setinterestdata(res?.data?.myInterestField);
     } catch (error) {
       console.error('Error creating post:', error);
@@ -187,7 +188,7 @@ const Profile = () => {
                 source={{
                   uri: details?.userProfile
                     ? details?.userProfile
-                    : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
@@ -353,19 +354,13 @@ const Profile = () => {
                 /> */}
                 <Image
                   // source={images.DemocraticPNG}
-                  source={
-                    details?.myParty === 'Democratic'
-                      ? images.DemocraticPNG
-                      : details?.myParty === 'Republican'
-                      ? images.RepublicanPNG
-                      : details?.myParty === 'Republican'
-                      ? images.LibertarianPNG
-                      : images.PartyPNG
+                  source={{uri:details?.myParty?.icons }
+                  
                   }
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {details?.myParty ? details?.myParty : 'Update your party'}
+                  {details?.myParty?.name ? details?.myParty?.name : 'Update your party'}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
