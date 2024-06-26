@@ -11,6 +11,7 @@ import {
 // import Video from 'react-native-video';
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
+import { getWidth } from '../Theme/Constants';
 const windowWidth = Dimensions.get('window').width;
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
@@ -44,10 +45,13 @@ const ListItem = ({Data}) => {
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
-                  <Image
-                    style={{width: 20, height: 20, marginLeft: 6}}
-                    source={images.VerifiedPNG}
-                  />
+                  {item.userDetails.role !== "Follower" && (
+                    <Image
+                      style={{ width: 20, height: 20, marginLeft: 6 }}
+                      source={images.VerifiedPNG}
+                    />
+                  )}
+
                 </View>
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
@@ -213,16 +217,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
+    fontFamily:'Jost-Bold',
     fontSize: 18,
-    fontWeight: 'bold',
+    
     color: 'black',
   },
   designation: {
+    fontFamily:'Jost-Regular',
     fontSize: 14,
     color: '#888',
     color: 'black',
   },
   description: {
+    fontFamily:'Jost-Regular',
     fontSize: 14,
     color: '#555',
     marginTop: 5,
@@ -265,20 +272,21 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   likeButton: {
-    position: 'absolute',
-    bottom: 30,
+    // position: 'absolute',
+    // bottom: 30,
 
     zIndex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width: 300,
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: getWidth(1),
     alignSelf: 'center',
     height: 40,
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderRadius: 25,
+    // borderRadius: 25,
     paddingLeft: 10,
     flexDirection: 'row',
     alignItems: '',
+    backgroundColor:'red'
   },
   likeIcon: {
     width: 22,

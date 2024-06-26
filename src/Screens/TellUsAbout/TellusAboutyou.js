@@ -249,9 +249,9 @@ const TellusAboutyou = props => {
         fullname,
         selectedOption,
         dateOfBirth,
-        'Male',
-        'India',
-        'Kerala',
+        gender,
+        country,
+        state,
         userid,
       );
       console.log(response, 'login api response');
@@ -465,7 +465,7 @@ const TellusAboutyou = props => {
         <DatePicker
           modal
           open={showPicker}
-          date={new Date()}
+          date={new Date('1980-01-01')}
           mode="date"
           maximumDate={
             new Date(new Date().setFullYear(new Date().getFullYear() - 18))
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
@@ -560,14 +560,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    maxHeight: getHeight(1.5)
   },
   closeButton: {
     position: 'absolute',
     top: 10,
     right: 10,
     backgroundColor: '#000',
-    borderRadius: 20,
+    // borderRadius: 20,
     padding: 10,
+    // backgroundColor:'red'
   },
   closeButtonText: {
     color: 'black',

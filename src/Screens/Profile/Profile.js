@@ -18,7 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
-import {getAllUserImages, getAllUserPost} from '../../api';
+import {getAllUserImages, getAllUserPost,getParties} from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
 
@@ -27,7 +27,8 @@ const Profile = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [leader, setLeader] = useState(false);
-  const [details, setDetails] = useState();
+  const [details, setDetails] = useState('');
+  const [parties, setparties] = useState();
   const [interestdata, setinterestdata] = useState();
   const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
@@ -59,10 +60,11 @@ const Profile = () => {
 
   const getuser = async () => {
     const userId = await local.getUserId();
-    console.log(userId, 'leaderdata he');
+    console.log(userId, 'userid he');
     setuserid(userId);
     getAllUserPosts(userId);
     getAllPosts(userId);
+    getAllParties()
   };
 
   // useEffect(() => {
@@ -74,13 +76,25 @@ const Profile = () => {
       getuser();
     }, []),
   );
+  const getAllParties = async () => {
+    try {
+      const res = await getParties();
+       console.log(res, 'Parties--------------------');
+      setparties(res?.data);
+     
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
 
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data);
       console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+       setDetails(res?.data);
+     
       setinterestdata(res?.data?.myInterestField);
     } catch (error) {
       console.error('Error creating post:', error);
@@ -115,7 +129,7 @@ const Profile = () => {
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
-      <Text style={{color: 'black'}}>{item.title}</Text>
+      <Text style={{color: 'black',  fontFamily:'Jost-Regular',}}>{item.title}</Text>
     </View>
   );
 
@@ -155,9 +169,9 @@ const Profile = () => {
             </Text>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+            
                 color: 'grey',
               }}>
               Following
@@ -174,7 +188,7 @@ const Profile = () => {
                 source={{
                   uri: details?.userProfile
                     ? details?.userProfile
-                    : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
@@ -210,18 +224,18 @@ const Profile = () => {
             }}>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 16,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+            
                 color: 'black',
               }}>
               698
             </Text>
             <Text
               style={{
+                fontFamily:'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Followers
@@ -243,8 +257,8 @@ const Profile = () => {
             </View>
           ) : (
             <View>
-              <Text style={styles.tabText}>{details?.userName}</Text>
-              <Text style={styles.idText}>{details?.userName}_official</Text>
+              <Text style={styles.tabText}>{details?.fullName}</Text>
+              <Text style={styles.idText}>{details?.userName}</Text>
             </View>
           )}
 
@@ -340,19 +354,13 @@ const Profile = () => {
                 /> */}
                 <Image
                   // source={images.DemocraticPNG}
-                  source={
-                    details?.myParty === 'Democratic'
-                      ? images.DemocraticPNG
-                      : details?.myParty === 'Republican'
-                      ? images.RepublicanPNG
-                      : details?.myParty === 'Republican'
-                      ? images.LibertarianPNG
-                      : images.PartyPNG
+                  source={{uri:details?.myParty?.icons }
+                  
                   }
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {details?.myParty ? details?.myParty : 'Update your party'}
+                  {details?.myParty?.name ? details?.myParty?.name : 'Update your party'}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
@@ -523,22 +531,22 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
+    fontFamily:'Jost-Bold',
     color: 'black',
     fontSize: 24,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+ 
     alignSelf: 'center',
     marginTop: 14,
   },
   idText: {
+    fontFamily:'Jost-Bold',
     color: 'grey',
     fontSize: 14,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+  
     alignSelf: 'center',
   },
   activeTabText: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily:'Jost-Bold',
     color: 'white',
     fontSize: 13,
     fontWeight: '800',
@@ -701,6 +709,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   democraticText: {
+    fontFamily:'Jost-Regular',
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
@@ -712,14 +721,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   selfText: {
+    fontFamily:'Jost-Regular',
     color: 'grey',
     fontSize: 17,
     marginTop: 5,
   },
   subHeadText: {
+    fontFamily:'Jost-Bold',
     color: 'black',
     fontSize: 20,
-    fontWeight: '800',
+   
     marginVertical: 15,
   },
 });

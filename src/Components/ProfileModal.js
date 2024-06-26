@@ -21,11 +21,13 @@ const ProfileModal = ({
   onClosePress,
   selectedItem,
   setSelectedItem,
+  partydata
 }) => {
   const selectItem = id => {
-    const item = data.find(item => item.id === id);
+
+    const item = partydata.find(item => item.id === id);
     setSelectedItem(item);
-    console.log(`Selected Item: ${item.title}`);
+    console.log('Selected Item:',item);
   };
 
   return (
@@ -52,9 +54,9 @@ const ProfileModal = ({
               </TouchableOpacity>
             </View>
             <View style={styles.itemList}>
-              {data.map(item => (
+              {partydata?.map(item => (
                 <View style={styles.item} key={item.id}>
-                  <Text style={styles.itemTitle}>{item.title}</Text>
+                  <Text style={styles.itemTitle}>{item.name}</Text>
                   <TouchableOpacity onPress={() => selectItem(item.id)}>
                     <Image
                       source={

@@ -22,6 +22,7 @@ import {
   getAllUserPost,
   getProfileInterests,
   setUserDetails,
+  getParties
 } from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
@@ -41,13 +42,14 @@ const EditProfile = () => {
   const [coverImage, setCoverImage] = useState(null);
   const [userid, setuserid] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedItemName, setSelectedItemName] = useState([]);
+  const [selectedItem, setSelectedItem] = useState({icons:'',name:details?.myParty});
+  const [selectedItemName, setSelectedItemName] = useState(details?.myInterestField);
 
   const [nameText, setNameText] = useState(details?.userName);
   const [selfText, setSelfText] = useState(details?.mySelf);
   const [interestModalVisible, setInterestModalVisible] = useState(false);
   const [selectedInterest, setSelectedInterests] = useState([]);
+  const [parties, setparties] = useState();
   const data = [
     {id: '1', title: 'Communism', imageUrl: images.ViratProfile},
     {id: '2', title: 'Evolutionary', imageUrl: images.Welcome_2},
@@ -67,17 +69,32 @@ const EditProfile = () => {
 
   useEffect(() => {
     getuser();
+    getAllParties()
   }, []);
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      setDetails(data);
+      console.log(res,'data resp')
+      setDetails(res);
       setSelfText(data?.mySelf);
       setNameText(data?.userName);
       setNameText(data?.userName);
+      setSelectedItemName(data?.myInterestField)
+      setSelectedItem(data?.myParty)
 
       // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
+  const getAllParties = async () => {
+    try {
+      const res = await getParties();
+       console.log(res, 'Parties--------------------');
+      setparties(res);
+     
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -207,7 +224,7 @@ const EditProfile = () => {
     const formData = new FormData();
     formData.append('userName', nameText);
     formData.append('mySelf', selfText);
-    formData.append('myParty', selectedItem?.title);
+    formData.append('myParty', selectedItem?.name);
 
     formData.append('myInterest', selectedInterest);
 
@@ -243,7 +260,9 @@ const EditProfile = () => {
             source={{
               uri: coverImage?.path
                 ? coverImage?.path
-                : details?.userBannerProfile,
+                : details?.userBannerProfile ?details?.userBannerProfile:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+
+
             }}
             style={{
               width: width * 1,
@@ -285,18 +304,18 @@ const EditProfile = () => {
             }}>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 18,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+              
                 color: 'black',
               }}>
               565
             </Text>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Following
@@ -311,7 +330,7 @@ const EditProfile = () => {
             <View style={styles.outerview}>
               <Image
                 source={{
-                  uri: image?.path ? image?.path : details?.userProfile,
+                  uri: image?.path ? image?.path : details?.userProfile?details?.userProfile  :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 }}
                 resizeMode="cover"
                 style={styles.statusUploadBackground}></Image>
@@ -347,18 +366,18 @@ const EditProfile = () => {
             }}>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 16,
-                fontFamily: 'Jost',
-                fontWeight: '800',
+              
                 color: 'black',
               }}>
               698
             </Text>
             <Text
               style={{
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-                fontFamily: 'Jost',
-                fontWeight: '400',
+               
                 color: 'grey',
               }}>
               Followers
@@ -417,19 +436,12 @@ const EditProfile = () => {
               <View style={styles.partyContainer1}>
                 <Image
                   // source={images.DemocraticPNG}
-                  source={
-                    selectedItem?.title === 'Democratic'
-                      ? images.DemocraticPNG
-                      : selectedItem?.title === 'Republican'
-                      ? images.RepublicanPNG
-                      : selectedItem?.title === 'Republican'
-                      ? images.LibertarianPNG
-                      : images.PartyPNG
-                  }
+                  source={{uri:selectedItem?.icons}}
+      
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {selectedItem?.title ? selectedItem?.title : details?.myParty}
+                  {selectedItem?.name ? selectedItem?.name : details?.myParty}
                 </Text>
               </View>
               <View style={styles.row1}>
@@ -473,6 +485,7 @@ const EditProfile = () => {
         </TouchableOpacity>
       </View>
       <ProfileModal
+       partydata={parties}
         selectedItem={selectedItem}
         setSelectedItem={setSelectedItem}
         modalVisible={modalVisible}
@@ -545,14 +558,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   idText: {
+    fontFamily: 'Jost-Bold',
     color: 'grey',
     fontSize: 14,
-    fontFamily: 'Jost-SemiBold',
-    fontWeight: '600',
+   
     alignSelf: 'center',
   },
   activeTabText: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize: 13,
     fontWeight: '800',
@@ -577,7 +590,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   itemName: {
-    fontWeight: 'bold',
+    fontFamily: 'Jost-Bold',
     marginTop: 5,
   },
   followButton: {
@@ -685,6 +698,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selfContainer: {
+    fontFamily:'Jost-Regular',
     minHeight: getHeight(8),
     width: getWidth(1.06),
     borderColor: 'grey',
@@ -727,9 +741,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   democraticText: {
+    fontFamily: 'Jost-Bold',
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
+    // backgroundColor:'red',
+    height:22
   },
   interestText: {
     color: 'grey',
@@ -764,12 +781,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#3A7BD5',
   },
   cancelText: {
+    fontFamily: 'Jost-Bold',
     color: '#3A7BD5',
-    fontWeight: '800',
+   
   },
   saveText: {
+    fontFamily: 'Jost-Bold',
     color: 'white',
-    fontWeight: '800',
+  
   },
   row1: {
     width: width * 0.9,
@@ -778,6 +797,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   input: {
+    fontFamily: 'Jost-Bold',
     height: 40,
     width: '100%',
     borderColor: 'gray',

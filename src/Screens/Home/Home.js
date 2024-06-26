@@ -38,95 +38,18 @@ const Home = props => {
   const [details, setDetails] = useState();
   const [userid, setuserid] = useState('');
 
-  // const data = [
-  //   {id: '1', title: 'My Story', imageUrl: images.Profile},
-  //   {id: '2', title: 'Virat Kohli', imageUrl: images.ViratProfile},
-  //   {id: '3', title: 'Virat Kohli', imageUrl: images.Welcome_2},
-  //   {id: '4', title: 'Item 3', imageUrl: images.Welcome_1},
-  //   {id: '5', title: 'Item 2', imageUrl: images.Welcome_1},
-  //   {id: '6', title: 'Item 3', imageUrl: images.Welcome_2},
-  //   {id: '7', title: 'Item 2', imageUrl: images.Welcome_3},
-  //   {id: '8', title: 'Item 3', imageUrl: images.Welcome_3},
-  //   // Add more items as needed
-  // ];
+  
   const data = [
     {id: '1', title: 'My Story', imageUrl: images.Profile},
     {id: '2', title: 'Joe Bidan', imageUrl: images.test1},
     {id: '3', title: 'Emilia', imageUrl: images.test2},
     {id: '4', title: 'Benedic', imageUrl: images.test3},
     {id: '5', title: 'Dr Robert', imageUrl: images.test4},
-    {id: '6', title: 'Item 3', imageUrl: images.Welcome_2},
-    {id: '7', title: 'Item 2', imageUrl: images.Welcome_3},
-    {id: '8', title: 'Item 3', imageUrl: images.Welcome_3},
-    // Add more items as needed
-  ];
-  const swiperdata = [
-    {id: '1', title: 'Item 1', imageUrl: images.ViratBanner},
-    {id: '2', title: 'Item 2', imageUrl: images.ViratBanner},
-    {id: '3', title: 'Item 3', imageUrl: images.ViratBanner},
-    {id: '4', title: 'Item 2', imageUrl: images.Welcome_1},
 
     // Add more items as needed
   ];
-  const verticalListData = [
-    {
-      id: '1',
-      name: 'Virat Kohli',
-      type: 'image',
-      media:
-        'https://www.whitehouse.gov/wp-content/uploads/2021/01/Joe-Biden-3.jpg',
-      designation: 'Bangalore',
-      description:
-        'Stumptown brunch raw umami flannel dollar pour-over ipsum. Booth glossier squid craft kale.😍❤️❤️',
-      image: images.ViratProfile,
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      type: 'image',
-      media:
-        'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/09/instagram-image-size.jpg',
-      designation: 'Product Manager',
-      description: 'Software fcrtdcvg ',
-      image: images.Welcome_1,
-    },
-    {
-      id: '3',
-      name: 'Alice Johnson',
-      type: 'video',
-      media:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      designation: 'UI/UX Designer',
-      description: 'Software vhgftrdfcgv bn dr',
-      image: images.Welcome_1,
-    },
-    {
-      id: '4',
-      name: 'Virat Kohli',
-      type: 'image',
-      media:
-        'https://i0.wp.com/www.rvcj.com/wp-content/uploads/2023/01/VIRAT-KOHLI-2.jpg?resize=600%2C451&ssl=1',
-      designation: 'Bangalore',
-      description:
-        'Stumptown brunch raw umami flannel dollar pour-over ipsum. Booth glossier squid craft kale.😍❤️❤️',
-      image: images.ViratProfile,
-    },
-    {
-      id: '5',
-      name: 'Jane Smith',
-      type: 'image',
-      media:
-        'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/09/instagram-image-size.jpg',
-      designation: 'Product Manager',
-      description: 'Software fcrtdcvg ',
-      image: images.Welcome_1,
-    },
-    // Add more items as needed
-  ];
 
-  // useEffect(() => {
-  //   getAllPosts();
-  // }, []);
+  
 
   const getuser = async () => {
     const userId = await local.getUserId();
@@ -174,7 +97,7 @@ const Home = props => {
       const res = await getAllUserPost(userId);
       const {data} = res;
       setDetails(data);
-      // console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
+      // console.log(res, 'Profileeeeeeeeeeeeoooooooooooooooo');
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -187,7 +110,7 @@ const Home = props => {
       setIsLoading(false);
 
       setProfileData(res?.data);
-      // console.log(res?.data, '-------ooooooo--GET ALL POST---------');
+      console.log(res?.data, '-------ooooooo--GET ALL POST---------');
     } catch (error) {
       console.error('Error creating post:', error);
       setIsLoading(false);
@@ -195,7 +118,7 @@ const Home = props => {
   };
 
   onPressStatusUpload = () => {
-    alert('upload');
+    console.log('upload');
   };
   return (
     <SafeAreaView style={{flex: 1}}>

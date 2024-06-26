@@ -28,14 +28,15 @@ const HomeHeader = ({title, profileImage}) => {
           source={{
             uri: profileImage?.userProfile
               ? profileImage?.userProfile
-              : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
           }}
           style={{width: 44, height: 44, marginRight: 15, borderRadius: 22}}
         />
         <Text
           style={{
+            fontFamily:'Jost-Bold',
             fontSize: 19,
-            fontWeight: '700',
+          
             color: 'black',
             marginTop: 10,
           }}>

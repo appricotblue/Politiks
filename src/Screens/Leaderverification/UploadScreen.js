@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal,ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, PermissionsAndroid, Image, Modal, ActivityIndicator } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Video from 'react-native-video';
 import { getHeight, getWidth } from '../../Theme/Constants';
@@ -19,7 +19,7 @@ const UploadScreen = () => {
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userid, setuserid] = useState('');
-    const [isLoading, setIsLoading] = useState(false); 
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const getuser = async () => {
@@ -139,7 +139,7 @@ const UploadScreen = () => {
             setErrorMessage('Both video and image files are required');
             return;
         }
-    
+
         const formData = new FormData();
         formData.append('verificationVideo', {
             uri: video.uri,
@@ -151,7 +151,7 @@ const UploadScreen = () => {
             type: image.type,
             name: image.fileName,
         });
-    
+
         // Custom fetch function with timeout
         const fetchWithTimeout = (url, options, timeout = 180000) => { // 180000 ms = 3 minutes
             return Promise.race([
@@ -161,7 +161,7 @@ const UploadScreen = () => {
                 ),
             ]);
         };
-    
+
         try {
             console.log('Starting upload...');
             setIsLoading(true);
@@ -176,8 +176,8 @@ const UploadScreen = () => {
                 },
                 180000 // Timeout set to 3 minutes
             );
-    console.log(response,'response')
-    setIsLoading(false);
+            console.log(response, 'response')
+            setIsLoading(false);
             if (response.ok) {
                 console.log('Upload successful');
                 navigation.navigate('PendingScreen');
@@ -192,251 +192,256 @@ const UploadScreen = () => {
             setErrorMessage(`An error occurred: ${error.message}`);
         }
     };
-    
+
 
 
 
     return (
         <View style={styles.container}>
-            <View style={{ width: getWidth(1.2), marginTop: 10, marginBottom: 20, marginTop: 30, }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
-                    </TouchableOpacity>
-                    <Text style={styles.TileTxt}>Leader Verification</Text>
+            <View style={{
+                width: getWidth(1.15), alignSelf: 'center',
+                backgroundColor: '#f5f5f5', height: '100%'
+            }}>
+                <View style={{ width: getWidth(1.2), marginTop: 10, marginBottom: 20, marginTop: 30, }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, }}>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
+                        </TouchableOpacity>
+                        <Text style={styles.TileTxt}>Leader Verification</Text>
+                    </View>
+
+                    <Text style={styles.subTxt}>
+                        To create a profile as leader, you need to verify your identity. This is a two-step process that includes uploading a self-explanatory video and a supporting document.
+                    </Text>
                 </View>
+                <Text style={styles.subTxt}>Upload Self-explanatory video</Text>
 
-                <Text style={styles.subTxt}>
-                    To create a profile as leader, you need to verify your identity. This is a two-step process that includes uploading a self-explanatory video and a supporting document.
-                </Text>
-            </View>
-            <Text style={styles.subTxt}>Upload Self-explanatory video</Text>
+                <TouchableOpacity style={styles.uploadBox} onPress={handleVideoPicker}>
+                    {video ? (
+                        <Video
+                            source={{ uri: video.uri }}
+                            style={styles.video}
+                            resizeMode="cover"
+                            controls={true}
+                        />
+                    ) : (
+                        <Text style={styles.uploadText}>Upload</Text>
+                    )}
+                </TouchableOpacity>
+                {video && <Text style={styles.uploadedText}>Video Uploaded</Text>}
+                {!video && errorMessage && <Text style={styles.errorText}>Video file is required</Text>}
 
-            <TouchableOpacity style={styles.uploadBox} onPress={handleVideoPicker}>
-                {video ? (
-                    <Video
-                        source={{ uri: video.uri }}
-                        style={styles.video}
-                        resizeMode="cover"
-                        controls={true}
+                <Text style={styles.subTxt}>Upload Supporting Document</Text>
+
+                <TouchableOpacity style={styles.uploadBox} onPress={handleImagePicker}>
+                    {image ? (
+                        <Image source={{ uri: image.uri }} style={{ height: '100%', width: '100%', borderRadius: 16 }} />
+                    ) : (
+                        <Text style={styles.uploadText}>Upload</Text>
+                    )}
+                </TouchableOpacity>
+                {image && <Text style={styles.uploadedText}>Image Uploaded</Text>}
+                {!image && errorMessage && <Text style={styles.errorText}>Image file is required</Text>}
+
+                <View style={styles.verifyButtonContainer}>
+                    <CommonButton
+                        onPress={handleVerify}
+                        color={['black', 'black']}
+                        title={'Verify'}
+                        width={getWidth(1.2)}
+                        texttitle={'white'}
                     />
-                ) : (
-                    <Text style={styles.uploadText}>Upload</Text>
-                )}
-            </TouchableOpacity>
-            {video && <Text style={styles.uploadedText}>Video Uploaded</Text>}
-            {!video && errorMessage && <Text style={styles.errorText}>Video file is required</Text>}
+                </View>
 
-            <Text style={styles.subTxt}>Upload Supporting Document</Text>
+                {/* Video Modal */}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={videoModalVisible}
+                    onRequestClose={() => setVideoModalVisible(false)}
+                >
+                    <View style={styles.modalView}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => setVideoModalVisible(false)}>
+                                <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
+                            </TouchableOpacity>
+                            <Text style={styles.TileTxt}>Video Verification</Text>
+                        </View>
 
-            <TouchableOpacity style={styles.uploadBox} onPress={handleImagePicker}>
-                {image ? (
-                    <Image source={{ uri: image.uri }} style={{ height: '100%', width: '100%', borderRadius: 16 }} />
-                ) : (
-                    <Text style={styles.uploadText}>Upload</Text>
-                )}
-            </TouchableOpacity>
-            {image && <Text style={styles.uploadedText}>Image Uploaded</Text>}
-            {!image && errorMessage && <Text style={styles.errorText}>Image file is required</Text>}
+                        <Image source={images.verification} style={styles.verification} />
+                        <View style={{ height: getHeight(2.8), }}>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Record a video reading the texts shown below
+                                </Text>
+                            </View>
 
-            <View style={styles.verifyButtonContainer}>
-                <CommonButton
-                    onPress={handleVerify}
-                    color={['black', 'black']}
-                    title={'Verify'}
-                    width={getWidth(1.2)}
-                    texttitle={'white'}
-                />
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Find a well-lit area to record your video.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Minimize background noise to capture clear audio.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Keep your device steady for a stable shot.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Click "Next" to be directed to your camera
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Once recorded, Click on “Upload”
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
+                            <CommonButton
+                                onPress={() => {
+                                    setVideoModalVisible(false);
+                                    Alert.alert(
+                                        'Upload Video',
+                                        'Choose an option',
+                                        [
+                                            // {
+                                            //     text: 'From Gallery',
+                                            //     onPress: () => openCameraOrGallery('video', 'gallery'),
+                                            // },
+                                            {
+                                                text: 'Record Video',
+                                                onPress: () => openCameraOrGallery('video', 'camera'),
+                                            },
+                                            { text: 'Cancel', style: 'cancel' },
+                                        ],
+                                        { cancelable: true }
+                                    );
+                                }}
+                                color={['black', 'black']}
+                                title={'Continue'}
+                                width={getWidth(1.2)}
+                                texttitle={'white'}
+                            />
+                            <Text style={styles.subTxt}>
+                                Our team will review and verify your profile
+                            </Text>
+                            <Text style={styles.subTxt}>
+                                within 48 hours
+                            </Text>
+                        </View>
+                    </View>
+                </Modal>
+
+                {/* Image Modal */}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={imageModalVisible}
+                    onRequestClose={() => setImageModalVisible(false)}
+                >
+                    <View style={styles.modalView}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <TouchableOpacity onPress={() => setImageModalVisible(false)}>
+                                <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
+                            </TouchableOpacity>
+                            <Text style={styles.TileTxt}>Image Verification</Text>
+                        </View>
+
+                        <Image source={images.verification} style={styles.verification} />
+                        <View style={{ height: getHeight(2.8), }}>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Take a picture of your ID and upload
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    You can choose US Passport card, US Drivers License or State issued photo ID card
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Ensure the document is clear and legible.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Find a well-lit area to capture the document.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Place the document Straight for a better shot.
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Scan or take a high-quality photo of the document
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+                                <Image source={images.starblue} style={styles.stardot} />
+                                <Text style={styles.subTxt}>
+                                    Once Shot, Click on “Upload”
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
+                            <CommonButton
+                                onPress={() => {
+                                    setImageModalVisible(false);
+                                    Alert.alert(
+                                        'Upload Image',
+                                        'Choose an option',
+                                        [
+                                            {
+                                                text: 'From Gallery',
+                                                onPress: () => openCameraOrGallery('photo', 'gallery'),
+                                            },
+                                            {
+                                                text: 'Take Photo',
+                                                onPress: () => openCameraOrGallery('photo', 'camera'),
+                                            },
+                                            { text: 'Cancel', style: 'cancel' },
+                                        ],
+                                        { cancelable: true }
+                                    );
+                                }}
+                                color={['black', 'black']}
+                                title={'Continue'}
+                                width={getWidth(1.2)}
+                                texttitle={'white'}
+                            />
+                            <Text style={styles.subTxt}>
+                                Our team will review and verify your profile
+                            </Text>
+                            <Text style={styles.subTxt}>
+                                within 48 hours
+                            </Text>
+                        </View>
+                    </View>
+                </Modal>
             </View>
-
-            {/* Video Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={videoModalVisible}
-                onRequestClose={() => setVideoModalVisible(false)}
-            >
-                <View style={styles.modalView}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <TouchableOpacity onPress={() => setVideoModalVisible(false)}>
-                            <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
-                        </TouchableOpacity>
-                        <Text style={styles.TileTxt}>Video Verification</Text>
-                    </View>
-
-                    <Image source={images.verification} style={styles.verification} />
-                    <View style={{ height: getHeight(2.8), }}>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Record a video reading the texts shown below
-                            </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Find a well-lit area to record your video.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Minimize background noise to capture clear audio.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Keep your device steady for a stable shot.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Click "Next" to be directed to your camera
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Once recorded, Click on “Upload”
-                            </Text>
-                        </View>
-                    </View>
-
-                    <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
-                        <CommonButton
-                            onPress={() => {
-                                setVideoModalVisible(false);
-                                Alert.alert(
-                                    'Upload Video',
-                                    'Choose an option',
-                                    [
-                                        // {
-                                        //     text: 'From Gallery',
-                                        //     onPress: () => openCameraOrGallery('video', 'gallery'),
-                                        // },
-                                        {
-                                            text: 'Record Video',
-                                            onPress: () => openCameraOrGallery('video', 'camera'),
-                                        },
-                                        { text: 'Cancel', style: 'cancel' },
-                                    ],
-                                    { cancelable: true }
-                                );
-                            }}
-                            color={['black', 'black']}
-                            title={'Continue'}
-                            width={getWidth(1.2)}
-                            texttitle={'white'}
-                        />
-                        <Text style={styles.subTxt}>
-                            Our team will review and verify your profile
-                        </Text>
-                        <Text style={styles.subTxt}>
-                            within 48 hours
-                        </Text>
-                    </View>
-                </View>
-            </Modal>
-
-            {/* Image Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={imageModalVisible}
-                onRequestClose={() => setImageModalVisible(false)}
-            >
-                <View style={styles.modalView}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                        <TouchableOpacity onPress={() => setImageModalVisible(false)}>
-                            <Image source={images.ArrowLeftblack} style={styles.arrowimg} />
-                        </TouchableOpacity>
-                        <Text style={styles.TileTxt}>Image Verification</Text>
-                    </View>
-
-                    <Image source={images.verification} style={styles.verification} />
-                    <View style={{ height: getHeight(2.8), }}>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Take a picture of your ID and upload
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                You can choose US Passport card, US Drivers License or State issued photo ID card
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Ensure the document is clear and legible.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Find a well-lit area to capture the document.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Place the document Straight for a better shot.
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Scan or take a high-quality photo of the document
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                            <Image source={images.starblue} style={styles.stardot} />
-                            <Text style={styles.subTxt}>
-                                Once Shot, Click on “Upload” 
-                            </Text>
-                        </View>
-                    </View>
-
-                    <View style={{ height: getHeight(5), width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'baseline' }}>
-                        <CommonButton
-                            onPress={() => {
-                                setImageModalVisible(false);
-                                Alert.alert(
-                                    'Upload Image',
-                                    'Choose an option',
-                                    [
-                                        {
-                                            text: 'From Gallery',
-                                            onPress: () => openCameraOrGallery('photo', 'gallery'),
-                                        },
-                                        {
-                                            text: 'Take Photo',
-                                            onPress: () => openCameraOrGallery('photo', 'camera'),
-                                        },
-                                        { text: 'Cancel', style: 'cancel' },
-                                    ],
-                                    { cancelable: true }
-                                );
-                            }}
-                            color={['black', 'black']}
-                            title={'Continue'}
-                            width={getWidth(1.2)}
-                            texttitle={'white'}
-                        />
-                        <Text style={styles.subTxt}>
-                            Our team will review and verify your profile
-                        </Text>
-                        <Text style={styles.subTxt}>
-                            within 48 hours
-                        </Text>
-                    </View>
-                </View>
-            </Modal>
             {isLoading && (
                 <View style={styles.loader}>
                     <ActivityIndicator size="large" color="white" />
@@ -449,7 +454,7 @@ const UploadScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: getWidth(1.2),
+        width: getWidth(1),
         alignSelf: 'center',
         backgroundColor: '#f5f5f5',
     },
@@ -552,6 +557,7 @@ const styles = StyleSheet.create({
     },
     loader: {
         ...StyleSheet.absoluteFillObject, // Covers the entire screen
+        width: getWidth(1),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
