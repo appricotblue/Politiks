@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -19,7 +19,8 @@ import local from '../Storage/Local';
 import {
   CreateMessage,
   GetMessage,
-  CreateSubMessage
+  CreateSubMessage,
+  Likecomment
 } from '../api';
 
 const ListItem = ({ Data }) => {
@@ -32,7 +33,11 @@ const ListItem = ({ Data }) => {
   const [comments, setComments] = useState([]);
   const [replyingTo, setReplyingTo] = useState(null);
   const [userid, setuserid] = useState('');
+  const [postid, setpostid] = useState('');
   const [messages, setmessages] = useState([]);
+  const commentInputRef = useRef(null);
+
+
 
   const likedPersons = [
     { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
@@ -50,15 +55,44 @@ const ListItem = ({ Data }) => {
    
   }, []);
 
+  const handleSend = (item) => {
+    console.log(item, 'send item', replyingTo, 'kkkk')
+    setpostid(item?.id)
+    if (newComment.trim()) {
+      if (replyingTo) {
+        handlesubcommant(replyingTo);
+      } else {
+        handledataRegister(item);
+      }
+      setReplyingTo(null);
+    }
+  };
 
 
-  const GetMessages = async (itemid) => {
+  const Likecomment = async (itemid) => {
     try {
       // setIsLoading(true);
       const response = await GetMessage(itemid);
       // setIsLoading(false);
       setmessages(response);
       console.log(response, 'getallinterests API response');
+    } catch (error) {
+      // setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+
+
+  const GetMessages = async (item) => {
+    console.log(item, 'message id')
+    try {
+      // setIsLoading(true);
+      const response = await GetMessage(17);
+      // setIsLoading(false);
+      setmessages(response);
+      console.log(response, 'getmessager API response');
     } catch (error) {
       // setIsLoading(false);
       console.error('Error fetching interests:', error);
@@ -72,12 +106,12 @@ const ListItem = ({ Data }) => {
       // setIsLoading(true);
       
       const response = await CreateMessage(
-       item?.id,
+        17,
        newComment,
       userid,
       );
       console.log(response, 'login api response');
-      GetMessages(item?.id)
+      GetMessages(17)
     
     } catch (error) {
       // setIsLoading(false);
@@ -95,7 +129,7 @@ const ListItem = ({ Data }) => {
 
 
   const handlesubcommant= async (item) => {
-    console.log(item,'hereitem')
+    console.log(item, 'hereitem', postid)
     setNewComment('')
     try {
       // setIsLoading(true);
@@ -106,7 +140,9 @@ const ListItem = ({ Data }) => {
       userid,
       );
       console.log(response, 'login api response');
-      GetMessages(item?.id)
+
+
+      GetMessages(17)
     
     } catch (error) {
       // setIsLoading(false);
@@ -142,25 +178,25 @@ const ListItem = ({ Data }) => {
     setCommentsModalVisible(false);
   };
 
-  const handleSend = () => {
-    if (replyingTo) {
-      // Handle adding a reply
-      const updatedComments = comments.map(comment => {
-        if (comment.id === replyingTo) {
-          return { ...comment, replies: [...comment.replies, { id: comment.replies.length + 1, text: newComment }] };
-        }
-        return comment;
-      });
-      setComments(updatedComments);
-      setReplyingTo(null);
-    } else {
-      // Handle adding a main comment
-      if (newComment.trim()) {
-        setComments([...comments, { id: comments.length + 1, text: newComment, replies: [] }]);
-      }
-    }
-    setNewComment('');
-  };
+  // const handleSend = () => {
+  //   if (replyingTo) {
+  //     // Handle adding a reply
+  //     const updatedComments = comments.map(comment => {
+  //       if (comment.id === replyingTo) {
+  //         return { ...comment, replies: [...comment.replies, { id: comment.replies.length + 1, text: newComment }] };
+  //       }
+  //       return comment;
+  //     });
+  //     setComments(updatedComments);
+  //     setReplyingTo(null);
+  //   } else {
+  //     // Handle adding a main comment
+  //     if (newComment.trim()) {
+  //       setComments([...comments, { id: comments.length + 1, text: newComment, replies: [] }]);
+  //     }
+  //   }
+  //   setNewComment('');
+  // };
 
   const renderLikedPerson = ({ item }) => (
     <TouchableOpacity onPress={() => closeBottomModal()} style={styles.likedPersonContainer}>
@@ -187,7 +223,11 @@ const ListItem = ({ Data }) => {
       <Text style={styles.commentText}>{item.content}</Text>
       <View style={styles.commentFooter}>
         <Text style={styles.commentTime}>2h ago</Text>
-        <TouchableOpacity onPress={() => handlesubcommant(item)}>
+        {/* <TouchableOpacity onPress={() => handlesubcommant(item)}> */}
+        <TouchableOpacity onPress={() => {
+          setReplyingTo(item);
+          commentInputRef.current.focus();
+        }}>
           <Text style={styles.commentReplyButton}>Reply</Text>
         </TouchableOpacity>
       </View>
@@ -296,7 +336,7 @@ const ListItem = ({ Data }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                onPress={()=>{GetMessages(item?.id),openCommentsModal()}}>
+                onPress={() => { GetMessages(17), openCommentsModal() }}>
                 <Image
                   source={liked ? images.Comment : images.Comment}
                   style={styles.likeIcon}
@@ -421,13 +461,15 @@ const ListItem = ({ Data }) => {
                     style={styles.commentUserImage}
                   />
                   <TextInput
+                    ref={commentInputRef}
                     value={newComment}
                     onChangeText={setNewComment}
                     placeholder="Write your comment..."
                     placeholderTextColor={'gray'}
                     style={styles.commentInput}
                   />
-                  <TouchableOpacity onPress={()=>handledataRegister(item)}>
+                  {/* <TouchableOpacity onPress={()=>handledataRegister(item)}> */}
+                  <TouchableOpacity onPress={() => handleSend(item)}>
                     <Text style={styles.sendText}>Send</Text>
                   </TouchableOpacity>
                 </View>

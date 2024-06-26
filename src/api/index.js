@@ -320,5 +320,18 @@ export const GetMessage = async (PostId) => {
   }
 };
 
+export const Likecomment = async (commentId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/likeComment/1',commentId,userId)
+  try {   
+    const response = await HTTP_REQUEST.post(`user/likeComment/17`, {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);
