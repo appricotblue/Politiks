@@ -1,35 +1,56 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
-  Modal,
   TouchableOpacity,
   Dimensions,
+  FlatList
 } from 'react-native';
-// import Video from 'react-native-video';
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
 import { getWidth } from '../Theme/Constants';
 const windowWidth = Dimensions.get('window').width;
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import Modal from 'react-native-modal';
 
-const ListItem = ({Data}) => {
+const ListItem = ({ Data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [liked, setLiked] = useState(false);
   const navigation = useNavigation();
+  const [bottomModalVisible, setBottomModalVisible] = useState(false);
+  const likedPersons = [
+    { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
+    { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
+  ];
 
   const toggleLike = () => {
     setLiked(!liked);
   };
 
+  const openBottomModal = () => {
+    console.log('test');
+    setBottomModalVisible(true);
+  };
+
+  const closeBottomModal = () => {
+    setBottomModalVisible(false);
+  };
+
+  const renderLikedPerson = ({ item }) => (
+    <TouchableOpacity onPress={() => closeBottomModal()} style={styles.likedPersonContainer}>
+      <Image source={{ uri: item.profile }} style={styles.likedPersonImage} />
+      <Text style={styles.likedPersonName}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View>
       {Data?.map(item => {
         return (
-          <View style={styles.container}>
-            <View style={{flexDirection: 'row', padding: 10}}>
+          <View style={styles.container} key={item.id}>
+            <View style={{ flexDirection: 'row', padding: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('OtherProfile')}>
                 <Image
@@ -43,15 +64,14 @@ const ListItem = ({Data}) => {
               </TouchableOpacity>
 
               <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
-                  {item.userDetails.role !== "Follower" && (
+                  {item.userDetails.role !== 'Follower' && (
                     <Image
                       style={{ width: 20, height: 20, marginLeft: 6 }}
                       source={images.VerifiedPNG}
                     />
                   )}
-
                 </View>
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
@@ -61,14 +81,12 @@ const ListItem = ({Data}) => {
                   height: 45,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  // backgroundColor: 'pink',
                 }}
-                onPress={() => {}}>
+                onPress={() => { }}>
                 <Image
                   style={{
                     width: 3,
                     height: 16,
-                    // marginBottom: 5,
                     resizeMode: 'contain',
                   }}
                   source={images.Threedots}
@@ -77,20 +95,8 @@ const ListItem = ({Data}) => {
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
-            <Image source={{uri: item?.image}} style={styles.media} />
+            <Image source={{ uri: item?.image }} style={styles.media} />
 
-            {/* {item.type === 'image' ? (
-      <>
-        <Image source={{uri: item.image}} style={styles.media} />
-      </>
-    ) : (
-      <Video
-        source={{uri: item.media}}
-        style={styles.media}
-        paused={true} // Start the video in a paused state
-        disableVolume={true} // Disable volume control if needed
-      />
-    )} */}
             <View onPress={toggleLike} style={styles.likeButton}>
               <View
                 style={{
@@ -99,14 +105,18 @@ const ListItem = ({Data}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={liked ? images.ThumbsUp : images.ThumbsUp}
-                  style={styles.likeIcon}
-                />
-                <Text style={styles.liketext}>1.5 k</Text>
+                <TouchableOpacity>
+                  <Image
+                    source={liked ? images.ThumbsUp : images.ThumbsUp}
+                    style={styles.likeIcon}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => openBottomModal()}>
+                  <Text style={styles.liketext}>1.5 k</Text>
+                </TouchableOpacity>
               </View>
 
-              <View
+              <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   width: 75,
@@ -118,8 +128,8 @@ const ListItem = ({Data}) => {
                   style={styles.likeIcon}
                 />
                 <Text style={styles.liketext}>386</Text>
-              </View>
-              <View
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   width: 75,
@@ -127,12 +137,13 @@ const ListItem = ({Data}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={liked ? images.Union : images.Union}
+                  source={images.Share}
                   style={styles.likeIcon}
                 />
                 <Text style={styles.liketext}>251</Text>
-              </View>
+              </TouchableOpacity>
             </View>
+
             {/* Modal */}
             <Modal
               animationType="slide"
@@ -141,7 +152,6 @@ const ListItem = ({Data}) => {
               onRequestClose={() => setModalVisible(false)}>
               <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                  {/* Close button */}
                   <View
                     style={styles.action}
                     onPress={() => setModalVisible(false)}>
@@ -163,9 +173,7 @@ const ListItem = ({Data}) => {
                     <Image source={images.Cross} style={styles.closeIcon} />
                   </TouchableOpacity>
 
-                  {/* List of items */}
                   <View style={styles.itemList}>
-                    {/* Item 1 */}
                     <TouchableOpacity style={styles.item}>
                       <Image source={images.Share} style={styles.itemIcon} />
                       <Text style={styles.itemTitle}>Share Post</Text>
@@ -190,9 +198,26 @@ const ListItem = ({Data}) => {
                       />
                       <Text style={styles.itemTitle}>Report this post</Text>
                     </TouchableOpacity>
-                    {/* Add more items similarly */}
                   </View>
                 </View>
+              </View>
+            </Modal>
+
+            {/* Bottom Modal */}
+            <Modal
+              isVisible={bottomModalVisible}
+              onSwipeComplete={closeBottomModal}
+              swipeDirection="down"
+              style={styles.bottomModal}
+              backdropOpacity={.1}
+            >
+              <View style={styles.modalContent}>
+                <Text style={{ color: 'black', fontFamily: 'Jost-Bold' }}>Likes</Text>
+                <FlatList
+                  data={likedPersons}
+                  renderItem={renderLikedPerson}
+                  keyExtractor={(item) => item.id.toString()}
+                />
               </View>
             </Modal>
           </View>
@@ -203,10 +228,7 @@ const ListItem = ({Data}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // alignItems: 'center',
-    // padding: 10,
-  },
+  container: {},
   image: {
     width: 50,
     height: 50,
@@ -217,23 +239,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     fontSize: 18,
-    
     color: 'black',
   },
   designation: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#888',
     color: 'black',
   },
   description: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#555',
-    marginTop: 5,
     color: 'black',
+    marginTop: 5,
     lineHeight: 20,
     paddingHorizontal: 13,
   },
@@ -242,51 +261,15 @@ const styles = StyleSheet.create({
     height: 400,
     marginTop: 10,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#F4F4F4',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  actionList: {
-    marginTop: 20,
-  },
-  action: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  actionText: {
-    fontSize: 16,
-    color: 'black',
-  },
   likeButton: {
-    // position: 'absolute',
-    // bottom: 30,
-
     zIndex: 1,
-    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     width: getWidth(1),
     alignSelf: 'center',
     height: 40,
     justifyContent: 'space-around',
     alignItems: 'center',
-    // borderRadius: 25,
     paddingLeft: 10,
     flexDirection: 'row',
-    alignItems: '',
-    backgroundColor:'red'
   },
   likeIcon: {
     width: 22,
@@ -302,7 +285,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '100%',
   },
   closeButton: {
     position: 'absolute',
@@ -315,7 +298,6 @@ const styles = StyleSheet.create({
     top: 10,
     left: 15,
     bottom: 100,
-
     height: 50,
   },
   closeIcon: {
@@ -346,9 +328,28 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: 'black',
   },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  likedPersonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  likedPersonImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  likedPersonName: {
+    fontSize: 16,
+    color: 'black',
+  },
   liketext: {
     marginLeft: 10,
-    color: 'white',
+    color: 'black',
     fontFamily: 'Jost',
     fontWeight: '500',
     fontSize: 15,
