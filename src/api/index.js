@@ -276,5 +276,49 @@ export const getParties = async () => {
   }
 };
 
+export const CreateMessage = async (postId,content, userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/createComment',postId,content, userId)
+  try {
+    
+    const response = await HTTP_REQUEST.post(`user/createComment`, {
+      userId,
+      postId,
+      content
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+export const CreateSubMessage = async (commentId,subComment, userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/createSubComment',commentId,subComment, userId)
+  try {
+    
+    const response = await HTTP_REQUEST.post(`user/createSubComment`, {
+      userId,
+      commentId,
+      subComment
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+export const GetMessage = async (PostId) => {
+  console.log(`https://politiks.aindriya.co.uk/user/getCommentsByPostId/${PostId}`,PostId)
+  try {
+    
+    const response = await HTTP_REQUEST.get(`user/getCommentsByPostId/${PostId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);
