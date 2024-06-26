@@ -11,7 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../Components/Header';
@@ -205,7 +205,7 @@ const EditPost = ({navigation}) => {
               console.log(data, '================');
             }}
             query={{
-              key: 'AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A',
+              // key: 'AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A',
               language: 'en',
             }}
           />

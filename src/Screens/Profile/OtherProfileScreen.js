@@ -203,7 +203,7 @@ const OtherProfileScreen = () => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => navigation.navigate('Followers')}
             style={{
               width: getWidth(4),
               justifyContent: 'center',

@@ -20,20 +20,10 @@ import {useNavigation} from '@react-navigation/native';
 import local from '../../Storage/Local';
 import {height} from '../../Theme/ConstantStyles';
 
-const Followers = () => {
+const HomeSearch = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTab, setSelectedTab] = useState(0); // 0 for images tab, 1 for items tab
-
-  const imageData = [
-    {id: 1, imageUrl: images.Welcome_1},
-    {id: 2, imageUrl: images.Welcome_2},
-    {id: 3, imageUrl: images.Welcome_3},
-    {id: 4, imageUrl: images.ViratBanner},
-    {id: 5, imageUrl: images.Welcome_3},
-    {id: 6, imageUrl: images.Welcome_2},
-    // Add more image objects as needed
-  ];
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const itemData = [
     {
@@ -107,71 +97,88 @@ const Followers = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView>
-        <Header title="Follow" />
+        <Header title="Search" />
 
         <View style={styles.container}>
           <View style={styles.tabs}>
             <TouchableOpacity
               onPress={() => handleTabPress(0)}
               style={[styles.tab, selectedTab === 0 && styles.activeTab]}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={
-                    selectedTab === 0 ? styles.activeTabText : styles.tabText
-                  }>
-                  {'230 '}
-                </Text>
-                <Text
-                  style={
-                    selectedTab === 0 ? styles.activeTabText : styles.tabText
-                  }>
-                  Followers
-                </Text>
-              </View>
               <LinearGradient
                 colors={
                   selectedTab === 0
-                    ? ['#3A7BD5', '#3A7BD5']
-                    : ['transparent', 'transparent']
+                    ? ['#000000', '#000000']
+                    : ['#D3D3D3', '#D3D3D3']
                 }
                 style={{
-                  width: '80%',
-                  height: 5,
+                  width: '50%',
+                  height: 35,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: 15,
-                }}></LinearGradient>
+                  borderRadius: 8,
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={
+                      selectedTab === 0 ? styles.activeTabText : styles.tabText
+                    }>
+                    People
+                  </Text>
+                </View>
+              </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleTabPress(1)}
               style={[styles.tab, selectedTab === 1 && styles.activeTab]}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={
-                    selectedTab === 1 ? styles.activeTabText : styles.tabText
-                  }>
-                  {'230 '}
-                </Text>
-                <Text
-                  style={
-                    selectedTab === 1 ? styles.activeTabText : styles.tabText
-                  }>
-                  Following
-                </Text>
-              </View>
               <LinearGradient
                 colors={
                   selectedTab === 1
-                    ? ['#3A7BD5', '#3A7BD5']
-                    : ['transparent', 'transparent']
+                    ? ['#000000', '#000000']
+                    : ['#D3D3D3', '#D3D3D3']
                 }
                 style={{
-                  width: '80%',
-                  height: 5,
+                  width: '50%',
+                  height: 35,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: 15,
-                }}></LinearGradient>
+                  borderRadius: 8,
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={
+                      selectedTab === 1 ? styles.activeTabText : styles.tabText
+                    }>
+                    Location
+                  </Text>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handleTabPress(2)}
+              style={[styles.tab, selectedTab === 2 && styles.activeTab]}>
+              <LinearGradient
+                colors={
+                  selectedTab === 2
+                    ? ['#000000', '#000000']
+                    : ['#D3D3D3', '#D3D3D3']
+                }
+                style={{
+                  width: '50%',
+                  height: 35,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 8,
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={
+                      selectedTab === 2 ? styles.activeTabText : styles.tabText
+                    }>
+                    Hashtag
+                  </Text>
+                </View>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.searchBar}>
@@ -278,6 +285,7 @@ const styles = StyleSheet.create({
     height: getHeight(18),
     marginTop: 5,
     marginBottom: 5,
+    paddingHorizontal: 30,
   },
   tab: {
     // flex: 1,
@@ -299,8 +307,8 @@ const styles = StyleSheet.create({
   activeTabText: {
     fontFamily: 'Jost-Bold',
 
-    color: 'black',
-    fontSize: 18,
+    color: 'white',
+    fontSize: 12,
 
     fontWeight: '400',
   },
@@ -309,7 +317,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Bold',
     fontWeight: '400',
     color: 'grey',
-    fontSize: 18,
+    fontSize: 12,
   },
 });
-export default Followers;
+export default HomeSearch;

@@ -67,7 +67,7 @@ const Footer = ({title}) => {
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => {
-          // setFooter('contest'), navigation.navigate('Notifications');
+          setFooter('contest'), navigation.navigate('Notifications');
         }}>
         <Image
           source={title === 'contest' ? images.ContestFilled : images.Contest}

@@ -18,9 +18,9 @@ import Header from '../../Components/Header';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import local from '../../Storage/Local';
-import {height} from '../../Theme/ConstantStyles';
+import {height, width} from '../../Theme/ConstantStyles';
 
-const Followers = () => {
+const SuggestionScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0); // 0 for images tab, 1 for items tab
@@ -81,118 +81,44 @@ const Followers = () => {
   );
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.itemContainer}>
+    <View style={styles.itemContainer}>
       <Image source={item.image} style={styles.itemImage} />
-      <View style={{marginLeft: 18}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Image
-            source={images.VerifiedPNG}
-            style={{width: 18, height: 18, marginLeft: 15, marginTop: 5}}
-          />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          width: width * 0.73,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <View style={{marginLeft: 8}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Image
+              source={images.VerifiedPNG}
+              style={{width: 18, height: 18, marginLeft: 5, marginTop: 5}}
+            />
+          </View>
+          <Text style={styles.itemFollowers}> {item.followers} Followers</Text>
         </View>
-        <Text style={styles.itemFollowers}> {item.followers} Followers</Text>
-      </View>
 
-      {/* <TouchableOpacity style={styles.followButton}>
-        <Text style={styles.followButtonText}>Follow</Text>
-      </TouchableOpacity> */}
-    </TouchableOpacity>
+        <TouchableOpacity style={styles.followButton}>
+          <Text style={styles.followButtonText}>Follow</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView>
-        <Header title="Follow" />
+        <Header title="Suggestions" />
 
         <View style={styles.container}>
-          <View style={styles.tabs}>
-            <TouchableOpacity
-              onPress={() => handleTabPress(0)}
-              style={[styles.tab, selectedTab === 0 && styles.activeTab]}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={
-                    selectedTab === 0 ? styles.activeTabText : styles.tabText
-                  }>
-                  {'230 '}
-                </Text>
-                <Text
-                  style={
-                    selectedTab === 0 ? styles.activeTabText : styles.tabText
-                  }>
-                  Followers
-                </Text>
-              </View>
-              <LinearGradient
-                colors={
-                  selectedTab === 0
-                    ? ['#3A7BD5', '#3A7BD5']
-                    : ['transparent', 'transparent']
-                }
-                style={{
-                  width: '80%',
-                  height: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 15,
-                }}></LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleTabPress(1)}
-              style={[styles.tab, selectedTab === 1 && styles.activeTab]}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={
-                    selectedTab === 1 ? styles.activeTabText : styles.tabText
-                  }>
-                  {'230 '}
-                </Text>
-                <Text
-                  style={
-                    selectedTab === 1 ? styles.activeTabText : styles.tabText
-                  }>
-                  Following
-                </Text>
-              </View>
-              <LinearGradient
-                colors={
-                  selectedTab === 1
-                    ? ['#3A7BD5', '#3A7BD5']
-                    : ['transparent', 'transparent']
-                }
-                style={{
-                  width: '80%',
-                  height: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 15,
-                }}></LinearGradient>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.searchBar}>
-            <Image
-              source={images.GraySearch}
-              style={{height: 30, width: 30, marginLeft: 10}}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Search"
-              placeholderTextColor={'grey'}
-              value={searchQuery}
-              onChangeText={text => setSearchQuery(text)}
-            />
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              {/* <Image
-                source={images.Cross}
-                style={{height: 30, width: 30, marginLeft: 10}}
-              /> */}
-            </TouchableOpacity>
-          </View>
           <View style={{height: getHeight(1)}}>
             <FlatList
               data={filteredItems}
@@ -201,7 +127,6 @@ const Followers = () => {
               contentContainerStyle={styles.flatListContent}
             />
           </View>
-          {/* <View style={{height: 300}} /> */}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -260,11 +185,12 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   followButton: {
-    backgroundColor: 'blue',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    marginTop: 5,
+    backgroundColor: '#3A7BD5',
+    height: height * 0.035,
+    width: width * 0.17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
   },
   followButtonText: {
     color: '#fff',
@@ -312,4 +238,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-export default Followers;
+export default SuggestionScreen;
