@@ -12,9 +12,12 @@ import {
 import Video from 'react-native-video-controls';
 import images from '../assets/Images';
 const windowWidth = Dimensions.get('window').width;
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+
 const ListItem = ({Data}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [liked, setLiked] = useState(false);
+  const navigation = useNavigation();
 
   const toggleLike = () => {
     setLiked(!liked);
@@ -26,15 +29,18 @@ const ListItem = ({Data}) => {
         return (
           <View style={styles.container}>
             <View style={{flexDirection: 'row', padding: 10}}>
-              {/* <Image source={{ uri: item.userDetails.userProfile ? item.userDetails.userProfile : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }} style={styles.image} /> */}
-              <Image
-                source={{
-                  uri: item.userDetails.userProfile
-                    ? item.userDetails.userProfile
-                    : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
-                }}
-                style={styles.image}
-              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('OtherProfile')}>
+                <Image
+                  source={{
+                    uri: item.userDetails.userProfile
+                      ? item.userDetails.userProfile
+                      : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                  }}
+                  style={styles.image}
+                />
+              </TouchableOpacity>
+
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>

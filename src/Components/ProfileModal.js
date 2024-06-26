@@ -43,7 +43,7 @@ const ProfileModal = ({
             <Text style={styles.containerText}>My Party</Text> */}
             <View style={{height: 50}}>
               <View style={styles.action}>
-                <Text style={styles.containerText}>My Interests</Text>
+                <Text style={styles.containerText}>My Party</Text>
               </View>
               <TouchableOpacity
                 style={styles.closeButton}

@@ -22,6 +22,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {CreatePost, getCountries} from '../../api';
 import local from '../../Storage/Local';
 import CountryPicker from '../../Components/CountryPicker';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
@@ -176,6 +177,33 @@ const EditPost = ({navigation}) => {
               <Image source={images.PlusIcon} style={{width: 25, height: 25}} />
             </TouchableOpacity>
           </View>
+          <GooglePlacesAutocomplete
+            placeholder="Search"
+            styles={{
+              textInput: {
+                height: height * 0.06,
+                width: width * 0.6,
+                color: '#5d5d5d',
+                fontSize: 16,
+              },
+
+              description: {
+                color: 'black',
+              },
+              row: {
+                width: width * 0.9,
+                alignSelf: 'center',
+              },
+            }}
+            onPress={(data, details = null) => {
+              console.log(details, '---------');
+              console.log(data, '================');
+            }}
+            query={{
+              key: 'AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A',
+              language: 'en',
+            }}
+          />
           {image?.length !== 0 ? (
             <View style={styles.locationContainer}>
               <View style={styles.row1}>
