@@ -20,12 +20,14 @@ import {
   CreateMessage,
   GetMessage,
   CreateSubMessage,
-  Likecomment
+  Likecomment,
+  UnLikecomment
 } from '../api';
 
 const ListItem = ({ Data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [commentliked, setcommentliked] = useState(false);
   const navigation = useNavigation();
   const [bottomModalVisible, setBottomModalVisible] = useState(false);
   const [commentsModalVisible, setCommentsModalVisible] = useState(false);
@@ -35,6 +37,7 @@ const ListItem = ({ Data }) => {
   const [userid, setuserid] = useState('');
   const [postid, setpostid] = useState('');
   const [messages, setmessages] = useState([]);
+  const [itemdata, setitemdata] = useState([]);
   const commentInputRef = useRef(null);
 
 
@@ -52,12 +55,12 @@ const ListItem = ({ Data }) => {
 
   useEffect(() => {
     getuser();
-   
+
   }, []);
 
   const handleSend = (item) => {
-    console.log(item, 'send item', replyingTo, 'kkkk')
-    setpostid(item?.id)
+    console.log(itemdata, 'send item', replyingTo, 'kkkk')
+    setpostid(itemdata?.id)
     if (newComment.trim()) {
       if (replyingTo) {
         handlesubcommant(replyingTo);
@@ -69,12 +72,24 @@ const ListItem = ({ Data }) => {
   };
 
 
-  const Likecomment = async (itemid) => {
+  const Likecomments = async (itemid) => {
     try {
       // setIsLoading(true);
-      const response = await GetMessage(itemid);
+      const response = await Likecomment(itemid, userid);
+      GetMessages(itemdata?.id)
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
       // setIsLoading(false);
-      setmessages(response);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+  const UNLikecomments = async (itemid) => {
+    try {
+      // setIsLoading(true);
+      const response = await UnLikecomment(itemid, userid);
+      GetMessages(itemdata?.id)
       console.log(response, 'getallinterests API response');
     } catch (error) {
       // setIsLoading(false);
@@ -85,11 +100,12 @@ const ListItem = ({ Data }) => {
 
 
 
-  const GetMessages = async (item) => {
-    console.log(item, 'message id')
+
+  const GetMessages = async (itemid) => {
+    console.log(itemid, 'message id')
     try {
       // setIsLoading(true);
-      const response = await GetMessage(17);
+      const response = await GetMessage(itemid);
       // setIsLoading(false);
       setmessages(response);
       console.log(response, 'getmessager API response');
@@ -100,19 +116,19 @@ const ListItem = ({ Data }) => {
     }
   };
   const handledataRegister = async (item) => {
-    console.log(item,'hereitem')
+    console.log(item, 'hereitem')
     setNewComment('')
     try {
       // setIsLoading(true);
-      
+
       const response = await CreateMessage(
-        17,
-       newComment,
-      userid,
+        itemdata?.id,
+        newComment,
+        userid,
       );
       console.log(response, 'login api response');
-      GetMessages(17)
-    
+      GetMessages(itemdata?.id)
+
     } catch (error) {
       // setIsLoading(false);
       if (
@@ -128,22 +144,22 @@ const ListItem = ({ Data }) => {
   };
 
 
-  const handlesubcommant= async (item) => {
+  const handlesubcommant = async (item) => {
     console.log(item, 'hereitem', postid)
     setNewComment('')
     try {
       // setIsLoading(true);
-      
+
       const response = await CreateSubMessage(
-       item?.id,
-       newComment,
-      userid,
+        item?.id,
+        newComment,
+        userid,
       );
       console.log(response, 'login api response');
 
 
-      GetMessages(17)
-    
+      GetMessages(itemdata?.id)
+
     } catch (error) {
       // setIsLoading(false);
       if (
@@ -162,6 +178,31 @@ const ListItem = ({ Data }) => {
     setLiked(!liked);
   };
 
+  // const toggleLikecomment = (itemid) => {
+  //   setcommentliked(!commentliked);
+  //   console.log(commentliked, 'like status')
+  //   if (commentliked == true) {
+  //     Likecomments(itemid)
+  //   } else {
+  //     UNLikecomments(itemid)
+  //   }
+  // };
+
+  const toggleLikecomment = (itemid) => {
+    setcommentliked((commentliked) => {
+      const newLiked = !commentliked;
+      console.log(newLiked, 'like status');
+  
+      if (newLiked) {
+        Likecomments(itemid);
+      } else {
+        UNLikecomments(itemid);
+      }
+  
+      return newLiked;
+    });
+  };
+
   const openBottomModal = () => {
     setBottomModalVisible(true);
   };
@@ -178,25 +219,7 @@ const ListItem = ({ Data }) => {
     setCommentsModalVisible(false);
   };
 
-  // const handleSend = () => {
-  //   if (replyingTo) {
-  //     // Handle adding a reply
-  //     const updatedComments = comments.map(comment => {
-  //       if (comment.id === replyingTo) {
-  //         return { ...comment, replies: [...comment.replies, { id: comment.replies.length + 1, text: newComment }] };
-  //       }
-  //       return comment;
-  //     });
-  //     setComments(updatedComments);
-  //     setReplyingTo(null);
-  //   } else {
-  //     // Handle adding a main comment
-  //     if (newComment.trim()) {
-  //       setComments([...comments, { id: comments.length + 1, text: newComment, replies: [] }]);
-  //     }
-  //   }
-  //   setNewComment('');
-  // };
+
 
   const renderLikedPerson = ({ item }) => (
     <TouchableOpacity onPress={() => closeBottomModal()} style={styles.likedPersonContainer}>
@@ -214,9 +237,9 @@ const ListItem = ({ Data }) => {
         />
         <Text style={styles.commentUserName}>User Name</Text>
         <View style={styles.commentLikeContainer}>
-          <Text style={styles.commentLikeCount}>12</Text>
-          <TouchableOpacity>
-            <Image source={images.ThumbsUp} style={styles.commentLikeIcon} />
+          <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
+          <TouchableOpacity onPress={() => toggleLikecomment(item?.id)}>
+            <Image source={ commentliked ? images.blueThumbsUp:images.ThumbsUp} style={styles.commentLikeIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -233,26 +256,26 @@ const ListItem = ({ Data }) => {
       </View>
       {item?.subComments?.map(reply => (
         <View key={reply.id} style={styles.replyContainer}>
-            <View style={styles.commentHeader}>
-        <Image
-          source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
-          style={styles.commentUserImage}
-        />
-        <Text style={styles.commentUserName}>User Name</Text>
-        <View style={styles.commentLikeContainer}>
-          <Text style={styles.commentLikeCount}>12</Text>
-          <TouchableOpacity>
-            <Image source={images.ThumbsUp} style={styles.commentLikeIcon} />
-          </TouchableOpacity>
-        </View>
-      </View>
-          <Text style={styles.replyText}>{reply.content}</Text>
+          <View style={styles.commentHeader}>
+            <Image
+              source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+              style={styles.commentUserImage}
+            />
+            <Text style={styles.commentUserName}>User Name</Text>
+            <View style={styles.commentLikeContainer}>
+              <Text style={styles.commentLikeCount}>{reply?.likeCount}</Text>
+              <TouchableOpacity>
+                <Image source={images.ThumbsUp} style={styles.commentLikeIcon} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={styles.replyText}>{reply.subComment}</Text>
           <View style={styles.commentFooter}>
-        <Text style={styles.commentTime}>2h ago</Text>
-        <TouchableOpacity onPress={() => setReplyingTo(item.id)}>
-          <Text style={styles.commentReplyButton}>Reply</Text>
-        </TouchableOpacity>
-      </View>
+            <Text style={styles.commentTime}>2h ago</Text>
+            <TouchableOpacity onPress={() => setReplyingTo(item.id)}>
+              <Text style={styles.commentReplyButton}>Reply</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ))}
     </View>
@@ -279,7 +302,7 @@ const ListItem = ({ Data }) => {
               <View style={styles.textContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
-                  {item.userDetails.role !== 'Follower' && (
+                  {item.userDetails.role !== 'Follower' && item?.userDetails?.action == 'Approved' && (
                     <Image
                       style={{ width: 20, height: 20, marginLeft: 6 }}
                       source={images.VerifiedPNG}
@@ -336,7 +359,7 @@ const ListItem = ({ Data }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                onPress={() => { GetMessages(17), openCommentsModal() }}>
+                onPress={() => { GetMessages(item.id), openCommentsModal(), setitemdata(item) }}>
                 <Image
                   source={liked ? images.Comment : images.Comment}
                   style={styles.likeIcon}
@@ -440,15 +463,15 @@ const ListItem = ({ Data }) => {
               backdropOpacity={.1}
             >
               <View style={styles.modalContent}>
-                <View style={{flexDirection:'row'}} >
-                <Text style={{ color: 'black', fontFamily: 'Jost-Bold',fontSize:16,margin:10 }}>Comments</Text>
-                <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => closeCommentsModal()}>
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
+                <View style={{ flexDirection: 'row' }} >
+                  <Text style={{ color: 'black', fontFamily: 'Jost-Bold', fontSize: 16, margin: 10 }}>Comments</Text>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => closeCommentsModal()}>
+                    <Text style={styles.closeButtonText}>X</Text>
+                  </TouchableOpacity>
                 </View>
-               
+
 
                 <FlatList
                   data={messages}
@@ -469,7 +492,7 @@ const ListItem = ({ Data }) => {
                     style={styles.commentInput}
                   />
                   {/* <TouchableOpacity onPress={()=>handledataRegister(item)}> */}
-                  <TouchableOpacity onPress={() => handleSend(item)}>
+                  <TouchableOpacity onPress={() => handleSend()}>
                     <Text style={styles.sendText}>Send</Text>
                   </TouchableOpacity>
                 </View>
@@ -541,7 +564,7 @@ const styles = StyleSheet.create({
     // padding: 20,
     borderRadius: 10,
     width: '100%',
-    maxHeight:getHeight(1.4)
+    maxHeight: getHeight(1.4)
   },
   closeButton: {
     position: 'absolute',
@@ -611,14 +634,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   commentContainer: {
-    marginLeft:10,
-    marginRight:10,
+    marginLeft: 10,
+    marginRight: 10,
     padding: 10,
     // borderBottomWidth: 1,
     // borderColor: '#ccc',
     backgroundColor: '#FFFFFF',
-   borderRadius:19,
-   marginBottom:5
+    borderRadius: 19,
+    marginBottom: 5
   },
   commentHeader: {
     flexDirection: 'row',
@@ -631,10 +654,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   commentUserName: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     fontSize: 16,
     color: 'black',
-   
+
   },
   commentLikeContainer: {
     flexDirection: 'row',
@@ -651,12 +674,12 @@ const styles = StyleSheet.create({
     height: 18,
   },
   commentText: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: 'black',
     marginTop: 5,
-    marginLeft:15,
-    marginRight:10
+    marginLeft: 15,
+    marginRight: 10
   },
   commentFooter: {
     flexDirection: 'row',
@@ -664,11 +687,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   commentTime: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     fontSize: 12,
     color: 'grey',
     marginRight: 20,
-    marginLeft:15,
+    marginLeft: 15,
   },
   commentReplyButton: {
     fontSize: 12,
@@ -700,19 +723,19 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   commentInputContainer: {
-    width:getWidth(1),
+    width: getWidth(1),
     flexDirection: 'row',
     alignItems: 'center',
     // borderTopWidth: 1,
     // borderColor: '#ccc',
     paddingTop: 10,
     marginTop: 10,
-    paddingTop:23,
-    paddingBottom:23,
-    padding:5,
-    backgroundColor:'white',
-    borderTopRightRadius:10,
-    borderTopLeftRadius:10
+    paddingTop: 23,
+    paddingBottom: 23,
+    padding: 5,
+    backgroundColor: 'white',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10
   },
   commentInput: {
     flex: 1,
@@ -723,7 +746,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
     color: 'black',
-    backgroundColor:'#F4F4F4'
+    backgroundColor: '#F4F4F4'
   },
   sendText: {
     color: 'blue',
@@ -731,7 +754,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   closeButton2: {
-    margin:10 
+    margin: 10
     // position: 'absolute',
     // top: 10,
     // right: 10,

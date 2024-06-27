@@ -87,6 +87,7 @@ const images = {
   LibertarianPNG: require('./LibertarianPNG.png'),
   PartyPNG: require('./PartyPNG.png'),
   flight: require('./flight.png'),
+  blueThumbsUp: require('./blueThumbsUp.png'),
 };
 
 export default images;
