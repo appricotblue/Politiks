@@ -8,7 +8,8 @@ import {
   Dimensions,
   FlatList,
   TextInput,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import images from '../assets/Images';
 import { getHeight, getWidth } from '../Theme/Constants';
@@ -21,13 +22,17 @@ import {
   GetMessage,
   CreateSubMessage,
   Likecomment,
-  UnLikecomment
+  UnLikecomment,
+  LikSubecomment,
+  UnLikeSubcomment
 } from '../api';
 
 const ListItem = ({ Data }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [repost, setrepost] = useState(false);
   const [liked, setLiked] = useState(false);
   const [commentliked, setcommentliked] = useState(false);
+  const [subcommentliked, setsubcommentliked] = useState(false);
   const navigation = useNavigation();
   const [bottomModalVisible, setBottomModalVisible] = useState(false);
   const [commentsModalVisible, setCommentsModalVisible] = useState(false);
@@ -39,6 +44,15 @@ const ListItem = ({ Data }) => {
   const [messages, setmessages] = useState([]);
   const [itemdata, setitemdata] = useState([]);
   const commentInputRef = useRef(null);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [selectedFollowers, setSelectedFollowers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [followers, setFollowers] = useState([
+    // Sample data, replace with actual data
+    { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
+    { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
+  ])
 
 
 
@@ -72,6 +86,32 @@ const ListItem = ({ Data }) => {
   };
 
 
+  const Likesubcomments = async (itemid) => {
+    try {
+      // setIsLoading(true);
+      const response = await LikSubecomment(itemid, userid);
+      GetMessages(itemdata?.id)
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      // setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+  const UNLikesubcomments = async (itemid) => {
+    try {
+      // setIsLoading(true);
+      const response = await UnLikeSubcomment(itemid, userid);
+      GetMessages(itemdata?.id)
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      // setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
   const Likecomments = async (itemid) => {
     try {
       // setIsLoading(true);
@@ -104,13 +144,13 @@ const ListItem = ({ Data }) => {
   const GetMessages = async (itemid) => {
     console.log(itemid, 'message id')
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const response = await GetMessage(itemid);
-      // setIsLoading(false);
+      setIsLoading(false);
       setmessages(response);
       console.log(response, 'getmessager API response');
     } catch (error) {
-      // setIsLoading(false);
+      setIsLoading(false);
       console.error('Error fetching interests:', error);
       Alert.alert('Error', 'An error occurred while fetching interests.');
     }
@@ -178,27 +218,32 @@ const ListItem = ({ Data }) => {
     setLiked(!liked);
   };
 
-  // const toggleLikecomment = (itemid) => {
-  //   setcommentliked(!commentliked);
-  //   console.log(commentliked, 'like status')
-  //   if (commentliked == true) {
-  //     Likecomments(itemid)
-  //   } else {
-  //     UNLikecomments(itemid)
-  //   }
-  // };
+  const toggleSubLikecomment = (itemid) => {
+    setsubcommentliked((subcommentliked) => {
+      const newLikedsub = !subcommentliked;
+      console.log(newLikedsub, 'like status');
+
+      if (newLikedsub) {
+        Likesubcomments(itemid);
+      } else {
+        UNLikesubcomments(itemid);
+      }
+
+      return newLikedsub;
+    });
+  };
 
   const toggleLikecomment = (itemid) => {
     setcommentliked((commentliked) => {
       const newLiked = !commentliked;
       console.log(newLiked, 'like status');
-  
+
       if (newLiked) {
         Likecomments(itemid);
       } else {
         UNLikecomments(itemid);
       }
-  
+
       return newLiked;
     });
   };
@@ -219,6 +264,72 @@ const ListItem = ({ Data }) => {
     setCommentsModalVisible(false);
   };
 
+  const openShareModal = () => {
+    setShareModalVisible(true);
+  };
+
+  const handleSendToFollowers = () => {
+    console.log('Send to:', selectedFollowers);
+    // Add logic to send to selected followers
+    closeShareModal();
+  };
+
+  const handleRepost = () => {
+    console.log('Repost');
+    navigation.navigate('RepostScreen', { repostydata: itemdata })
+    // Add logic for reposting
+    closeShareModal();
+  };
+
+  const handleCopyLink = () => {
+    console.log('Copy link');
+    // Add logic to copy link to clipboard
+    closeShareModal();
+  };
+
+  const handleShareTo = () => {
+    console.log('Share to');
+    // Add logic for sharing to other platforms
+    closeShareModal();
+  };
+
+  const closeShareModal = () => {
+    setShareModalVisible(false);
+  };
+
+  const renderFollower = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        if (selectedFollowers.includes(item)) {
+          setSelectedFollowers(selectedFollowers.filter(follower => follower.id !== item.id));
+        } else {
+          setSelectedFollowers([...selectedFollowers, item]);
+        }
+      }}
+      style={[
+        styles.followerItem,
+        // selectedFollowers.includes(item) && styles.selectedFollowerItem,
+      ]}
+    >
+      <Image
+        source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+        style={styles.shareUserImage}
+      />
+      <Text style={styles.followerName}>{item.name}</Text>
+      {selectedFollowers?.length > 0 && (
+        <View style={{ height: 40 }}>
+          {selectedFollowers.includes(item) && (
+            <Image
+              source={images.Done}
+              style={styles.sharetickImage}
+            />
+          )}
+        </View>
+      )}
+
+
+    </TouchableOpacity>
+  );
 
 
   const renderLikedPerson = ({ item }) => (
@@ -239,7 +350,7 @@ const ListItem = ({ Data }) => {
         <View style={styles.commentLikeContainer}>
           <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
           <TouchableOpacity onPress={() => toggleLikecomment(item?.id)}>
-            <Image source={ commentliked ? images.blueThumbsUp:images.ThumbsUp} style={styles.commentLikeIcon} />
+            <Image source={commentliked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -264,8 +375,8 @@ const ListItem = ({ Data }) => {
             <Text style={styles.commentUserName}>User Name</Text>
             <View style={styles.commentLikeContainer}>
               <Text style={styles.commentLikeCount}>{reply?.likeCount}</Text>
-              <TouchableOpacity>
-                <Image source={images.ThumbsUp} style={styles.commentLikeIcon} />
+              <TouchableOpacity onPress={() => toggleSubLikecomment(reply?.id)}>
+                <Image source={subcommentliked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
               </TouchableOpacity>
             </View>
           </View>
@@ -286,6 +397,45 @@ const ListItem = ({ Data }) => {
       {Data?.map(item => {
         return (
           <View style={styles.container} key={item.id}>
+
+            {repost == true && (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: getWidth(1.13), alignSelf: 'center', marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <Image
+                    source={{ uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
+                    style={{ width: 30, height: 30, borderRadius: 25 }}
+                  />
+                  <Text style={{ color: 'black', fontSize: 19, fontFamily: 'Jost-Bold', marginLeft: 5 }}>
+                    {'teeee'}
+                  </Text>
+                  <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Jost-Regular', marginLeft: 5 }}>
+                    {'reposted this'}
+                  </Text>
+                </View>
+
+
+                <TouchableOpacity
+                  style={{
+                    width: 35,
+                    height: 45,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => { }}>
+                  <Image
+                    style={{
+                      width: 3,
+                      height: 16,
+                      resizeMode: 'contain',
+                    }}
+                    source={images.Threedots}
+                  />
+                </TouchableOpacity>
+
+
+
+              </View>
+            )}
             <View style={{ flexDirection: 'row', padding: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('OtherProfile')}>
@@ -293,7 +443,7 @@ const ListItem = ({ Data }) => {
                   source={{
                     uri: item.userDetails.userProfile
                       ? item.userDetails.userProfile
-                      : 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                      : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                   }}
                   style={styles.image}
                 />
@@ -311,23 +461,30 @@ const ListItem = ({ Data }) => {
                 </View>
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
-              <TouchableOpacity
-                style={{
-                  width: 35,
-                  height: 45,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => { }}>
-                <Image
+
+              {repost ? (
+
+                <View style={{ backgroundColor: '#3A7BD5', padding: 7, borderRadius: 10, height: 30, width: 50 }}><Text style={{ fontFamily: 'Jost-Regular', color: 'white', fontSize: 13 }}>Follow</Text></View>
+
+              ) : (
+                <TouchableOpacity
                   style={{
-                    width: 3,
-                    height: 16,
-                    resizeMode: 'contain',
+                    width: 35,
+                    height: 45,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
-                  source={images.Threedots}
-                />
-              </TouchableOpacity>
+                  onPress={() => { }}>
+                  <Image
+                    style={{
+                      width: 3,
+                      height: 16,
+                      resizeMode: 'contain',
+                    }}
+                    source={images.Threedots}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
@@ -367,6 +524,7 @@ const ListItem = ({ Data }) => {
                 <Text style={styles.liketext}>386</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => { openShareModal(), setitemdata(item) }}
                 style={{
                   flexDirection: 'row',
                   width: 75,
@@ -379,6 +537,7 @@ const ListItem = ({ Data }) => {
                 />
                 <Text style={styles.liketext}>251</Text>
               </TouchableOpacity>
+              <Text style={{color:'gray',fontSize:12}}>{'12 minutes ago'}</Text>
             </View>
 
             {/* Modal */}
@@ -493,11 +652,85 @@ const ListItem = ({ Data }) => {
                   />
                   {/* <TouchableOpacity onPress={()=>handledataRegister(item)}> */}
                   <TouchableOpacity onPress={() => handleSend()}>
-                    <Text style={styles.sendText}>Send</Text>
+                    <Image
+                      source={images.Sendbtn}
+                      style={styles.commentUserImage}
+                    />
+
                   </TouchableOpacity>
                 </View>
               </View>
             </Modal>
+
+
+            {/* {share model} */}
+
+            <Modal isVisible={shareModalVisible}
+              backdropOpacity={.1}
+              onBackdropPress={closeShareModal}
+              style={styles.bottomModal}>
+              <View style={styles.shareContainer}>
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Search followers..."
+                  placeholderTextColor={'gray'}
+                  value={searchText}
+                  onChangeText={setSearchText}
+                />
+                <Text style={{ color: 'black', fontFamily: 'Jost-Regular', marginBottom: 5 }}>Select followers to share as message</Text>
+                <FlatList
+                  // data={followers.filter(follower => follower.name.toLowerCase().includes(searchText.toLowerCase()))}
+                  data={followers}
+                  renderItem={renderFollower}
+                  horizontal
+                  keyExtractor={(item) => item.id.toString()}
+                />
+
+                {selectedFollowers?.length > 0 ? (
+                  <View style={styles.shareButtonsContainer}>
+                    <TouchableOpacity onPress={closeShareModal} style={styles.cancelButton}>
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSendToFollowers()} style={styles.sendButton}>
+                      <Text style={styles.sendButtonText}>Send</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                ) : (
+                  <View style={styles.repostContainer}>
+                    <TouchableOpacity onPress={() => handleRepost()} style={styles.shareIconButton}>
+                      <Image
+                        source={images.ArrowBendUpRight}
+                        style={styles.commentUserImage}
+                      />
+                      <Text style={styles.shareIconText}>Repost</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.shareIconButton}>
+                      <Image
+                        source={images.LinkSimple}
+                        style={styles.commentUserImage}
+                      />
+                      <Text style={styles.shareIconText}>Copy link</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.shareIconButton}>
+                      <Image
+                        source={images.Export}
+                        style={styles.commentUserImage}
+                      />
+                      <Text style={styles.shareIconText}>Share to</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                )}
+
+
+              </View>
+            </Modal>
+            {isLoading && (
+              <View style={styles.loader}>
+                <ActivityIndicator size="large" color="white" />
+              </View>
+            )}
           </View>
         );
       })}
@@ -767,6 +1000,120 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  shareContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 16,
+    marginBottom: 10,
+    color: 'black'
+  },
+  shareButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#3A7BD5',
+    padding: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: '#3A7BD5',
+  },
+  repostContainer: {
+    marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  repostButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  repostButtonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  shareIconButton: {
+    // flexDirection: 'row', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 2,
+    // backgroundColor:'red'
+  },
+  shareIconText: {
+    fontFamily: 'Jost-Bold',
+    fontSize: 13,
+    color: 'black',
+
+  },
+  sendButton: {
+    flex: 1,
+    backgroundColor: '#3A7BD5',
+    padding: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  sendButtonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  followerItem: {
+    padding: 10,
+    // borderWidth: 1,
+    // borderColor: 'red',
+    borderRadius: 10,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  selectedFollowerItem: {
+    backgroundColor: '#007BFF',
+    borderColor: '#007BFF',
+  },
+  followerName: {
+    color: 'black',
+  },
+  shareUserImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  sharetickImage: {
+    width: 20,
+    height: 20,
+    // borderRadius: 20,
+    // marginRight: 10,
+  },
+  loader: {
+    ...StyleSheet.absoluteFillObject, // Covers the entire screen
+    height: getHeight(1),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
 });
 

@@ -41,6 +41,7 @@ import SuggestionScreen from '../Screens/Suggestion/SuggestionScreen';
 import HomeSearch from '../Screens/HomeSearch/HomeSearch';
 import ChatScreen from '../Screens/ChatScreen.js/ChatScreen';
 import VoiceCallScreen from '../Screens/VoiceCall/VoiceCallScreen';
+import RepostScreen from '../Screens/EditPost/RepostScreen';
 
 const Stack = createStackNavigator();
 if (!__DEV__) {
@@ -95,6 +96,7 @@ const index = () => {
         <Stack.Screen name="HomeSearch" component={HomeSearch} />
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
         <Stack.Screen name="VoiceCall" component={VoiceCallScreen} />
+        <Stack.Screen name="RepostScreen" component={RepostScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

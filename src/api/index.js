@@ -321,7 +321,7 @@ export const GetMessage = async (PostId) => {
 };
 
 export const Likecomment = async (commentId,userId) => {
-  console.log('https://politiks.aindriya.co.uk/user/likeComment/1',commentId,userId)
+  console.log('https://politiks.aindriya.co.uk/user/likeComment/ like',commentId,userId)
   try {   
     const response = await HTTP_REQUEST.post(`user/likeComment/${commentId}`, {
       userId,
@@ -333,7 +333,7 @@ export const Likecomment = async (commentId,userId) => {
   }
 };
 export const UnLikecomment = async (commentId,userId) => {
-  console.log('https://politiks.aindriya.co.uk/user/unlikeComment/1',commentId,userId)
+  console.log('https://politiks.aindriya.co.uk/user/unlikeComment/ unlike',commentId,userId)
   try {   
     const response = await HTTP_REQUEST.post(`user/unlikeComment/${commentId}`, {
       userId,
@@ -344,6 +344,33 @@ export const UnLikecomment = async (commentId,userId) => {
     throw error;
   }
 };
+
+
+export const LikSubecomment = async (commentId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/likeSubComment/',commentId,userId)
+  try {   
+    const response = await HTTP_REQUEST.post(`user/likeSubComment/${commentId}`, {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+export const UnLikeSubcomment = async (commentId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/unlikeSubComment/',commentId,userId)
+  try {   
+    const response = await HTTP_REQUEST.post(`user/unlikeSubComment/${commentId}`, {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
 
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);

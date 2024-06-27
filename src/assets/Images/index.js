@@ -89,6 +89,11 @@ const images = {
   blueThumbsUp: require('./blueThumbsUp.png'),
   VideoCall: require('./VideoCall.png'),
   AudioCall: require('./AudioCall.png'),
+  Done: require('./Done.png'),
+  ArrowBendUpRight: require('./ArrowBendUpRight.png'),
+  Export: require('./Export.png'),
+  LinkSimple: require('./LinkSimple.png'),
+  Sendbtn: require('./Sendbtn.png'),
 };
 
 export default images;
