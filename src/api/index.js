@@ -323,7 +323,19 @@ export const GetMessage = async (PostId) => {
 export const Likecomment = async (commentId,userId) => {
   console.log('https://politiks.aindriya.co.uk/user/likeComment/1',commentId,userId)
   try {   
-    const response = await HTTP_REQUEST.post(`user/likeComment/17`, {
+    const response = await HTTP_REQUEST.post(`user/likeComment/${commentId}`, {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+export const UnLikecomment = async (commentId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/unlikeComment/1',commentId,userId)
+  try {   
+    const response = await HTTP_REQUEST.post(`user/unlikeComment/${commentId}`, {
       userId,
     });
     return response.data;
