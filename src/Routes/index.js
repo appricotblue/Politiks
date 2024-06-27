@@ -39,6 +39,7 @@ import EditProfile from '../Screens/Profile/EditProfile';
 import OtherProfileScreen from '../Screens/Profile/OtherProfileScreen';
 import SuggestionScreen from '../Screens/Suggestion/SuggestionScreen';
 import HomeSearch from '../Screens/HomeSearch/HomeSearch';
+import RepostScreen from '../Screens/EditPost/RepostScreen';
 
 const Stack = createStackNavigator();
 if (!__DEV__) {
@@ -91,6 +92,7 @@ const index = () => {
         <Stack.Screen name="OtherProfile" component={OtherProfileScreen} />
         <Stack.Screen name="Suggestion" component={SuggestionScreen} />
         <Stack.Screen name="HomeSearch" component={HomeSearch} />
+        <Stack.Screen name="RepostScreen" component={RepostScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

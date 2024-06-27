@@ -88,6 +88,11 @@ const images = {
   PartyPNG: require('./PartyPNG.png'),
   flight: require('./flight.png'),
   blueThumbsUp: require('./blueThumbsUp.png'),
+  Done: require('./Done.png'),
+  ArrowBendUpRight: require('./ArrowBendUpRight.png'),
+  Export: require('./Export.png'),
+  LinkSimple: require('./LinkSimple.png'),
+  Sendbtn: require('./Sendbtn.png'),
 };
 
 export default images;
