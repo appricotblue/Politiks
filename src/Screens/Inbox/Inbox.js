@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const Inbox = () => {
+const Inbox = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0); // 0 for images tab, 1 for items tab
 
@@ -66,7 +66,9 @@ const Inbox = () => {
   );
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.itemContainer}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => navigation.navigate('ChatScreen')}>
       <View style={{width: getWidth(8)}}>
         <Image source={item.image} style={styles.itemImage} />
         <View
@@ -76,7 +78,7 @@ const Inbox = () => {
             backgroundColor: '#0FE16D',
             borderRadius: 10,
             position: 'absolute',
-            bottom: 10,
+            bottom: 2,
             right: 1,
           }}></View>
       </View>
@@ -90,18 +92,18 @@ const Inbox = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text>3 min</Text>
         <View
           style={{
-            width: 30,
-            height: 30,
-            borderRadius: 30,
+            width: 20,
+            height: 20,
+            borderRadius: 20,
             backgroundColor: '#3A7BD5',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Text style={{color: 'white'}}>4</Text>
         </View>
+        <Text style={{color: 'grey'}}>3 min</Text>
       </View>
     </TouchableOpacity>
   );
