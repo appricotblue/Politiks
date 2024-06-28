@@ -372,5 +372,29 @@ export const UnLikeSubcomment = async (commentId,userId) => {
 };
 
 
+export const LikePost = async (postId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/likeUnlikePost/17',postId,userId)
+  try {   
+    const response = await HTTP_REQUEST.post(`user/likeUnlikePost/${postId}`, {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+export const LikePostuselist = async (postId,userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/likedUserList/',postId,userId)
+  try {   
+    const response = await HTTP_REQUEST.get(`user/likedUserList/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);
