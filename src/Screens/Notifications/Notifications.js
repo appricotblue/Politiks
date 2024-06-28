@@ -14,18 +14,41 @@ import {getHeight, getWidth} from '../../Theme/Constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {ScrollView} from 'react-native-gesture-handler';
+import {height, width} from '../../Theme/ConstantStyles';
+import SuggestionCard from '../../Components/SuggestionCard';
 
 const Notifications = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const imageData = [
-    {id: 1, imageUrl: images.Welcome_1},
-    {id: 2, imageUrl: images.Welcome_2},
-    {id: 3, imageUrl: images.Welcome_3},
-    {id: 4, imageUrl: images.ViratBanner},
-    {id: 5, imageUrl: images.Welcome_3},
-    {id: 6, imageUrl: images.Welcome_2},
+  // const imageData = [
+  //   {id: 1, imageUrl: images.Welcome_1},
+  //   {id: 2, imageUrl: images.Welcome_2},
+  //   {id: 3, imageUrl: images.Welcome_3},
+  //   {id: 4, imageUrl: images.ViratBanner},
+  //   {id: 5, imageUrl: images.Welcome_3},
+  //   {id: 6, imageUrl: images.Welcome_2},
+  // ];
+  const Data = [
+    {
+      id: 1,
+      name: 'Priyanka Chopra',
+      followers: 1000,
+      image: images.ViratBanner,
+    },
+    {id: 2, name: 'Cody Fisher', followers: 2000, image: images.Welcome_1},
+    {
+      id: 3,
+      name: 'Cameron Williamson',
+      followers: 3000,
+      image: images.Welcome_2,
+    },
+    {id: 4, name: 'Dianne Russell', followers: 2000, image: images.Welcome_1},
+    {id: 5, name: 'Jane Cooper', followers: 3000, image: images.Welcome_2},
+    {id: 6, name: 'Priyanka Chopra', followers: 3000, image: images.Welcome_2},
+    {id: 7, name: 'Jane Cooper', followers: 2000, image: images.Welcome_1},
+    {id: 8, name: 'Magno Savio', followers: 3000, image: images.Welcome_2},
+    {id: 9, name: 'Chris Adams', followers: 3000, image: images.Welcome_2},
   ];
 
   const itemData = [
@@ -109,8 +132,12 @@ const Notifications = () => {
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <Header title="Notifications" />
+
+      <View style={styles.horrizontalContainer}>
+        <SuggestionCard datas={Data} />
+      </View>
       <View style={styles.container}>
         <FlatList
           data={filteredItems}
@@ -124,6 +151,9 @@ const Notifications = () => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   container: {
     height: getHeight(1.1),
     justifyContent: 'center',
@@ -186,6 +216,11 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: '#fff',
+  },
+  horrizontalContainer: {
+    height: height * 0.15,
+    width: width * 1,
+    backgroundColor: 'pink',
   },
 });
 

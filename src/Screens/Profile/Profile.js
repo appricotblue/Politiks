@@ -18,7 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CommonStyles from '../../Theme/CommonStyles';
-import {getAllUserImages, getAllUserPost,getParties} from '../../api';
+import {getAllUserImages, getAllUserPost, getParties} from '../../api';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
 
@@ -32,21 +32,6 @@ const Profile = () => {
   const [interestdata, setinterestdata] = useState();
   const [image, setImage] = useState();
   const [userid, setuserid] = useState('');
-
-  const imageData = [
-    {id: 1, imageUrl: images.Welcome_1},
-    {id: 2, imageUrl: images.Welcome_2},
-    {id: 3, imageUrl: images.Welcome_3},
-    {id: 4, imageUrl: images.ViratBanner},
-    {id: 5, imageUrl: images.Welcome_3},
-    {id: 6, imageUrl: images.Welcome_2},
-    {id: 7, imageUrl: images.Welcome_1},
-    {id: 8, imageUrl: images.Welcome_2},
-    {id: 9, imageUrl: images.Welcome_3},
-    {id: 10, imageUrl: images.ViratBanner},
-    {id: 11, imageUrl: images.Welcome_3},
-    {id: 12, imageUrl: images.Welcome_2},
-  ];
 
   const data = [
     {id: '1', title: 'Campain', imageUrl: images.CampaignPNG},
@@ -64,7 +49,7 @@ const Profile = () => {
     setuserid(userId);
     getAllUserPosts(userId);
     getAllPosts(userId);
-    getAllParties()
+    getAllParties();
   };
 
   // useEffect(() => {
@@ -79,22 +64,18 @@ const Profile = () => {
   const getAllParties = async () => {
     try {
       const res = await getParties();
-       console.log(res, 'Parties--------------------');
       setparties(res?.data);
-     
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
 
-
   const getAllUserPosts = async userId => {
     try {
       const res = await getAllUserPost(userId);
       const {data} = res;
-      console.log(res?.data, 'Profileeeeeeeeeeeeoooooooooooooooo');
-       setDetails(res?.data);
-     
+      setDetails(res?.data);
+
       setinterestdata(res?.data?.myInterestField);
     } catch (error) {
       console.error('Error creating post:', error);
@@ -129,7 +110,9 @@ const Profile = () => {
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <Image source={item.imageUrl} style={styles.image} />
-      <Text style={{color: 'black',  fontFamily:'Jost-Regular',}}>{item.title}</Text>
+      <Text style={{color: 'black', fontFamily: 'Jost-Regular'}}>
+        {item.title}
+      </Text>
     </View>
   );
 
@@ -152,7 +135,9 @@ const Profile = () => {
         />
         <View style={styles.tabs}>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate('Followers');
+            }}
             style={{
               width: getWidth(4),
               justifyContent: 'center',
@@ -169,9 +154,9 @@ const Profile = () => {
             </Text>
             <Text
               style={{
-                fontFamily:'Jost-Bold',
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-            
+
                 color: 'grey',
               }}>
               Following
@@ -224,18 +209,18 @@ const Profile = () => {
             }}>
             <Text
               style={{
-                fontFamily:'Jost-Bold',
+                fontFamily: 'Jost-Bold',
                 fontSize: 16,
-            
+
                 color: 'black',
               }}>
               698
             </Text>
             <Text
               style={{
-                fontFamily:'Jost-Bold',
+                fontFamily: 'Jost-Bold',
                 fontSize: 14,
-               
+
                 color: 'grey',
               }}>
               Followers
@@ -354,13 +339,13 @@ const Profile = () => {
                 /> */}
                 <Image
                   // source={images.DemocraticPNG}
-                  source={{uri:details?.myParty?.icons }
-                  
-                  }
+                  source={{uri: details?.myParty?.icons}}
                   style={{width: 25, height: 25}}
                 />
                 <Text style={styles.democraticText}>
-                  {details?.myParty?.name ? details?.myParty?.name : 'Update your party'}
+                  {details?.myParty?.name
+                    ? details?.myParty?.name
+                    : 'Update your party'}
                 </Text>
               </View>
               <Text style={styles.subHeadText}> My Interests</Text>
@@ -531,22 +516,22 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabText: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     color: 'black',
     fontSize: 24,
- 
+
     alignSelf: 'center',
     marginTop: 14,
   },
   idText: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     color: 'grey',
     fontSize: 14,
-  
+
     alignSelf: 'center',
   },
   activeTabText: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     color: 'white',
     fontSize: 13,
     fontWeight: '800',
@@ -709,7 +694,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   democraticText: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     color: 'grey',
     marginHorizontal: 12,
     fontSize: 17,
@@ -721,16 +706,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   selfText: {
-    fontFamily:'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     color: 'grey',
     fontSize: 17,
     marginTop: 5,
   },
   subHeadText: {
-    fontFamily:'Jost-Bold',
+    fontFamily: 'Jost-Bold',
     color: 'black',
     fontSize: 20,
-   
+
     marginVertical: 15,
   },
 });

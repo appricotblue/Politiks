@@ -12,28 +12,23 @@ import {
 } from 'react-native';
 import images from '../../assets/Images';
 import {getHeight, getWidth} from '../../Theme/Constants';
-import DiscoverItems from '../../Components/DiscoverItems';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
-import {ScrollView} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import local from '../../Storage/Local';
 import {height} from '../../Theme/ConstantStyles';
+import {getFollowers, getFollowing} from '../../api';
 
 const Followers = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTab, setSelectedTab] = useState(0); // 0 for images tab, 1 for items tab
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [followers, setFollowers] = useState();
+  const [followersCount, setFollowersCount] = useState();
+  const [following, setFollowing] = useState();
+  const [followingCount, setFollowingCount] = useState();
 
-  const imageData = [
-    {id: 1, imageUrl: images.Welcome_1},
-    {id: 2, imageUrl: images.Welcome_2},
-    {id: 3, imageUrl: images.Welcome_3},
-    {id: 4, imageUrl: images.ViratBanner},
-    {id: 5, imageUrl: images.Welcome_3},
-    {id: 6, imageUrl: images.Welcome_2},
-    // Add more image objects as needed
-  ];
+  const [userid, setuserid] = useState('');
 
   const itemData = [
     {
@@ -55,12 +50,13 @@ const Followers = () => {
     {id: 7, name: 'Jane Cooper', followers: 2000, image: images.Welcome_1},
     {id: 8, name: 'Magno Savio', followers: 3000, image: images.Welcome_2},
     {id: 9, name: 'Chris Adams', followers: 3000, image: images.Welcome_2},
-    // Add more item objects as needed
   ];
 
   const getuser = async () => {
-    const leaderdata = await local.getLeader();
-    console.log(leaderdata, 'leaderdata he');
+    const userId = await local.getUserId();
+    setuserid(userId);
+    getAllFollowers(userId);
+    getAllFollowing(userId);
   };
 
   useEffect(() => {
@@ -70,19 +66,46 @@ const Followers = () => {
     setSelectedTab(tabIndex);
   };
 
-  const renderImageItem = ({item}) => (
-    <View style={{width: '33%', padding: 0}}>
-      <Image source={item.imageUrl} style={{width: '100%', height: 120}} />
-    </View>
+  const filteredItems = followers?.filter(item =>
+    item?.userName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const filteredItems = itemData.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const getAllFollowers = async userId => {
+    try {
+      const res = await getFollowers(userId);
+      // console.log(res.data, 'Follwers--------------------');
+      setFollowers(res?.data?.followerDetails);
+      setFollowersCount(res?.data);
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
+  const filteredItem = following?.filter(item =>
+    item?.userName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const getAllFollowing = async userId => {
+    try {
+      const res = await getFollowing(userId);
+      // console.log(res.data, 'Follwing--------------------');
+      setFollowing(res?.data?.followings);
+      setFollowingCount(res?.data);
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
 
   const renderItem = ({item}) => (
     <TouchableOpacity style={styles.itemContainer}>
-      <Image source={item.image} style={styles.itemImage} />
+      <Image
+        source={{
+          uri: item.userProfile
+            ? item.userProfile
+            : 'https://images.musicfy.lol/misc/dummy_background.png',
+        }}
+        style={styles.itemImage}
+      />
       <View style={{marginLeft: 18}}>
         <View
           style={{
@@ -90,11 +113,15 @@ const Followers = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Image
-            source={images.VerifiedPNG}
-            style={{width: 18, height: 18, marginLeft: 15, marginTop: 5}}
-          />
+          <Text style={styles.itemName}>{item.userName}</Text>
+          {item?.role === 'Leader' ? (
+            <Image
+              source={images.VerifiedPNG}
+              style={{width: 18, height: 18, marginLeft: 15, marginTop: 5}}
+            />
+          ) : (
+            ''
+          )}
         </View>
         <Text style={styles.itemFollowers}> {item.followers} Followers</Text>
       </View>
@@ -119,13 +146,13 @@ const Followers = () => {
                   style={
                     selectedTab === 0 ? styles.activeTabText : styles.tabText
                   }>
-                  {'230 '}
+                  {followersCount?.followerCount}
                 </Text>
                 <Text
                   style={
                     selectedTab === 0 ? styles.activeTabText : styles.tabText
                   }>
-                  Followers
+                  {' Followers'}
                 </Text>
               </View>
               <LinearGradient
@@ -150,13 +177,13 @@ const Followers = () => {
                   style={
                     selectedTab === 1 ? styles.activeTabText : styles.tabText
                   }>
-                  {'230 '}
+                  {followingCount?.count}
                 </Text>
                 <Text
                   style={
                     selectedTab === 1 ? styles.activeTabText : styles.tabText
                   }>
-                  Following
+                  {' Following'}
                 </Text>
               </View>
               <LinearGradient
@@ -186,22 +213,17 @@ const Followers = () => {
               value={searchQuery}
               onChangeText={text => setSearchQuery(text)}
             />
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              {/* <Image
-                source={images.Cross}
-                style={{height: 30, width: 30, marginLeft: 10}}
-              /> */}
-            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSearchQuery('')}></TouchableOpacity>
           </View>
           <View style={{height: getHeight(1)}}>
             <FlatList
-              data={filteredItems}
+              data={selectedTab === 0 ? filteredItems : filteredItem}
               renderItem={renderItem}
               keyExtractor={item => item.id.toString()}
               contentContainerStyle={styles.flatListContent}
             />
           </View>
-          {/* <View style={{height: 300}} /> */}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
