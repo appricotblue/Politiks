@@ -9,8 +9,8 @@ const SwiperComponent = ({ data }) => {
   }, [])
   return (
     <Swiper>
-      {data?.map((item, index) => (
-        <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {data?.map((item) => (
+        <View key={item} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image source={{ uri: item }} style={styles.image} />
           {/* <Text>{item?.description}</Text> */}
           {/* Add any other content you want to display for each slide */}
