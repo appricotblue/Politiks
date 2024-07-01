@@ -25,7 +25,7 @@ import local from '../../Storage/Local';
 import CountryPicker from '../../Components/CountryPicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useRoute } from '@react-navigation/native';
-import { getAllPost, getAllUserPost } from '../../api';
+import { getAllPost, getAllUserPost,Repost } from '../../api';
 
 const RepostScreen = ({ navigation }) => {
     const route = useRoute();
@@ -74,26 +74,26 @@ const RepostScreen = ({ navigation }) => {
         } else if (country == '') {
             Alert.alert('Please add an Country to continue');
         } else {
-            createPosts();
+            // createPosts();
         }
     };
 
-    const createPosts = async () => {
-        const formData = new FormData();
-        formData.append('location', country);
-        formData.append('tagUser', '2');
-        formData.append('caption', text);
-        formData.append('image', {
-            uri: image.path,
-            type: image.mime,
-            name: image.path,
-        });
+    const createRePosts = async () => {
+        // const formData = new FormData();
+        // formData.append('location', country);
+        // formData.append('tagUser', '2');
+        // formData.append('caption', text);
+        // formData.append('image', {
+        //     uri: image.path,
+        //     type: image.mime,
+        //     name: image.path,
+        // });
 
         try {
             setIsLoading(true);
-            const res = await CreatePost(formData, userid);
+            const res = await Repost(repostydata?.id,text,repostydata?.tagUser,'USA', userid);
             setIsLoading(false);
-            console.log(res?.data, '---------><><');
+            console.log(res, '---------><><');
             navigation.navigate('Home');
         } catch (error) {
             setIsLoading(false);
@@ -162,7 +162,7 @@ const RepostScreen = ({ navigation }) => {
                         </View>
 
 
-                        <View style={{ backgroundColor: '#3A7BD5', padding: 7, borderRadius: 10 }}><Text style={{ fontFamily: 'Jost-Regular', color: 'white', fontSize: 13 }}>Post Now</Text></View>
+                        <TouchableOpacity onPress={()=>createRePosts()} style={{ backgroundColor: '#3A7BD5', padding: 7, borderRadius: 10 }}><Text style={{ fontFamily: 'Jost-Regular', color: 'white', fontSize: 13 }}>Post Now</Text></TouchableOpacity>
                     </View>
                     <View style={styles.textInputContainer}>
                         <TextInput

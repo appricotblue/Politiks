@@ -73,8 +73,8 @@ const Home = props => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getAllPosts();
-      getAllUserPosts();
+      // getAllPosts(userId);
+      // getAllUserPosts();
       getuser();
     }, []),
   );

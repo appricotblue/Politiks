@@ -521,12 +521,12 @@ const ListItem = ({ Data ,likePress}) => {
                 }}>
                 <TouchableOpacity  onPress={() => likePress(item)}>
                   <Image
-                    source={liked ? images.ThumbsUp : images.ThumbsUp}
+                    source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
                     style={styles.likeIcon}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {openBottomModal(),GetLikeduserlist(item?.id)}}>
-                  <Text style={styles.liketext}>{item?.tagUser}</Text>
+                  <Text style={styles.liketext}>{item?.likeCount}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -542,7 +542,7 @@ const ListItem = ({ Data ,likePress}) => {
                   source={liked ? images.Comment : images.Comment}
                   style={styles.likeIcon}
                 />
-                <Text style={styles.liketext}>386</Text>
+                <Text style={styles.liketext}>{item?.commentCount}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => { openShareModal(), setitemdata(item) }}

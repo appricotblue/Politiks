@@ -57,8 +57,8 @@ export const CreatePost = (async = (data, userId) => {
   });
 });
 
-export const getAllPost = async () => {
-  return commonRequest('GET', 'user/getAllpost');
+export const getAllPost = async (userId) => {
+  return commonRequest('GET', `user/getAllpost/${userId}`);
 };
 export const getAllUserPost = async userId => {
   console.log(userId);
@@ -395,6 +395,24 @@ export const LikePostuselist = async (postId,userId) => {
   }
 };
 
+export const Repost = async (postId,caption,tagUser,location, userId) => {
+  console.log('https://politiks.aindriya.co.uk/user/createRepost/', postId,caption, userId)
+  try {
+    const response = await HTTP_REQUEST.post(`user/createRepost/${postId}`, {
+      userId,
+      caption,
+      tagUser,
+      location
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
 
+
+// https://politiks.aindriya.co.uk/user/getAllpost/17
+// https://politiks.aindriya.co.uk/user/createRepost/1
 export const trial = async PAYLOAD =>
   HTTP_REQUEST.post('/user-home-screen/', PAYLOAD);
