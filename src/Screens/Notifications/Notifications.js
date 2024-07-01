@@ -17,7 +17,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {height, width} from '../../Theme/ConstantStyles';
 import SuggestionCard from '../../Components/SuggestionCard';
 
-const Notifications = () => {
+const Notifications = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -136,7 +136,10 @@ const Notifications = () => {
       <Header title="Notifications" />
 
       <View style={styles.horrizontalContainer}>
-        <SuggestionCard datas={Data} />
+        <SuggestionCard
+          datas={Data}
+          onViewAllPress={() => navigation.navigate('Suggestion')}
+        />
       </View>
       <View style={styles.container}>
         <FlatList
@@ -144,6 +147,7 @@ const Notifications = () => {
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
           contentContainerStyle={styles.flatListContent}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </SafeAreaView>
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   horrizontalContainer: {
-    height: height * 0.17,
+    height: height * 0.2,
     width: width * 1,
     paddingHorizontal: 8,
   },

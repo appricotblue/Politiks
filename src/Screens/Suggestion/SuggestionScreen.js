@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   FlatList,
@@ -12,10 +11,7 @@ import {
 } from 'react-native';
 import images from '../../assets/Images';
 import {getHeight, getWidth} from '../../Theme/Constants';
-import DiscoverItems from '../../Components/DiscoverItems';
-import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../Components/Header';
-import {ScrollView} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import local from '../../Storage/Local';
 import {height, width} from '../../Theme/ConstantStyles';
@@ -23,7 +19,7 @@ import {height, width} from '../../Theme/ConstantStyles';
 const SuggestionScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTab, setSelectedTab] = useState(0); // 0 for images tab, 1 for items tab
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const imageData = [
     {id: 1, imageUrl: images.Welcome_1},
@@ -66,53 +62,62 @@ const SuggestionScreen = () => {
   useEffect(() => {
     getuser();
   }, []);
-  const handleTabPress = tabIndex => {
-    setSelectedTab(tabIndex);
-  };
-
-  const renderImageItem = ({item}) => (
-    <View style={{width: '33%', padding: 0}}>
-      <Image source={item.imageUrl} style={{width: '100%', height: 120}} />
-    </View>
-  );
 
   const filteredItems = itemData.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <Image source={item.image} style={styles.itemImage} />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          width: width * 0.73,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <View style={{marginLeft: 8}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Image
-              source={images.VerifiedPNG}
-              style={{width: 18, height: 18, marginLeft: 5, marginTop: 5}}
-            />
-          </View>
-          <Text style={styles.itemFollowers}> {item.followers} Followers</Text>
-        </View>
+  const handleSelectItem = id => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(item => item !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
 
-        <TouchableOpacity style={styles.followButton}>
-          <Text style={styles.followButtonText}>Follow</Text>
-        </TouchableOpacity>
+  const renderItem = ({item}) => {
+    const isSelected = selectedItems.includes(item.id);
+    return (
+      <View style={styles.itemContainer}>
+        <Image source={item.image} style={styles.itemImage} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: width * 0.73,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{marginLeft: 8}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Image
+                source={images.VerifiedPNG}
+                style={{width: 18, height: 18, marginLeft: 5, marginTop: 5}}
+              />
+            </View>
+            <Text style={styles.itemFollowers}>
+              {' '}
+              {item.followers} Followers
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.followButton}
+            onPress={() => handleSelectItem(item.id)}>
+            <Text style={styles.followButtonText}>
+              {isSelected ? 'Following' : 'Follow'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView>
@@ -125,6 +130,7 @@ const SuggestionScreen = () => {
               renderItem={renderItem}
               keyExtractor={item => item.id.toString()}
               contentContainerStyle={styles.flatListContent}
+              showsVerticalScrollIndicator={false}
             />
           </View>
         </View>
@@ -187,7 +193,7 @@ const styles = StyleSheet.create({
   followButton: {
     backgroundColor: '#3A7BD5',
     height: height * 0.035,
-    width: width * 0.17,
+    width: width * 0.24,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
