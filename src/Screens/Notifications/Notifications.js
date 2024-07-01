@@ -218,9 +218,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   horrizontalContainer: {
-    height: height * 0.15,
+    height: height * 0.17,
     width: width * 1,
-    backgroundColor: 'pink',
+    paddingHorizontal: 8,
   },
 });
 

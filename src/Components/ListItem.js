@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,12 @@ import {
   FlatList,
   TextInput,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import images from '../assets/Images';
-import { getHeight, getWidth } from '../Theme/Constants';
+import {getHeight, getWidth} from '../Theme/Constants';
 const windowWidth = Dimensions.get('window').width;
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import local from '../Storage/Local';
 import {
@@ -25,10 +25,10 @@ import {
   UnLikecomment,
   LikSubecomment,
   UnLikeSubcomment,
-  LikePostuselist
+  LikePostuselist,
 } from '../api';
 
-const ListItem = ({ Data ,likePress}) => {
+const ListItem = ({Data, likePress}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [repost, setrepost] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -52,15 +52,33 @@ const ListItem = ({ Data ,likePress}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [followers, setFollowers] = useState([
     // Sample data, replace with actual data
-    { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
-    { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
-  ])
-
-
+    {
+      id: 1,
+      name: 'Jane Smith',
+      profile:
+        'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+    },
+    {
+      id: 2,
+      name: 'Mike Johnson',
+      profile:
+        'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+    },
+  ]);
 
   const likedPersons = [
-    { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
-    { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
+    {
+      id: 1,
+      name: 'Jane Smith',
+      profile:
+        'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+    },
+    {
+      id: 2,
+      name: 'Mike Johnson',
+      profile:
+        'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+    },
   ];
 
   const getuser = async () => {
@@ -71,12 +89,11 @@ const ListItem = ({ Data ,likePress}) => {
 
   useEffect(() => {
     getuser();
-
   }, []);
 
-  const handleSend = (item) => {
-    console.log(itemdata, 'send item', replyingTo, 'kkkk')
-    setpostid(itemdata?.id)
+  const handleSend = item => {
+    console.log(itemdata, 'send item', replyingTo, 'kkkk');
+    setpostid(itemdata?.id);
     if (newComment.trim()) {
       if (replyingTo) {
         handlesubcommant(replyingTo);
@@ -87,15 +104,11 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-
- 
-
-
-  const Likesubcomments = async (itemid) => {
+  const Likesubcomments = async itemid => {
     try {
       // setIsLoading(true);
       const response = await LikSubecomment(itemid, userid);
-      GetMessages(itemdata?.id)
+      GetMessages(itemdata?.id);
       console.log(response, 'getallinterests API response');
     } catch (error) {
       // setIsLoading(false);
@@ -104,11 +117,11 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-  const UNLikesubcomments = async (itemid) => {
+  const UNLikesubcomments = async itemid => {
     try {
       // setIsLoading(true);
       const response = await UnLikeSubcomment(itemid, userid);
-      GetMessages(itemdata?.id)
+      GetMessages(itemdata?.id);
       console.log(response, 'getallinterests API response');
     } catch (error) {
       // setIsLoading(false);
@@ -117,11 +130,11 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-  const Likecomments = async (itemid) => {
+  const Likecomments = async itemid => {
     try {
       // setIsLoading(true);
       const response = await Likecomment(itemid, userid);
-      GetMessages(itemdata?.id)
+      GetMessages(itemdata?.id);
       console.log(response, 'getallinterests API response');
     } catch (error) {
       // setIsLoading(false);
@@ -130,11 +143,11 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-  const UNLikecomments = async (itemid) => {
+  const UNLikecomments = async itemid => {
     try {
       // setIsLoading(true);
       const response = await UnLikecomment(itemid, userid);
-      GetMessages(itemdata?.id)
+      GetMessages(itemdata?.id);
       console.log(response, 'getallinterests API response');
     } catch (error) {
       // setIsLoading(false);
@@ -143,11 +156,8 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-
-
-
-  const GetMessages = async (itemid) => {
-    console.log(itemid, 'message id')
+  const GetMessages = async itemid => {
+    console.log(itemid, 'message id');
     try {
       setIsLoading(true);
       const response = await GetMessage(itemid);
@@ -161,13 +171,13 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-  const GetLikeduserlist = async (itemid) => {
-    console.log(itemid, 'message id')
+  const GetLikeduserlist = async itemid => {
+    console.log(itemid, 'message id');
     try {
       setIsLoading(true);
-      const response = await LikePostuselist(itemid,userid);
+      const response = await LikePostuselist(itemid, userid);
       setIsLoading(false);
-      setlikeduserList(response)
+      setlikeduserList(response);
       // setmessages(response?.comments);
       console.log(response, 'getmessager API response');
     } catch (error) {
@@ -176,20 +186,15 @@ const ListItem = ({ Data ,likePress}) => {
       Alert.alert('Error', 'An error occurred while fetching interests.');
     }
   };
-  const handledataRegister = async (item) => {
-    console.log(item, 'hereitem')
-    setNewComment('')
+  const handledataRegister = async item => {
+    console.log(item, 'hereitem');
+    setNewComment('');
     try {
       // setIsLoading(true);
 
-      const response = await CreateMessage(
-        itemdata?.id,
-        newComment,
-        userid,
-      );
+      const response = await CreateMessage(itemdata?.id, newComment, userid);
       console.log(response, 'login api response');
-      GetMessages(itemdata?.id)
-
+      GetMessages(itemdata?.id);
     } catch (error) {
       // setIsLoading(false);
       if (
@@ -204,23 +209,16 @@ const ListItem = ({ Data ,likePress}) => {
     }
   };
 
-
-  const handlesubcommant = async (item) => {
-    console.log(item, 'hereitem', postid)
-    setNewComment('')
+  const handlesubcommant = async item => {
+    console.log(item, 'hereitem', postid);
+    setNewComment('');
     try {
       // setIsLoading(true);
 
-      const response = await CreateSubMessage(
-        item?.id,
-        newComment,
-        userid,
-      );
+      const response = await CreateSubMessage(item?.id, newComment, userid);
       console.log(response, 'login api response');
 
-
-      GetMessages(itemdata?.id)
-
+      GetMessages(itemdata?.id);
     } catch (error) {
       // setIsLoading(false);
       if (
@@ -239,8 +237,8 @@ const ListItem = ({ Data ,likePress}) => {
     setLiked(!liked);
   };
 
-  const toggleSubLikecomment = (itemid) => {
-    setsubcommentliked((subcommentliked) => {
+  const toggleSubLikecomment = itemid => {
+    setsubcommentliked(subcommentliked => {
       const newLikedsub = !subcommentliked;
       console.log(newLikedsub, 'like status');
 
@@ -254,8 +252,8 @@ const ListItem = ({ Data ,likePress}) => {
     });
   };
 
-  const toggleLikecomment = (itemid) => {
-    setcommentliked((commentliked) => {
+  const toggleLikecomment = itemid => {
+    setcommentliked(commentliked => {
       const newLiked = !commentliked;
       console.log(newLiked, 'like status');
 
@@ -297,7 +295,7 @@ const ListItem = ({ Data ,likePress}) => {
 
   const handleRepost = () => {
     console.log('Repost');
-    navigation.navigate('RepostScreen', { repostydata: itemdata })
+    navigation.navigate('RepostScreen', {repostydata: itemdata});
     // Add logic for reposting
     closeShareModal();
   };
@@ -318,11 +316,13 @@ const ListItem = ({ Data ,likePress}) => {
     setShareModalVisible(false);
   };
 
-  const renderFollower = ({ item }) => (
+  const renderFollower = ({item}) => (
     <TouchableOpacity
       onPress={() => {
         if (selectedFollowers.includes(item)) {
-          setSelectedFollowers(selectedFollowers.filter(follower => follower.id !== item.id));
+          setSelectedFollowers(
+            selectedFollowers.filter(follower => follower.id !== item.id),
+          );
         } else {
           setSelectedFollowers([...selectedFollowers, item]);
         }
@@ -330,48 +330,61 @@ const ListItem = ({ Data ,likePress}) => {
       style={[
         styles.followerItem,
         // selectedFollowers.includes(item) && styles.selectedFollowerItem,
-      ]}
-    >
+      ]}>
       <Image
-        source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+        source={{
+          uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+        }}
         style={styles.shareUserImage}
       />
       <Text style={styles.followerName}>{item.name}</Text>
       {selectedFollowers?.length > 0 && (
-        <View style={{ height: 40 }}>
+        <View style={{height: 40}}>
           {selectedFollowers.includes(item) && (
-            <Image
-              source={images.Done}
-              style={styles.sharetickImage}
-            />
+            <Image source={images.Done} style={styles.sharetickImage} />
           )}
         </View>
       )}
-
-
     </TouchableOpacity>
   );
 
-
-  const renderLikedPerson = ({ item }) => (
-    <TouchableOpacity onPress={() => closeBottomModal()} style={styles.likedPersonContainer}>
-      <Image source={{ uri: item?.userProfile ? item?.userProfile :"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style={styles.likedPersonImage} />
+  const renderLikedPerson = ({item}) => (
+    <TouchableOpacity
+      onPress={() => closeBottomModal()}
+      style={styles.likedPersonContainer}>
+      <Image
+        source={{
+          uri: item?.userProfile
+            ? item?.userProfile
+            : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        }}
+        style={styles.likedPersonImage}
+      />
       <Text style={styles.likedPersonName}>{item?.userName}</Text>
     </TouchableOpacity>
   );
 
-  const renderComment = ({ item }) => (
+  const renderComment = ({item}) => (
     <View style={styles.commentContainer}>
       <View style={styles.commentHeader}>
         <Image
-          source={{ uri:item?.userDetails?.userProfile ?  item?.userDetails?.userProfile :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
+          source={{
+            uri: item?.userDetails?.userProfile
+              ? item?.userDetails?.userProfile
+              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+          }}
           style={styles.commentUserImage}
         />
-        <Text style={styles.commentUserName}>{item?.userDetails?.userName}</Text>
+        <Text style={styles.commentUserName}>
+          {item?.userDetails?.userName}
+        </Text>
         <View style={styles.commentLikeContainer}>
           <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
           <TouchableOpacity onPress={() => toggleLikecomment(item?.id)}>
-            <Image source={item?.liked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
+            <Image
+              source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
+              style={styles.commentLikeIcon}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -379,10 +392,11 @@ const ListItem = ({ Data ,likePress}) => {
       <View style={styles.commentFooter}>
         <Text style={styles.commentTime}>{item?.userDetails?.commentedAt}</Text>
         {/* <TouchableOpacity onPress={() => handlesubcommant(item)}> */}
-        <TouchableOpacity onPress={() => {
-          setReplyingTo(item);
-          commentInputRef.current.focus();
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setReplyingTo(item);
+            commentInputRef.current.focus();
+          }}>
           <Text style={styles.commentReplyButton}>Reply</Text>
         </TouchableOpacity>
       </View>
@@ -390,20 +404,29 @@ const ListItem = ({ Data ,likePress}) => {
         <View key={reply.id} style={styles.replyContainer}>
           <View style={styles.commentHeader}>
             <Image
-              source={{ uri:reply?.userDetails?.userProfile ?  reply?.userDetails?.userProfile : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
+              source={{
+                uri: reply?.userDetails?.userProfile
+                  ? reply?.userDetails?.userProfile
+                  : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+              }}
               style={styles.commentUserImage}
             />
             <Text style={styles.commentUserName}>{reply?.reply?.userName}</Text>
             <View style={styles.commentLikeContainer}>
               <Text style={styles.commentLikeCount}>{reply?.likeCount}</Text>
               <TouchableOpacity onPress={() => toggleSubLikecomment(reply?.id)}>
-                <Image source={reply?.liked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
+                <Image
+                  source={reply?.liked ? images.blueThumbsUp : images.ThumbsUp}
+                  style={styles.commentLikeIcon}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <Text style={styles.replyText}>{reply.subComment}</Text>
           <View style={styles.commentFooter}>
-            <Text style={styles.commentTime}>{reply?.userDetails?.commentedAt}</Text>
+            <Text style={styles.commentTime}>
+              {reply?.userDetails?.commentedAt}
+            </Text>
             <TouchableOpacity onPress={() => setReplyingTo(item.id)}>
               <Text style={styles.commentReplyButton}>Reply</Text>
             </TouchableOpacity>
@@ -418,22 +441,47 @@ const ListItem = ({ Data ,likePress}) => {
       {Data?.map(item => {
         return (
           <View style={styles.container} key={item.id}>
-
             {repost == true && (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: getWidth(1.13), alignSelf: 'center', marginTop: 10 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: getWidth(1.13),
+                  alignSelf: 'center',
+                  marginTop: 10,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   <Image
-                    source={{ uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
-                    style={{ width: 30, height: 30, borderRadius: 25 }}
+                    source={{
+                      uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    }}
+                    style={{width: 30, height: 30, borderRadius: 25}}
                   />
-                  <Text style={{ color: 'black', fontSize: 19, fontFamily: 'Jost-Bold', marginLeft: 5 }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 19,
+                      fontFamily: 'Jost-Bold',
+                      marginLeft: 5,
+                    }}>
                     {'teeee'}
                   </Text>
-                  <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Jost-Regular', marginLeft: 5 }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 14,
+                      fontFamily: 'Jost-Regular',
+                      marginLeft: 5,
+                    }}>
                     {'reposted this'}
                   </Text>
                 </View>
-
 
                 <TouchableOpacity
                   style={{
@@ -442,7 +490,7 @@ const ListItem = ({ Data ,likePress}) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  onPress={() => { }}>
+                  onPress={() => {}}>
                   <Image
                     style={{
                       width: 3,
@@ -452,12 +500,9 @@ const ListItem = ({ Data ,likePress}) => {
                     source={images.Threedots}
                   />
                 </TouchableOpacity>
-
-
-
               </View>
             )}
-            <View style={{ flexDirection: 'row', padding: 10 }}>
+            <View style={{flexDirection: 'row', padding: 10}}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('OtherProfile')}>
                 <Image
@@ -471,22 +516,37 @@ const ListItem = ({ Data ,likePress}) => {
               </TouchableOpacity>
 
               <View style={styles.textContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.name}>{item.userDetails.userName}</Text>
-                  {item.userDetails.role !== 'Follower' && item?.userDetails?.action == 'Approved' && (
-                    <Image
-                      style={{ width: 20, height: 20, marginLeft: 6 }}
-                      source={images.VerifiedPNG}
-                    />
-                  )}
+                  {item.userDetails.role !== 'Follower' &&
+                    item?.userDetails?.action == 'Approved' && (
+                      <Image
+                        style={{width: 20, height: 20, marginLeft: 6}}
+                        source={images.VerifiedPNG}
+                      />
+                    )}
                 </View>
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
 
               {repost ? (
-
-                <View style={{ backgroundColor: '#3A7BD5', padding: 7, borderRadius: 10, height: 30, width: 50 }}><Text style={{ fontFamily: 'Jost-Regular', color: 'white', fontSize: 13 }}>Follow</Text></View>
-
+                <View
+                  style={{
+                    backgroundColor: '#3A7BD5',
+                    padding: 7,
+                    borderRadius: 10,
+                    height: 30,
+                    width: 50,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Jost-Regular',
+                      color: 'white',
+                      fontSize: 13,
+                    }}>
+                    Follow
+                  </Text>
+                </View>
               ) : (
                 <TouchableOpacity
                   style={{
@@ -495,7 +555,7 @@ const ListItem = ({ Data ,likePress}) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  onPress={() => { }}>
+                  onPress={() => {}}>
                   <Image
                     style={{
                       width: 3,
@@ -509,7 +569,7 @@ const ListItem = ({ Data ,likePress}) => {
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
-            <Image source={{ uri: item?.image }} style={styles.media} />
+            <Image source={{uri: item?.image}} style={styles.media} />
 
             <View onPress={toggleLike} style={styles.likeButton}>
               <View
@@ -519,13 +579,16 @@ const ListItem = ({ Data ,likePress}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity  onPress={() => likePress(item)}>
+                <TouchableOpacity onPress={() => likePress(item)}>
                   <Image
                     source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
                     style={styles.likeIcon}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {openBottomModal(),GetLikeduserlist(item?.id)}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    openBottomModal(), GetLikeduserlist(item?.id);
+                  }}>
                   <Text style={styles.liketext}>{item?.likeCount}</Text>
                 </TouchableOpacity>
               </View>
@@ -537,7 +600,9 @@ const ListItem = ({ Data ,likePress}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                onPress={() => { GetMessages(item.id), openCommentsModal(), setitemdata(item) }}>
+                onPress={() => {
+                  GetMessages(item.id), openCommentsModal(), setitemdata(item);
+                }}>
                 <Image
                   source={liked ? images.Comment : images.Comment}
                   style={styles.likeIcon}
@@ -545,20 +610,21 @@ const ListItem = ({ Data ,likePress}) => {
                 <Text style={styles.liketext}>{item?.commentCount}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => { openShareModal(), setitemdata(item) }}
+                onPress={() => {
+                  openShareModal(), setitemdata(item);
+                }}
                 style={{
                   flexDirection: 'row',
                   width: 75,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={images.Share}
-                  style={styles.likeIcon}
-                />
+                <Image source={images.Share} style={styles.likeIcon} />
                 <Text style={styles.liketext}>251</Text>
               </TouchableOpacity>
-              <Text style={{color:'gray',fontSize:12}}>{'12 minutes ago'}</Text>
+              <Text style={{color: 'gray', fontSize: 12}}>
+                {'12 minutes ago'}
+              </Text>
             </View>
 
             {/* Modal */}
@@ -569,7 +635,6 @@ const ListItem = ({ Data ,likePress}) => {
               onRequestClose={() => setModalVisible(false)}>
               <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-
                   <View
                     style={styles.action}
                     onPress={() => setModalVisible(false)}>
@@ -598,18 +663,12 @@ const ListItem = ({ Data ,likePress}) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.item}>
-                      <Image
-                        source={images.SaveIcon}
-                        style={styles.itemIcon}
-                      />
+                      <Image source={images.SaveIcon} style={styles.itemIcon} />
                       <Text style={styles.itemTitle}>Save Post</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.item}>
-                      <Image
-                        source={images.Report}
-                        style={styles.itemIcon}
-                      />
+                      <Image source={images.Report} style={styles.itemIcon} />
                       <Text style={styles.itemTitle}>Report Post</Text>
                     </TouchableOpacity>
                   </View>
@@ -622,14 +681,15 @@ const ListItem = ({ Data ,likePress}) => {
               isVisible={bottomModalVisible}
               onBackdropPress={closeBottomModal}
               style={styles.bottomModal}
-              backdropOpacity={.1}
-            >
-              <View style={[styles.modalContent,{paddingLeft:10}]}>
-                <Text style={{ color: 'black', fontFamily: 'Jost-Bold' }}>Likes</Text>
+              backdropOpacity={0.1}>
+              <View style={[styles.modalContent, {paddingLeft: 10}]}>
+                <Text style={{color: 'black', fontFamily: 'Jost-Bold'}}>
+                  Likes
+                </Text>
 
                 <FlatList
                   data={likeduserList}
-                  keyExtractor={(item) => item?.userId?.toString()}
+                  keyExtractor={item => item?.userId?.toString()}
                   renderItem={renderLikedPerson}
                 />
               </View>
@@ -640,11 +700,18 @@ const ListItem = ({ Data ,likePress}) => {
               isVisible={commentsModalVisible}
               onBackdropPress={closeCommentsModal}
               style={styles.bottomModal}
-              backdropOpacity={.1}
-            >
+              backdropOpacity={0.1}>
               <View style={styles.modalContent}>
-                <View style={{ flexDirection: 'row' }} >
-                  <Text style={{ color: 'black', fontFamily: 'Jost-Bold', fontSize: 16, margin: 10 }}>Comments</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Jost-Bold',
+                      fontSize: 16,
+                      margin: 10,
+                    }}>
+                    Comments
+                  </Text>
                   <TouchableOpacity
                     style={styles.closeButton}
                     onPress={() => closeCommentsModal()}>
@@ -652,15 +719,16 @@ const ListItem = ({ Data ,likePress}) => {
                   </TouchableOpacity>
                 </View>
 
-
                 <FlatList
                   data={messages}
-                  keyExtractor={(item) => item?.id.toString()}
+                  keyExtractor={item => item?.id.toString()}
                   renderItem={renderComment}
                 />
                 <View style={styles.commentInputContainer}>
                   <Image
-                    source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+                    source={{
+                      uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                    }}
                     style={styles.commentUserImage}
                   />
                   <TextInput
@@ -677,17 +745,16 @@ const ListItem = ({ Data ,likePress}) => {
                       source={images.Sendbtn}
                       style={styles.commentUserImage}
                     />
-
                   </TouchableOpacity>
                 </View>
               </View>
             </Modal>
 
-
             {/* {share model} */}
 
-            <Modal isVisible={shareModalVisible}
-              backdropOpacity={.1}
+            <Modal
+              isVisible={shareModalVisible}
+              backdropOpacity={0.1}
               onBackdropPress={closeShareModal}
               style={styles.bottomModal}>
               <View style={styles.shareContainer}>
@@ -698,28 +765,40 @@ const ListItem = ({ Data ,likePress}) => {
                   value={searchText}
                   onChangeText={setSearchText}
                 />
-                <Text style={{ color: 'black', fontFamily: 'Jost-Regular', marginBottom: 5 }}>Select followers to share as message</Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontFamily: 'Jost-Regular',
+                    marginBottom: 5,
+                  }}>
+                  Select followers to share as message
+                </Text>
                 <FlatList
                   // data={followers.filter(follower => follower.name.toLowerCase().includes(searchText.toLowerCase()))}
                   data={followers}
                   renderItem={renderFollower}
                   horizontal
-                  keyExtractor={(item) => item.id.toString()}
+                  keyExtractor={item => item.id.toString()}
                 />
 
                 {selectedFollowers?.length > 0 ? (
                   <View style={styles.shareButtonsContainer}>
-                    <TouchableOpacity onPress={closeShareModal} style={styles.cancelButton}>
+                    <TouchableOpacity
+                      onPress={closeShareModal}
+                      style={styles.cancelButton}>
                       <Text style={styles.cancelButtonText}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleSendToFollowers()} style={styles.sendButton}>
+                    <TouchableOpacity
+                      onPress={() => handleSendToFollowers()}
+                      style={styles.sendButton}>
                       <Text style={styles.sendButtonText}>Send</Text>
                     </TouchableOpacity>
                   </View>
-
                 ) : (
                   <View style={styles.repostContainer}>
-                    <TouchableOpacity onPress={() => handleRepost()} style={styles.shareIconButton}>
+                    <TouchableOpacity
+                      onPress={() => handleRepost()}
+                      style={styles.shareIconButton}>
                       <Image
                         source={images.ArrowBendUpRight}
                         style={styles.commentUserImage}
@@ -741,10 +820,7 @@ const ListItem = ({ Data ,likePress}) => {
                       <Text style={styles.shareIconText}>Share to</Text>
                     </TouchableOpacity>
                   </View>
-
                 )}
-
-
               </View>
             </Modal>
             {isLoading && (
@@ -818,7 +894,7 @@ const styles = StyleSheet.create({
     // padding: 20,
     borderRadius: 10,
     width: '100%',
-    maxHeight: getHeight(1.4)
+    maxHeight: getHeight(1.4),
   },
   closeButton: {
     position: 'absolute',
@@ -895,7 +971,7 @@ const styles = StyleSheet.create({
     // borderColor: '#ccc',
     backgroundColor: '#FFFFFF',
     borderRadius: 19,
-    marginBottom: 5
+    marginBottom: 5,
   },
   commentHeader: {
     flexDirection: 'row',
@@ -911,7 +987,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Bold',
     fontSize: 16,
     color: 'black',
-
   },
   commentLikeContainer: {
     flexDirection: 'row',
@@ -933,7 +1008,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 5,
     marginLeft: 15,
-    marginRight: 10
+    marginRight: 10,
   },
   commentFooter: {
     flexDirection: 'row',
@@ -989,7 +1064,7 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: 'white',
     borderTopRightRadius: 10,
-    borderTopLeftRadius: 10
+    borderTopLeftRadius: 10,
   },
   commentInput: {
     flex: 1,
@@ -1000,7 +1075,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
     color: 'black',
-    backgroundColor: '#F4F4F4'
+    backgroundColor: '#F4F4F4',
   },
   sendText: {
     color: 'blue',
@@ -1008,7 +1083,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   closeButton2: {
-    margin: 10
+    margin: 10,
     // position: 'absolute',
     // top: 10,
     // right: 10,
@@ -1036,7 +1111,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     fontSize: 16,
     marginBottom: 10,
-    color: 'black'
+    color: 'black',
   },
   shareButtonsContainer: {
     flexDirection: 'row',
@@ -1063,7 +1138,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#eee',
     paddingTop: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   repostButton: {
     backgroundColor: '#007BFF',
@@ -1077,7 +1152,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   shareIconButton: {
-    // flexDirection: 'row', 
+    // flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 2,
@@ -1087,7 +1162,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Bold',
     fontSize: 13,
     color: 'black',
-
   },
   sendButton: {
     flex: 1,
@@ -1108,7 +1182,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   selectedFollowerItem: {
     backgroundColor: '#007BFF',
