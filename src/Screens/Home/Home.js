@@ -79,7 +79,7 @@ const Home = props => {
     }, []),
   );
  const likePress = (item) => {
-  Alert.alert('Liked');
+  // Alert.alert('Liked');
   LikeMainPost(item?.id)
   console.log(item, 'hereee');
 };

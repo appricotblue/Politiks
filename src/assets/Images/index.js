@@ -94,6 +94,7 @@ const images = {
   Export: require('./Export.png'),
   LinkSimple: require('./LinkSimple.png'),
   Sendbtn: require('./Sendbtn.png'),
+  Trash: require('./Trash.png'),
 };
 
 export default images;

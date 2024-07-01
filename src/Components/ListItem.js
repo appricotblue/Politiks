@@ -92,7 +92,7 @@ const ListItem = ({Data, likePress}) => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
     setuserid(userId);
-    console.group(Data[0].image, 'imagesss');
+    console.group(Data[0]?.image, 'imagesss');
   };
 
   useEffect(() => {
@@ -388,6 +388,21 @@ const ListItem = ({Data, likePress}) => {
         </Text>
         <View style={styles.commentLikeContainer}>
           <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
+          <TouchableOpacity onPress={() => console.log(item?.id)}>
+            <Image
+              source={item?.liked ? images.Trash : images.Trash}
+              style={styles.commentLikeIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log(item?.id)}>
+            <Image
+              source={item?.liked ? images.PencilPNG : images.PencilPNG}
+              style={styles.commentLikeIcon}
+            />
+          </TouchableOpacity>
+        </View> 
+        <View style={styles.commentLikeContainer}>
+          <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
           <TouchableOpacity onPress={() => toggleLikecomment(item?.id)}>
             <Image
               source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
@@ -467,8 +482,8 @@ const ListItem = ({Data, likePress}) => {
                   }}>
                   <Image
                     source={{
-                      uri: item?.originalPostDetails?.userDetails?.userProfile
-                        ? item?.originalPostDetails?.userDetails?.userProfile
+                      uri: item?.repostDetails?.userDetails?.userProfile
+                        ? item?.repostDetails?.userDetails?.userProfile
                         : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                     }}
                     style={{width: 30, height: 30, borderRadius: 25}}
@@ -480,7 +495,7 @@ const ListItem = ({Data, likePress}) => {
                       fontFamily: 'Jost-Bold',
                       marginLeft: 5,
                     }}>
-                    {item?.originalPostDetails?.userDetails?.userName}
+                    {item?.repostDetails?.userDetails?.userName}
                   </Text>
                   <Text
                     style={{
@@ -527,7 +542,7 @@ const ListItem = ({Data, likePress}) => {
 
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.name}>{item.userDetails.userName}</Text>
+                  <Text style={styles.name}>{item?.userDetails?.userName}</Text>
                   {item.userDetails.role !== 'Follower' &&
                     item?.userDetails?.action == 'Approved' && (
                       <Image
@@ -714,7 +729,7 @@ const ListItem = ({Data, likePress}) => {
               style={styles.bottomModal}
               backdropOpacity={0.1}>
               <View style={[styles.modalContent, {paddingLeft: 10}]}>
-                <Text style={{color: 'black', fontFamily: 'Jost-Bold'}}>
+                <Text style={{color: 'black', fontFamily: 'Jost-Bold',fontSize:19}}>
                   Likes
                 </Text>
 
@@ -925,8 +940,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     // padding: 20,
     borderRadius: 10,
+    minHeight:150,
     width: '100%',
     maxHeight: getHeight(1.4),
+    // backgroundColor:'red'
   },
   closeButton: {
     position: 'absolute',
