@@ -26,6 +26,7 @@ import {
   LikSubecomment,
   UnLikeSubcomment,
   LikePostuselist,
+  UpdateMessage
 } from '../api';
 import SwiperComponent from './SwiperComponent';
 import Swiper from 'react-native-swiper';
@@ -194,6 +195,29 @@ const ListItem = ({Data, likePress}) => {
       Alert.alert('Error', 'An error occurred while fetching interests.');
     }
   };
+  const UpdateMessages = async itemid => {
+    console.log(itemid, 'hereitem');
+    setNewComment('');
+    try {
+      // setIsLoading(true);
+
+      const response = await UpdateMessage(itemid, newComment, userid);
+      console.log(response, 'login api response');
+      GetMessages(itemdata?.id);
+    } catch (error) {
+      // setIsLoading(false);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        Alert.alert('Error', error.response.data.message);
+      } else {
+        Alert.alert('Error', 'An error occurred during login.');
+      }
+    }
+  };
+
   const handledataRegister = async item => {
     console.log(item, 'hereitem');
     setNewComment('');
@@ -394,7 +418,7 @@ const ListItem = ({Data, likePress}) => {
               style={styles.commentLikeIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log(item?.id)}>
+          <TouchableOpacity onPress={() => UpdateMessages(item?.id)}>
             <Image
               source={item?.liked ? images.PencilPNG : images.PencilPNG}
               style={styles.commentLikeIcon}

@@ -281,7 +281,6 @@ export const getParties = async () => {
     throw error;
   }
 };
-
 export const CreateMessage = async (postId, content, userId) => {
   console.log(
     'https://politiks.aindriya.co.uk/user/createComment',
@@ -293,6 +292,26 @@ export const CreateMessage = async (postId, content, userId) => {
     const response = await HTTP_REQUEST.post(`user/createComment`, {
       userId,
       postId,
+      content,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.message, 'login error');
+    throw error;
+  }
+};
+
+export const UpdateMessage = async (comentId, content, userId) => {
+  console.log(
+    'https://politiks.aindriya.co.uk/user/updateComment/1',
+    comentId,
+    content,
+    userId,
+  );
+  try {
+    const response = await HTTP_REQUEST.post(`user/updateComment/${comentId}`, {
+      userId,
+      comentId,
       content,
     });
     return response.data;
