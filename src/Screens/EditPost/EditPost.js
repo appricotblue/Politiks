@@ -102,22 +102,6 @@ const EditPost = ({navigation}) => {
       console.log(imageFile, 'test', imageUri, 'imagefile')
   });
 
-    //   imagesArray.forEach((imageUri, index) => {
-    //     const imageFile = {
-    //         uri: imageUri.path,
-    //         name: `image_${index}.jpg`,
-    //         type: 'image/jpeg',
-    //     };
-    //     formData.append(`image`, imageFile);
-    //     console.log(imageFile,'test',imageUri,'imagefile')
-    // });
-    // imagesArray.forEach((image, index) => {
-    //   formData.append(`image[${index}]`, {
-    //     uri: image.path,
-    //     type: image.mime,
-    //     name: image.path,
-    //   });
-    // });
     console.log(formData, 'sending data')
     try {
       setIsLoading(true);
