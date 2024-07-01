@@ -24,13 +24,15 @@ import {
   Likecomment,
   UnLikecomment,
   LikSubecomment,
-  UnLikeSubcomment
+  UnLikeSubcomment,
+  LikePostuselist
 } from '../api';
 
-const ListItem = ({ Data }) => {
+const ListItem = ({ Data ,likePress}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [repost, setrepost] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [likeduserList, setlikeduserList] = useState([]);
   const [commentliked, setcommentliked] = useState(false);
   const [subcommentliked, setsubcommentliked] = useState(false);
   const navigation = useNavigation();
@@ -84,6 +86,9 @@ const ListItem = ({ Data }) => {
       setReplyingTo(null);
     }
   };
+
+
+ 
 
 
   const Likesubcomments = async (itemid) => {
@@ -147,7 +152,23 @@ const ListItem = ({ Data }) => {
       setIsLoading(true);
       const response = await GetMessage(itemid);
       setIsLoading(false);
-      setmessages(response);
+      setmessages(response?.comments);
+      console.log(response, 'getmessager API response');
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
+
+  const GetLikeduserlist = async (itemid) => {
+    console.log(itemid, 'message id')
+    try {
+      setIsLoading(true);
+      const response = await LikePostuselist(itemid,userid);
+      setIsLoading(false);
+      setlikeduserList(response)
+      // setmessages(response?.comments);
       console.log(response, 'getmessager API response');
     } catch (error) {
       setIsLoading(false);
@@ -334,8 +355,8 @@ const ListItem = ({ Data }) => {
 
   const renderLikedPerson = ({ item }) => (
     <TouchableOpacity onPress={() => closeBottomModal()} style={styles.likedPersonContainer}>
-      <Image source={{ uri: item.profile }} style={styles.likedPersonImage} />
-      <Text style={styles.likedPersonName}>{item.name}</Text>
+      <Image source={{ uri: item?.userProfile ? item?.userProfile :"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style={styles.likedPersonImage} />
+      <Text style={styles.likedPersonName}>{item?.userName}</Text>
     </TouchableOpacity>
   );
 
@@ -343,20 +364,20 @@ const ListItem = ({ Data }) => {
     <View style={styles.commentContainer}>
       <View style={styles.commentHeader}>
         <Image
-          source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+          source={{ uri:item?.userDetails?.userProfile ?  item?.userDetails?.userProfile :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
           style={styles.commentUserImage}
         />
-        <Text style={styles.commentUserName}>User Name</Text>
+        <Text style={styles.commentUserName}>{item?.userDetails?.userName}</Text>
         <View style={styles.commentLikeContainer}>
           <Text style={styles.commentLikeCount}>{item?.likeCount}</Text>
           <TouchableOpacity onPress={() => toggleLikecomment(item?.id)}>
-            <Image source={commentliked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
+            <Image source={item?.liked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
           </TouchableOpacity>
         </View>
       </View>
       <Text style={styles.commentText}>{item.content}</Text>
       <View style={styles.commentFooter}>
-        <Text style={styles.commentTime}>2h ago</Text>
+        <Text style={styles.commentTime}>{item?.userDetails?.commentedAt}</Text>
         {/* <TouchableOpacity onPress={() => handlesubcommant(item)}> */}
         <TouchableOpacity onPress={() => {
           setReplyingTo(item);
@@ -369,20 +390,20 @@ const ListItem = ({ Data }) => {
         <View key={reply.id} style={styles.replyContainer}>
           <View style={styles.commentHeader}>
             <Image
-              source={{ uri: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}
+              source={{ uri:reply?.userDetails?.userProfile ?  reply?.userDetails?.userProfile : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
               style={styles.commentUserImage}
             />
-            <Text style={styles.commentUserName}>User Name</Text>
+            <Text style={styles.commentUserName}>{reply?.reply?.userName}</Text>
             <View style={styles.commentLikeContainer}>
               <Text style={styles.commentLikeCount}>{reply?.likeCount}</Text>
               <TouchableOpacity onPress={() => toggleSubLikecomment(reply?.id)}>
-                <Image source={subcommentliked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
+                <Image source={reply?.liked ? images.blueThumbsUp : images.ThumbsUp} style={styles.commentLikeIcon} />
               </TouchableOpacity>
             </View>
           </View>
           <Text style={styles.replyText}>{reply.subComment}</Text>
           <View style={styles.commentFooter}>
-            <Text style={styles.commentTime}>2h ago</Text>
+            <Text style={styles.commentTime}>{reply?.userDetails?.commentedAt}</Text>
             <TouchableOpacity onPress={() => setReplyingTo(item.id)}>
               <Text style={styles.commentReplyButton}>Reply</Text>
             </TouchableOpacity>
@@ -498,14 +519,14 @@ const ListItem = ({ Data }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => likePress(item)}>
                   <Image
-                    source={liked ? images.ThumbsUp : images.ThumbsUp}
+                    source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
                     style={styles.likeIcon}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => openBottomModal()}>
-                  <Text style={styles.liketext}>1.5 k</Text>
+                <TouchableOpacity onPress={() => {openBottomModal(),GetLikeduserlist(item?.id)}}>
+                  <Text style={styles.liketext}>{item?.likeCount}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -521,7 +542,7 @@ const ListItem = ({ Data }) => {
                   source={liked ? images.Comment : images.Comment}
                   style={styles.likeIcon}
                 />
-                <Text style={styles.liketext}>386</Text>
+                <Text style={styles.liketext}>{item?.commentCount}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => { openShareModal(), setitemdata(item) }}
@@ -603,12 +624,12 @@ const ListItem = ({ Data }) => {
               style={styles.bottomModal}
               backdropOpacity={.1}
             >
-              <View style={styles.modalContent}>
+              <View style={[styles.modalContent,{paddingLeft:10}]}>
                 <Text style={{ color: 'black', fontFamily: 'Jost-Bold' }}>Likes</Text>
 
                 <FlatList
-                  data={likedPersons}
-                  keyExtractor={(item) => item.id.toString()}
+                  data={likeduserList}
+                  keyExtractor={(item) => item?.userId?.toString()}
                   renderItem={renderLikedPerson}
                 />
               </View>

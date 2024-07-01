@@ -25,7 +25,7 @@ import images from '../../assets/Images';
 import SwiperComponent from '../../Components/SwiperComponent';
 import ListItem from '../../Components/ListItem';
 import Footer from '../../Components/Footer';
-import {getAllPost, getAllUserPost} from '../../api';
+import {getAllPost, getAllUserPost,LikePost} from '../../api';
 import local from '../../Storage/Local';
 
 const axios = require('axios').default;
@@ -49,7 +49,19 @@ const Home = props => {
     // Add more items as needed
   ];
 
-  
+  const LikeMainPost = async (itemid) => {
+    try {
+      // setIsLoading(true);
+      const response = await LikePost(itemid, userid);
+      // GetMessages(itemdata?.id)
+      getuser()
+      console.log(response, 'getallinterests API response');
+    } catch (error) {
+      // setIsLoading(false);
+      console.error('Error fetching interests:', error);
+      Alert.alert('Error', 'An error occurred while fetching interests.');
+    }
+  };
 
   const getuser = async () => {
     const userId = await local.getUserId();
@@ -61,12 +73,16 @@ const Home = props => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getAllPosts();
-      getAllUserPosts();
+      // getAllPosts(userId);
+      // getAllUserPosts();
       getuser();
     }, []),
   );
-
+ const likePress = (item) => {
+  Alert.alert('Liked');
+  LikeMainPost(item?.id)
+  console.log(item, 'hereee');
+};
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -131,13 +147,15 @@ const Home = props => {
             onPressStatusUpload={() => onPressStatusUpload()}
           />
         </View>
+
         {/* <View style={{height:200,marginTop:10}}>
           <SwiperComponent data={swiperdata} />
         </View> */}
         {/* {ProfileData?.map(item => (
           <ListItem key={item.id} item={item} />
         ))} */}
-        <ListItem Data={ProfileData} />
+
+        <ListItem Data={ProfileData} likePress={likePress}/>
         {isLoading && (
           <View style={styles.loader}>
             <ActivityIndicator size="large" color="white" />
