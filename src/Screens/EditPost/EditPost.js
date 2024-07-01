@@ -92,15 +92,25 @@ const EditPost = ({navigation}) => {
     formData.append('location', country);
     formData.append('tagUser', '2');
     formData.append('caption', text);
-
     imagesArray.forEach((imageUri, index) => {
       const imageFile = {
-          uri: imageUri,
-          name: `image_${index}.jpg`,
-          type: 'image/jpeg',
+        uri: imageUri.path,
+        type: imageUri.mime,
+        name: imageUri.path,
       };
       formData.append(`image`, imageFile);
+      console.log(imageFile, 'test', imageUri, 'imagefile')
   });
+
+    //   imagesArray.forEach((imageUri, index) => {
+    //     const imageFile = {
+    //         uri: imageUri.path,
+    //         name: `image_${index}.jpg`,
+    //         type: 'image/jpeg',
+    //     };
+    //     formData.append(`image`, imageFile);
+    //     console.log(imageFile,'test',imageUri,'imagefile')
+    // });
     // imagesArray.forEach((image, index) => {
     //   formData.append(`image[${index}]`, {
     //     uri: image.path,
@@ -108,12 +118,12 @@ const EditPost = ({navigation}) => {
     //     name: image.path,
     //   });
     // });
-
+    console.log(formData, 'sending data')
     try {
       setIsLoading(true);
       const res = await CreatePost(formData, userid);
       setIsLoading(false);
-      console.log(res?.data, '---------><><');
+      console.log(res, '---------><><');
       navigation.navigate('Home');
     } catch (error) {
       setIsLoading(false);

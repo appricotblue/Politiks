@@ -28,6 +28,7 @@ import {
   LikePostuselist
 } from '../api';
 import SwiperComponent from './SwiperComponent';
+import Swiper from 'react-native-swiper';
 
 const ListItem = ({ Data ,likePress}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -57,7 +58,7 @@ const ListItem = ({ Data ,likePress}) => {
     { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
   ])
 
-  const swiperimage = ["https://politiks.aindriya.co.uk/post/19/dress.jpg"]
+  const swiperimage =["https://politiks.aindriya.co.uk/post/41/1719822943486.jpg", "https://politiks.aindriya.co.uk/post/41/1719822943620.jpg"]
 
   const likedPersons = [
     { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
@@ -426,11 +427,11 @@ const ListItem = ({ Data ,likePress}) => {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: getWidth(1.13), alignSelf: 'center', marginTop: 10 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Image
-                    source={{ uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
+                    source={{ uri: item?.originalPostDetails?.userDetails?.userProfile ? item?.originalPostDetails?.userDetails?.userProfile : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
                     style={{ width: 30, height: 30, borderRadius: 25 }}
                   />
                   <Text style={{ color: 'black', fontSize: 19, fontFamily: 'Jost-Bold', marginLeft: 5 }}>
-                    {'teeee'}
+                    {item?.originalPostDetails?.userDetails?.userName}
                   </Text>
                   <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Jost-Regular', marginLeft: 5 }}>
                     {'reposted this'}
@@ -486,7 +487,7 @@ const ListItem = ({ Data ,likePress}) => {
                 <Text style={styles.designation}>{item.location}</Text>
               </View>
 
-              {repost ? (
+              {item?.isRepost ? (
 
                 <View style={{ backgroundColor: '#3A7BD5', padding: 7, borderRadius: 10, height: 30, width: 50 }}><Text style={{ fontFamily: 'Jost-Regular', color: 'white', fontSize: 13 }}>Follow</Text></View>
 
@@ -512,7 +513,20 @@ const ListItem = ({ Data ,likePress}) => {
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
-            <SwiperComponent data={swiperimage} />
+            {item?.image?.length > 0 && (
+              <Swiper style={{height:400}} showsPagination={true}>
+                {item?.image.map((image, index) => (
+                  <View key={index} style={styles.slide}>
+                    <Image
+                      source={{ uri: image || 'https://example.com/default-image.jpg' }}
+                      style={styles.media}
+                      onError={() => console.error('Image failed to load')}
+                    />
+                  </View>
+                ))}
+              </Swiper>
+            )}
+            {/* <SwiperComponent data={swiperimage} /> */}
             {/* <SwiperComponent data={item?.image} /> */}
             {/* <Image source={{ uri: item?.image[0] }} style={styles.media} /> */}
 
@@ -526,7 +540,7 @@ const ListItem = ({ Data ,likePress}) => {
                 }}>
                 <TouchableOpacity  onPress={() => likePress(item)}>
                   <Image
-                    source={item?.liked ? images.blueThumbsUp : images.ThumbsUp}
+                    source={item?.liked == true ? images.blueThumbsUp : images.ThumbsUp}
                     style={styles.likeIcon}
                   />
                 </TouchableOpacity>
@@ -797,9 +811,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 400,
     marginTop: 10,
+    // backgroundColor:'red'
   },
   likeButton: {
-    zIndex: 1,
+    // zIndex: 1,
     width: getWidth(1),
     alignSelf: 'center',
     height: 40,
@@ -1141,6 +1156,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
+  slide: {
+    // width: 400,
+    // flex:1,
+    height: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'red'
+  }
 });
 
 export default ListItem;

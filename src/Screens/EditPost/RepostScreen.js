@@ -26,6 +26,7 @@ import CountryPicker from '../../Components/CountryPicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useRoute } from '@react-navigation/native';
 import { getAllPost, getAllUserPost,Repost } from '../../api';
+import Swiper from 'react-native-swiper';
 
 const RepostScreen = ({ navigation }) => {
     const route = useRoute();
@@ -208,8 +209,20 @@ const RepostScreen = ({ navigation }) => {
 
                     </View>
                     <Text style={styles.description}>{repostydata?.caption}</Text>
-
-                    <Image source={{ uri: repostydata?.image }} style={styles.media} />
+                    {repostydata?.image?.length > 0 && (
+                        <Swiper style={{ height: 300 }} showsPagination={true}>
+                            {repostydata?.image?.map((image, index) => (
+                                <View key={index} style={styles.slide}>
+                                    <Image
+                                        source={{ uri: image || 'https://example.com/default-image.jpg' }}
+                                        style={styles.media}
+                                        onError={() => console.error('Image failed to load')}
+                                    />
+                                </View>
+                            ))}
+                        </Swiper>
+                    )}
+                    {/* <Image source={{ uri: repostydata?.image }} style={styles.media} /> */}
 
                 </KeyboardAvoidingView>
             </ScrollView>
@@ -332,6 +345,14 @@ const styles = StyleSheet.create({
         marginTop: 10,
         alignSelf: 'center'
     },
+    slide: {
+        // width: 400,
+        // flex:1,
+        height: 300,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'red'
+    }
 });
 
 export default RepostScreen;
