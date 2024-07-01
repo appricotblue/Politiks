@@ -27,6 +27,7 @@ import {
   UnLikeSubcomment,
   LikePostuselist,
 } from '../api';
+import SwiperComponent from './SwiperComponent';
 
 const ListItem = ({Data, likePress}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -66,6 +67,8 @@ const ListItem = ({Data, likePress}) => {
     },
   ]);
 
+  const swiperimage = ['https://politiks.aindriya.co.uk/post/19/dress.jpg'];
+
   const likedPersons = [
     {
       id: 1,
@@ -85,6 +88,7 @@ const ListItem = ({Data, likePress}) => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
     setuserid(userId);
+    console.group(Data[0].image, 'imagesss');
   };
 
   useEffect(() => {
@@ -441,7 +445,7 @@ const ListItem = ({Data, likePress}) => {
       {Data?.map(item => {
         return (
           <View style={styles.container} key={item.id}>
-            {repost == true && (
+            {item?.isRepost == true && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -569,7 +573,9 @@ const ListItem = ({Data, likePress}) => {
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
-            <Image source={{uri: item?.image}} style={styles.media} />
+            <SwiperComponent data={swiperimage} />
+            {/* <SwiperComponent data={item?.image} /> */}
+            {/* <Image source={{ uri: item?.image[0] }} style={styles.media} /> */}
 
             <View onPress={toggleLike} style={styles.likeButton}>
               <View

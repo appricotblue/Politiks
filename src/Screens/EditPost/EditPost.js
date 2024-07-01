@@ -27,7 +27,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 
 const EditPost = ({navigation}) => {
   const [text, setText] = useState('');
-  const [image, setImage] = useState();
+  const [imagesArray, setImagesArray] = useState([]);
   const [userid, setuserid] = useState('');
   const [countrydata, setcountrydata] = useState([]);
   const [country, changecountry] = useState('');
@@ -75,13 +75,13 @@ const EditPost = ({navigation}) => {
   }, []);
 
   const validate = () => {
-    console.log(image, 'imagee');
-    if (image == null) {
-      Alert.alert('Please add an image to continue');
-    } else if (text == '') {
-      Alert.alert('Please add an Content to continue');
-    } else if (country == '') {
-      Alert.alert('Please add an Country to continue');
+    console.log(imagesArray, 'imagesArray');
+    if (imagesArray?.length === 0) {
+      Alert.alert('Please add at least one image to continue');
+    } else if (text === '') {
+      Alert.alert('Please add some content to continue');
+    } else if (country === '') {
+      Alert.alert('Please add a country to continue');
     } else {
       createPosts();
     }
@@ -92,11 +92,22 @@ const EditPost = ({navigation}) => {
     formData.append('location', country);
     formData.append('tagUser', '2');
     formData.append('caption', text);
-    formData.append('image', {
-      uri: image.path,
-      type: image.mime,
-      name: image.path,
-    });
+
+    imagesArray.forEach((imageUri, index) => {
+      const imageFile = {
+          uri: imageUri,
+          name: `image_${index}.jpg`,
+          type: 'image/jpeg',
+      };
+      formData.append(`image`, imageFile);
+  });
+    // imagesArray.forEach((image, index) => {
+    //   formData.append(`image[${index}]`, {
+    //     uri: image.path,
+    //     type: image.mime,
+    //     name: image.path,
+    //   });
+    // });
 
     try {
       setIsLoading(true);
@@ -112,16 +123,15 @@ const EditPost = ({navigation}) => {
 
   const pickImageFromGallery = () => {
     ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
+      multiple: true,
+      mediaType: 'photo',
     })
-      .then(image => {
-        console.log(image);
-        setImage(image);
+      .then(selectedImages => {
+        console.log(selectedImages);
+        setImagesArray([...imagesArray, ...selectedImages]);
       })
       .catch(error => {
-        console.log('Error picking image from gallery: ', error);
+        console.log('Error picking images from gallery: ', error);
       });
   };
 
@@ -133,7 +143,7 @@ const EditPost = ({navigation}) => {
     })
       .then(image => {
         console.log(image);
-        setImage(image);
+        setImagesArray([...imagesArray, image]);
       })
       .catch(error => {
         console.log('Error taking photo: ', error);
@@ -152,6 +162,10 @@ const EditPost = ({navigation}) => {
       {cancelable: true},
     );
   };
+
+  const renderItem = ({item}) => (
+    <Image source={{uri: item.path}} style={styles.image} />
+  );
 
   return (
     <View style={styles.container}>
@@ -209,35 +223,28 @@ const EditPost = ({navigation}) => {
               language: 'en',
             }}
           />
-          {image?.length !== 0 ? (
-            <View style={styles.locationContainer}>
-              <View style={styles.row1}>
-                <Image
-                  source={images.ImagePNG}
-                  style={{width: 25, height: 25}}
-                />
-                <Text style={styles.locationText}>Add Image</Text>
-              </View>
-              <TouchableOpacity onPress={() => showImagePickerOptions()}>
-                <Image
-                  source={images.PlusIcon}
-                  style={{width: 25, height: 25}}
-                />
-              </TouchableOpacity>
+          <View style={styles.locationContainer}>
+            <View style={styles.row1}>
+              <Image
+                source={images.ImagePNG}
+                style={{width: 25, height: 25}}
+              />
+              <Text style={styles.locationText}>Add Image</Text>
             </View>
-          ) : (
-            <></>
-          )}
-          {image?.length !== 0 ? (
-            <View>
-              {image && (
-                <Image source={{uri: image.path}} style={styles.image} />
-              )}
-            </View>
-          ) : (
-            <></>
-          )}
-
+            <TouchableOpacity onPress={() => showImagePickerOptions()}>
+              <Image
+                source={images.PlusIcon}
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={imagesArray}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            contentContainerStyle={styles.imageList}
+          />
           <View style={styles.buttonView}></View>
         </KeyboardAvoidingView>
         <CommonButton
@@ -333,6 +340,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     borderRadius: 10,
+  },
+  imageList: {
+    paddingVertical: 10,
   },
   title: {
     fontFamily: 'Jost-Regular',
