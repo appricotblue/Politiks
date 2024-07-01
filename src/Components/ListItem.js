@@ -27,6 +27,7 @@ import {
   UnLikeSubcomment,
   LikePostuselist
 } from '../api';
+import SwiperComponent from './SwiperComponent';
 
 const ListItem = ({ Data ,likePress}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,7 +57,7 @@ const ListItem = ({ Data ,likePress}) => {
     { id: 2, name: 'Mike Johnson', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }
   ])
 
-
+  const swiperimage = ["https://politiks.aindriya.co.uk/post/19/dress.jpg"]
 
   const likedPersons = [
     { id: 1, name: 'Jane Smith', profile: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' },
@@ -67,6 +68,8 @@ const ListItem = ({ Data ,likePress}) => {
     const userId = await local.getUserId();
     console.log(userId, 'leaderdata he');
     setuserid(userId);
+    console.group(Data[0].image, 'imagesss')
+
   };
 
   useEffect(() => {
@@ -419,7 +422,7 @@ const ListItem = ({ Data ,likePress}) => {
         return (
           <View style={styles.container} key={item.id}>
 
-            {repost == true && (
+            {item?.isRepost == true && (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: getWidth(1.13), alignSelf: 'center', marginTop: 10 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Image
@@ -509,7 +512,9 @@ const ListItem = ({ Data ,likePress}) => {
             </View>
 
             <Text style={styles.description}>{item.caption}</Text>
-            <Image source={{ uri: item?.image }} style={styles.media} />
+            <SwiperComponent data={swiperimage} />
+            {/* <SwiperComponent data={item?.image} /> */}
+            {/* <Image source={{ uri: item?.image[0] }} style={styles.media} /> */}
 
             <View onPress={toggleLike} style={styles.likeButton}>
               <View

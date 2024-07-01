@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text ,Image,StyleSheet} from 'react-native';
 import Swiper from 'react-native-swiper';
 
 const SwiperComponent = ({ data }) => {
+
+  useEffect(() => {
+    console.log(data, 'heredata')
+  }, [])
   return (
     <Swiper>
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-           <Image source={item.imageUrl} style={styles.image} />
-          <Text>{item?.description}</Text>
+          <Image source={{ uri: item }} style={styles.image} />
+          {/* <Text>{item?.description}</Text> */}
           {/* Add any other content you want to display for each slide */}
         </View>
       ))}
